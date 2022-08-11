@@ -1,0 +1,41 @@
+{
+    "name": "syntetic-scripting-view",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon index.js",
+        "start": "node index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@aws-sdk/client-cloudformation": "^3.142.0",
+        "@aws-sdk/client-cloudwatch-events": "^3.142.0",
+        "@aws-sdk/client-eventbridge": "^3.142.0",
+        "@aws-sdk/client-lambda": "^3.137.0",
+        "@aws-sdk/credential-provider-cognito-identity": "^3.137.0",
+        "@menadevs/objectron": "^0.1.14",
+        "archiver": "^5.3.1",
+        "aws-sdk": "^2.1185.0",
+        "browsermob-proxy-client": "^0.1.2",
+        "chrome-remote-interface": "^0.31.3",
+        "chromedriver": "^104.0.0",
+        "dotenv": "^16.0.1",
+        "ejs": "^3.1.8",
+        "express": "^4.18.1",
+        "express-validator": "^6.14.2",
+        "har-recorder": "0.0.1",
+        "jest": "^28.1.3",
+        "logzio-nodejs": "^2.1.4",
+        "playwright-aws-lambda": "^0.9.0",
+        "playwright-core": "^1.24.2",
+        "playwright-har": "^0.1.1",
+        "selenium-webdriver": "^4.4.0",
+        "shelljs": "^0.8.5"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.19"
+    }
+}

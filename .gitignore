@@ -1,0 +1,10 @@
+node_modules
+.env
+lambdaFunction.zip
+responseCreationLambda.json
+archive_cloudformation-creator.js
+local.har
+/mock
+/service/selenium-v2
+/service/selenium
+/service/selenium_old
