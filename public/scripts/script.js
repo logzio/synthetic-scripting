@@ -44,6 +44,10 @@ const inputLambdaDescription = document.querySelector('#description');
 const allTabs = document.querySelectorAll('.tab-control-item');
 const configForm = document.querySelector('.config-form');
 const allConfigInputs = document.querySelectorAll('.config-form input');
+
+const generalForm = document.querySelector('.general-form');
+const allGeneralInputs = document.querySelectorAll('.general-form input');
+
 const startTestButton = document.querySelector('.submission-test');
 
 class PageBuilder {
@@ -51,10 +55,14 @@ class PageBuilder {
         this.awsAccessKey = null;
         this.awsSecretKey = null;
         this.awsBucketName = null;
-        this.shipping_token = null;
+        this.shippingToken = null;
         this.awsRegion = null;
         this.createNewOne = null;
-        this.range_time = 1;
+        this.iamRoleArn = null;
+        this.iamRoleArnEvent = null;
+        this.rangeTime = 1;
+        this.name_lambda = null;
+        this.description_lambda = null;
     }
     customFetch = async (bodyToSend, url) => {
         return await fetch(`http://localhost:8080${url}`, {
@@ -136,8 +144,6 @@ class PageBuilder {
             .querySelector('.submission-test')
             .addEventListener('click', async (e) => {
                 e.preventDefault();
-                const name = inputLambdaName.value;
-                const description = inputLambdaDescription.value;
 
                 notificationFileModify.style.display = 'flex';
                 const responseModify = await this.customFetch(
@@ -172,7 +178,11 @@ class PageBuilder {
                 }
 
                 const responseUploadZip = await this.customFetch(
-                    {},
+                    {
+                        accessKey: this.awsAccessKey,
+                        secretKey: this.awsSecretKey,
+                        bucketName: this.awsBucketName,
+                    },
                     settings.endPointUrls.uploadZipUrl,
                 );
                 if (!responseUploadZip.error) {
@@ -182,7 +192,16 @@ class PageBuilder {
                         'Zip Uploaded',
                     );
                     const response = await this.customFetch(
-                        { name, description },
+                        {
+                            name: this.name,
+                            description: this.description,
+                            accessKey: this.awsAccessKey,
+                            secretKey: this.awsSecretKey,
+                            bucketName: this.awsBucketName,
+                            token: this.shippingToken,
+                            iamRoleArn: this.iamRoleArn,
+                            region: this.region,
+                        },
                         settings.endPointUrls.createLambdaUrl,
                     );
 
@@ -203,7 +222,11 @@ class PageBuilder {
                     return false;
                 }
                 const cloudBridgeEventResp = await this.customFetch(
-                    { name, range_time: this.range_time },
+                    {
+                        name: this.name,
+                        rangeTime: this.rangeTime,
+                        iamRoleArnEvent: this.iamRoleArnEvent,
+                    },
                     settings.endPointUrls.addEventBridgeUrl,
                 );
                 if (!cloudBridgeEventResp.error) {
@@ -220,51 +243,44 @@ class PageBuilder {
             });
     };
     setDefault = () => {
-        editor.setValue(`require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
-const convertHarToJSON = require('./convertHarToJSON');
-const logger = require('./logger');
-const playwright = require('playwright-aws-lambda');
-const { PlaywrightHar } = require('playwright-har');		
-function sleep(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-	}
-exports.handler = async (event, context) => {
-	let browser = null;
-	let harData = null;
-	try {
-		browser = await playwright.launchChromium();
-		const context = await browser.newContext();
-		const page = await context.newPage();
-		const playwrightHar = new PlaywrightHar(page);
-		await playwrightHar.start();
-		//////////////////////////////////
-		//// add your code from here ////
-		//////////////////////////////////
-			
-		//////////////////////////////////
-		//// add your code to here ////
-		//////////////////////////////////
-		harData = await playwrightHar.stop();
-	} catch (error) {
-		throw error;
-	} finally {
-		if (browser) {
-			await browser.close();
-		}
-	}
-	try {
-		parsedData.result.forEach((log) => {
-			logger.log(log);
-		});
-	} catch (err) {
-		console.log(err);
-	}
-	logger.sendAndClose();
-	await sleep(4000);	
-	return true;
-};`);
+        editor.setValue(`const playwright = require('playwright-aws-lambda');
+
+		const readSendData = require('./rsData');
+		
+		const handler = async () => {
+			let context = null;
+			let page = null;
+			try {
+				browser = await playwright.launchChromium(false);
+				context = await browser.newContext({
+					recordHar: {
+						path: './capture-hars/example.har',
+						mode: 'full',
+						content: 'omit',
+					},
+				});
+				page = await context.newPage();
+				//////////////////////////////////
+				//// add your code from here ////
+				//////////////////////////////////
+					
+				//////////////////////////////////
+				//// add your code to here ////
+				//////////////////////////////////
+				
+			} catch (error) {
+				console.log(error);
+				throw error;
+			} finally {
+				if (browser) {
+					await context.close();
+					await browser.close();
+				}
+			}
+		
+			readSendData(process.argv[2]);
+			return true;
+		};`);
     };
     disableButtonConfig = () => {
         allConfigInputs.forEach((input) => {
@@ -282,16 +298,17 @@ exports.handler = async (event, context) => {
                 access_key,
                 secret_key,
                 bucket_name,
+                iam_role_arn_event,
+                iam_role_arn,
                 region,
-                range_time,
-                shipping_token,
             } = e.target;
 
             if (
                 access_key.value === '' ||
                 secret_key.value === '' ||
-                shipping_token.value === '' ||
                 bucket_name.value === '' ||
+                iam_role_arn.value === '' ||
+                iam_role_arn_event.value === '' ||
                 region.value === ''
             ) {
                 startTestButton.disabled = true;
@@ -300,8 +317,29 @@ exports.handler = async (event, context) => {
                 this.awsBucketName = bucket_name.value;
                 this.awsSecretKey = secret_key.value;
                 this.region = region.value;
-                this.range_time = range_time;
-                this.shipping_token = shipping_token;
+                this.iamRoleArn = iam_role_arn.value;
+                this.iamRoleArnEvent = iam_role_arn_event.value;
+
+                startTestButton.disabled = false;
+            }
+        });
+    };
+    generalFormHandler = () => {
+        generalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const { name, description, range_time, shipping_token } = e.target;
+
+            if (
+                name.value === '' ||
+                description.value === '' ||
+                shipping_token.value === ''
+            ) {
+                startTestButton.disabled = true;
+            } else {
+                this.name = name.value;
+                this.description = description.value;
+                this.rangeTime = range_time.value;
+                this.shippingToken = shipping_token.value;
                 startTestButton.disabled = false;
             }
         });
@@ -311,13 +349,13 @@ exports.handler = async (event, context) => {
         this.tabLogic();
         this.testLocal();
         this.configFormHandle();
+        this.generalFormHandler();
         this.setDefault();
     };
     testLocal = async () => {
         document
             .querySelector('.test-locally')
             .addEventListener('click', async (e) => {
-                
                 const responseModify = await this.customFetch(
                     { code: editor.getValue() },
                     settings.endPointUrls.modifyFileLocalUrl,
@@ -325,6 +363,7 @@ exports.handler = async (event, context) => {
                 //TODO: handle
             });
     };
+    validationFields = () => {};
 }
 
 const pageBuilder = new PageBuilder();

@@ -1,0 +1,33 @@
+.icon-tooltip {
+    background: #BCC6D4;
+    font-size: 12px;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    color: #25272c;
+	margin-left: 5px;
+}
+.tooltip-text {
+    display: none;
+	background: #fff;
+    color: #25272c;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    top: -5px;
+	box-shadow:0px 6px 19px rgb(79 118 178 / 14%);
+	left: 25px;
+}
+.tooltip{
+	max-width: 300px;
+    width: 100%;
+	position: relative;
+}
+
+.tooltip:hover .tooltip-text {
+    display: block;
+	z-index: 10000;
+}

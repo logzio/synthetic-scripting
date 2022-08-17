@@ -31,12 +31,16 @@
 			<div class="container">
 				<div class="row">
 					<div class="tab-control">
-						<div class="tab-control-item active" isTab="code">
-							<p>Code Editor</p>
-						</div>
 
-						<div class="tab-control-item" isTab="config">
-							<p>Config Editor</p>
+
+						<div class="tab-control-item active" isTab="general">
+							<p>General Settings</p>
+						</div>
+						<div class="tab-control-item" isTab="aws">
+							<p>AWS Settings</p>
+						</div>
+						<div class="tab-control-item " isTab="code">
+							<p>Code Editor</p>
 						</div>
 					</div>
 				</div>
@@ -44,22 +48,12 @@
 			<div class="container">
 				<div class="row">
 					<div class="tab">
-						<div class="tab-body-item active" isTabBody="code">
+						<div class="tab-body-item " isTabBody="code">
 							<div class="row">
 								<div class="form-side">
 									<form class="form-element" id="generalForm">
-										<div class="form-control">
-											<label class="form_label" for="">Test URL</label>
-											<input class="form_input" name="test_url" id="test_url" type="text" />
-										</div>
-										<div class="form-control">
-											<label class="form_label" for="">Name of the Lambda</label>
-											<input class="form_input" name="name" id="name" type="text" />
-										</div>
-										<div class="form-control">
-											<label class="form_label" for="">Description</label>
-											<input class="form_input" name="description" id="description" type="text" name="" id="" />
-										</div>
+
+
 										<div class="form-editor">
 											<div id="editor"></div>
 										</div>
@@ -69,37 +63,120 @@
 								<div class="info-side"></div>
 							</div>
 						</div>
-						<div class="tab-body-item" isTabBody="config">
+						<div class="tab-body-item" isTabBody="aws">
 							<div class="row">
 								<div class="config-settings">
 									<h2 class="title-h2-white">Config for AWS</h2>
 									<form action="" class="config-form">
 										<div class="form-control">
-											<label class="form_label" for="">Aws Access Key</label>
+											<label class="form_label" for="">Aws Access Key <div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">Your AWS
+														access key ID.</span>
+												</div></label>
 											<input class="form_input" type="text" name="access_key" id="access_key" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Aws Secret Key</label>
+											<label class="form_label" for="">Aws Secret Key <div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">Your AWS
+														secret key ID.</span>
+												</div> </label>
 											<input class="form_input" type="text" name="secret_key" id="secret_key" />
 										</div>
+
 										<div class="form-control">
-											<label class="form_label" for="">Bucket Name</label>
+											<label class="form_label" for="">Bucket Name
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">The
+														bucket
+														name
+														to which the PUT action was initiated.
+														<br />
+														When using this action with an access point, you must direct
+														requests to the access point hostname. The access point hostname
+														takes the form
+														AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com.
+														When
+														using this action with an access point through the Amazon Web
+														Services SDKs, you provide the access point ARN in place of the
+														bucket name. For more information about access point ARNs, see
+														Using
+														access points in the Amazon S3 User Guide.</span>
+												</div>
+
+											</label>
 											<input class="form_input" type="text" name="bucket_name" id="bucket_name" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Aws Region</label>
+											<label class="form_label" for="">Aws Region
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">Your
+														region
+														to send
+														service requests to.</span>
+												</div>
+
+											</label>
 											<input class="form_input" type="text" name="region" id="region" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Aws AccountId</label>
+											<label class="form_label" for="">Aws AccountId
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">AWS
+														account ID.</span>
+												</div>
+
+											</label>
 											<input class="form_input" type="text" name="account_id" id="account_id" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Logz.io shipping Token</label>
-											<input class="form_input" type="text" name="shipping_token" id="shipping_token" />
+											<label class="form_label" for="">AWS IAM Role Lambda Create
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text"> The
+														Amazon
+														Resource
+														Name (ARN) of the function's execution role.
+													</span>
+												</div>
+
+											</label>
+											<input class="form_input" type="text" name="iam_role_arn"
+												id="iam_role_arn" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Range time for send data to the logs</label>
+											<label class="form_label" for="">AWS IAM Role Event Put </label>
+											<input class="form_input" type="text" name="iam_role_arn_event"
+												id="iam_role_arn_event" />
+										</div>
+										<div class="button-control">
+											<button class="submission" type="submit">
+												Accept Configs
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="tab-body-item active" isTabBody="general">
+							<div class="row">
+								<div class="config-settings">
+									<h2 class="title-h2-white">General Config</h2>
+									<form action="" class="general-form">
+										<div class="form-control">
+											<label class="form_label" for="">Name of the Lambda</label>
+											<input class="form_input" name="name" id="name" type="text" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="">Description</label>
+											<input class="form_input" name="description" id="description" type="text" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="">Logz.io shipping Token</label>
+											<input class="form_input" type="text" name="shipping_token"
+												id="shipping_token" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="">Range time for send data to the
+												logs</label>
 											<select class="select-control" name="range_time" id="range_time">
 												<option default value="1">1 minute</option>
 												<option value="2">2 minutes</option>

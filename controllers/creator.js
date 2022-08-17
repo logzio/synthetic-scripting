@@ -46,8 +46,7 @@ exports.createZip = async (req, res, next) => {
 };
 
 exports.uploadZipToS3 = async (req, res, next) => {
-    //
-    const { access_key, secret_key, bucket_name } = req.body;
+    const { accessKey, secretKey, bucketName } = req.body;
     const fileRoute = path.join(__dirname, '..', NAME_OF_ZIP_FILE);
 
     try {
@@ -57,9 +56,9 @@ exports.uploadZipToS3 = async (req, res, next) => {
             result = await uploadFileOnS3(
                 NAME_OF_ZIP_FILE,
                 readData,
-                access_key,
-                secret_key,
-                bucket_name,
+                accessKey,
+                secretKey,
+                bucketName,
             );
         } else {
             throw Error('Failed to upload data');
@@ -75,17 +74,28 @@ exports.uploadZipToS3 = async (req, res, next) => {
 };
 
 exports.createLambda = async (req, res, next) => {
-    // process.env.IAM_ROLE_ARN
-    // process.env.TOKEN
-    // process.env.BUCKET_NAME
-    // process.env.ACCESS_KEY,
-    // process.env.SECRET_KEY,
-    // REGION
-
-    const { name, description } = req.body;
+    const {
+        name,
+        description,
+        token,
+        bucketName,
+        accessKey,
+        secretKey,
+        iamRoleArn,
+        region,
+    } = req.body;
 
     try {
-        const lambdaResp = await createLambda(name, description);
+        const lambdaResp = await createLambda(
+            name,
+            description,
+            token,
+            bucketName,
+            accessKey,
+            secretKey,
+            iamRoleArn,
+            region,
+        );
         if (lambdaResp.error) {
             throw Error(lambdaResp.err);
         }
@@ -98,11 +108,10 @@ exports.createLambda = async (req, res, next) => {
 };
 
 exports.addEventBridge = async (req, res, next) => {
-    const { name, range_time } = req.body;
+    const { name, range_time, iamRoleArnEvent } = req.body;
 
     try {
-        const resp = await cloudWatchEvent(name, range_time);
-        console.log('line105,', resp);
+        const resp = await cloudWatchEvent(name, range_time, iamRoleArnEvent);
         if (resp.error) {
             throw Error(resp.err);
         }
@@ -111,20 +120,18 @@ exports.addEventBridge = async (req, res, next) => {
             res.send({ error: false, message: 'Lambda was created' });
         }
     } catch (err) {
-        console.log('line,114', err);
         res.status(400).send({ error: true, errorData: err });
     }
 };
 
 exports.modifyFileLocally = async (req, res, next) => {
-    const { code } = req.body;
+    const { code, token } = req.body;
 
     try {
         const resp = await updateFileLocal(code);
         if (resp) {
             res.statusCode = 200;
-            shell.exec('node ./service/lambdaFunctionLocal/index.js');
-
+            shell.exec(`node ./service/lambdaFunctionLocal/index.js ${token}`);
             res.send({ error: false, message: 'File was created' });
         }
     } catch (err) {

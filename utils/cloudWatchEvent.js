@@ -3,12 +3,28 @@ const {
     PutTargetsCommand,
 } = require('@aws-sdk/client-eventbridge');
 
-const { cweClient } = require('./cloudWatchEventsClient.js');
 const { addPermissions } = require('./addPermissions');
 const { CLOUDWATCH_EVENT } = require('./constants');
 
-exports.cloudWatchEvent = async (name, range_time) => {
+const { EventBridgeClient } = require('@aws-sdk/client-eventbridge');
 
+exports.cloudWatchEvent = async (
+    name,
+    range_time,
+    region,
+    accessKey,
+    secretKey,
+    iamRoleArnEvent,
+) => {
+    const cweClient = new EventBridgeClient({
+        region,
+        credentials: {
+            // accessKeyId: process.env.ACCESS_KEY,
+            // secretAccessKey: process.env.SECRET_KEY,
+            accessKeyId: accessKey,
+            secretAccessKey: secretKey,
+        },
+    });
     const paramsTarget = {
         Rule: CLOUDWATCH_EVENT,
         Targets: [
@@ -20,7 +36,8 @@ exports.cloudWatchEvent = async (name, range_time) => {
     };
     const paramsRule = {
         Name: CLOUDWATCH_EVENT,
-        RoleArn: process.env.IAM_ROLE_ARN_EVENT, //IAM_ROLE_ARN
+        // RoleArn: process.env.IAM_ROLE_ARN_EVENT, //IAM_ROLE_ARN
+        RoleArn: iamRoleArnEvent,
         ScheduleExpression: `rate(${range_time} minute${
             parseInt(range_time) === 1 ? '' : 's'
         })`,
@@ -37,7 +54,7 @@ exports.cloudWatchEvent = async (name, range_time) => {
 
         const data = await cweClient.send(new PutTargetsCommand(paramsTarget));
 
-        return { data, dataRule, dataPermissions }; 
+        return { data, dataRule, dataPermissions };
     } catch (err) {
         return err;
     }

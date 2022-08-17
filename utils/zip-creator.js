@@ -1,12 +1,10 @@
 const fs = require('fs');
-const shell = require('shelljs');
 const archiver = require('archiver');
 const path = require('path');
 const { NAME_OF_ZIP_FILE } = require('./constants');
 
 const outPath = path.join(__dirname, '..', NAME_OF_ZIP_FILE);
 const sourceDir = path.join(__dirname, '..', 'service', 'lambdaFunction');
-
 
 exports.fileToZip = async () => {
     try {
