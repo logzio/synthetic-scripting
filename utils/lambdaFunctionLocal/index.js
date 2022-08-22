@@ -1,58 +1,54 @@
 const playwright = require('playwright-aws-lambda');
 
-const readSendData = require('./rsData');
+	const readSendData = require('./rsData');
+	
+	const handler = async () => {
+		let context = null;
+		let err = null;
+		let page = null;
+		try {
+			browser = await playwright.launchChromium(false);
+			context = await browser.newContext({
+				recordHar: {
+					path: './capture-hars/example.har',
+					mode: 'full',
+					content: 'omit',
+				},
+			});
+			page = await context.newPage();
+	
 
-const handler = async () => {
-    let context = null;
-    let page = null;
-    try {
-        browser = await playwright.launchChromium(false);
-        context = await browser.newContext({
-            recordHar: {
-                path: './capture-hars/example.har',
-                mode: 'full',
-                content: 'omit',
-            },
+        page.goto('https://app.logz.io/#/login').then(() => {
+            return;
         });
 
-        page = await context.newPage();
+        await page.type('[name="email"]', 'test@testlogz.io');
+        await page.type('[name="password"]', 'qwertyuio');
+        await page.click('button[type="submit"]');
+        await page.waitForTimeout(10000);
 
-        const navPromise = page.waitForNavigation();
+        await page.waitForSelector('.overlay > .logzio-icon-close-round ');
+        await page.click('.overlay > .logzio-icon-close-round');
+        const messageLog = await page.innerText('truncate-by-height');
 
-        await page.goto('https://logz.io/');
+        if (!messageLog) {
+            throw new Error('first log didn`t upload');
+        }
 
-        await page.setViewportSize({ width: 1850, height: 877 });
-
-        await page.waitForSelector(
-            '.home > .body_wrapper > .cta_bottom_section',
-        );
-        await page.click('.home > .body_wrapper > .cta_bottom_section', {
-            button: 'middle',
+        const execudedScript = await page.addInitScript({
+            script: 'return 1+1',
         });
 
-        await page.waitForSelector(
-            '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(2) > .navigation-link',
-        );
-        await page.waitForTimeout(1000);
-        await page.click(
-            '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(2) > .navigation-link',
-            { button: 'middle' },
-        );
-        await page.waitForSelector(
-            '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(3) > .navigation-link',
-        );
-        await page.waitForTimeout(1000);
-        await page.click(
-            '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(4) > .navigation-link',
-            { button: 'middle' },
-        );
-        await page.waitForSelector(
-            '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(3) > .navigation-link',
-        );
-        await page.waitForTimeout(1000);
+        if (execudedScript != 2) {
+            throw new Error('script not launched');
+        }
+
+        await page.waitForTimeout(10000);
+
+        
     } catch (error) {
-        console.log(error);
-        throw error;
+		console.log('is here?', error);
+		err= error.message;
     } finally {
         if (browser) {
             await context.close();
@@ -60,7 +56,7 @@ const handler = async () => {
         }
     }
 
-    readSendData(process.argv[2]);
+    readSendData(process.argv[2], err, process.argv[3]);
     return true;
 };
 handler();

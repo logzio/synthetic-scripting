@@ -1,13 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const { startFile, endFile } = require('../helper/index-config');
+const { IDENTIFIER } = require('./constants');
 const readWriteAsync = async (code, filePath) => {
     try {
         const fileStarts = startFile.split('\n');
-
+        const IDENTIFIER_CODE = `///////////////////////////////////
+		`;
         const fileEnds = endFile.split('\n');
-
-        const newValue = fileStarts.concat(code.split('\n'));
+        const extractCode = code.split(IDENTIFIER_CODE);
+        const newValue = fileStarts.concat(extractCode[1].split('\n'));
         const resultToWrite = newValue.concat(fileEnds).join('\n');
         return new Promise((resolve, reject) => {
             fs.writeFile(filePath, resultToWrite, 'utf-8', function (err) {

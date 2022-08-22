@@ -2,8 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const convertHarToJSON = require('./convertHarToJSON');
 const loggerGenerator = require('./logger');
+const errorStatusHandler = require('./statusError');
+const createSessionId = require('./sessionId');
 
-const readSendData = (token) => {
+const readSendData = (token, error = '', name) => {
+    const sessionId = createSessionId();
+    const status = errorStatusHandler(error);
     const logger = loggerGenerator(token);
     const harsInDir = fs.readdirSync('./capture-hars');
 
@@ -11,13 +15,24 @@ const readSendData = (token) => {
         harsInDir.forEach((file) => {
             const fileData = fs.readFileSync(path.join('./capture-hars', file));
             const json = JSON.parse(fileData.toString());
+            const firstEnterence = json.log.entries[0].request.url;
             const parsedData = convertHarToJSON(json);
             parsedData.result.forEach((log) => {
-                logger.log(log);
+                logger.log({
+                    ...log,
+                    statusTest: status,
+                    statusResult: error ? 1 : 0,
+
+                    sessionId,
+                    firstEnterence,
+                    nameTest: name,
+                });
             });
         });
+        return true;
     } catch (err) {
         console.log(err);
+        return err;
     }
 };
 

@@ -1,5 +1,5 @@
 module.exports = {
-    startFileLocally: `const playwright = require('playwright-aws-lambda');
+    startFile: `const playwright = require('playwright-aws-lambda');
 
 	const readSendData = require('./rsData');
 
@@ -25,7 +25,6 @@ module.exports = {
 	readSendData();
 
 } catch (error) {
-		console.log(error);
 		throw error;
 	} finally {
 		if (browser) {
@@ -56,7 +55,6 @@ module.exports = {
 			page = await context.newPage();
 	`,
     endFileLocally: `    } catch (error) {
-        console.log(error);
         throw error;
     } finally {
         if (browser) {
