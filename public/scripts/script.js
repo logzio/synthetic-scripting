@@ -44,7 +44,11 @@ const inputLambdaDescription = document.querySelector('#description');
 const allTabs = document.querySelectorAll('.tab-control-item');
 const configForm = document.querySelector('.config-form');
 const allConfigInputs = document.querySelectorAll('.config-form input');
-
+const wrapperEnvVariables = document.querySelector(
+    '.env-variables-controls-list',
+);
+const buttonAddEnvVariable = document.querySelector('.button-add');
+const formEnvVariable = document.querySelector('.env_variables');
 const generalForm = document.querySelector('.general-form');
 const allGeneralInputs = document.querySelectorAll('.general-form input');
 
@@ -56,13 +60,29 @@ class PageBuilder {
         this.awsSecretKey = null;
         this.awsBucketName = null;
         this.shippingToken = null;
+        this.awsAccountId = null;
         this.awsRegion = null;
         this.createNewOne = null;
         this.iamRoleArn = null;
         this.iamRoleArnEvent = null;
         this.rangeTime = 1;
-        this.name_lambda = null;
-        this.description_lambda = null;
+        this.nameLambda = null;
+        this.descriptionLambda = null;
+        this.envVariableCounter = 1;
+        this._listOfEnvVariables = [];
+        this._listOfFields = {
+            access_key: 'awsAccessKey',
+            name: 'nameLambda',
+            description: 'descriptionLambda',
+            secret_key: 'awsSecretKey',
+            bucket_name: 'awsBucketName',
+            region: 'awsRegion',
+            account_id: 'awsAccountId',
+            iam_role_arn: 'iamRoleArn',
+            iam_role_arn_event: 'iamRoleArnEvent',
+            shipping_token: 'shippingToken',
+            range_time: 'rangeTime',
+        };
     }
     customFetch = async (bodyToSend, url) => {
         return await fetch(`http://localhost:8080${url}`, {
@@ -156,14 +176,13 @@ class PageBuilder {
                         notificationZipCreate,
                         'Function Created',
                     );
-                    return false;
                 } else {
                     this.errorDisplay(responseModify.errorData);
                     this.displayFailedStatus(notificationFileModify);
                     return false;
                 }
                 const responseToZip = await this.customFetch(
-                    { message: 'success' },
+                    { name: this.nameLambda },
                     settings.endPointUrls.createZipUrl,
                 );
                 if (!responseToZip.error) {
@@ -183,6 +202,7 @@ class PageBuilder {
                         accessKey: this.awsAccessKey,
                         secretKey: this.awsSecretKey,
                         bucketName: this.awsBucketName,
+                        name: this.nameLambda,
                     },
                     settings.endPointUrls.uploadZipUrl,
                 );
@@ -194,14 +214,15 @@ class PageBuilder {
                     );
                     const response = await this.customFetch(
                         {
-                            name: this.name,
-                            description: this.description,
+                            name: this.nameLambda,
+                            description: this.descriptionLambda,
                             accessKey: this.awsAccessKey,
                             secretKey: this.awsSecretKey,
                             bucketName: this.awsBucketName,
                             token: this.shippingToken,
                             iamRoleArn: this.iamRoleArn,
-                            region: this.region,
+                            region: this.awsRegion,
+                            listEnvVariables: this._listOfEnvVariables,
                         },
                         settings.endPointUrls.createLambdaUrl,
                     );
@@ -224,9 +245,13 @@ class PageBuilder {
                 }
                 const cloudBridgeEventResp = await this.customFetch(
                     {
-                        name: this.name,
+                        name: this.nameLambda,
                         rangeTime: this.rangeTime,
                         iamRoleArnEvent: this.iamRoleArnEvent,
+                        accessKey: this.awsAccessKey,
+                        secretKey: this.awsSecretKey,
+                        region: this.awsRegion,
+                        accountId: this.awsAccountId,
                     },
                     settings.endPointUrls.addEventBridgeUrl,
                 );
@@ -260,13 +285,13 @@ const handler = async () => {
 		},
     });
 	const page = await context.newPage();
-				//////////////////////////////////
-				//// add your code from here ////
-				///////////////////////////////////
+	//////////////////////////////////
+	//// add your code from here ////
+	///////////////////////////////////
 					
-				///////////////////////////////////
-				//// add your code to here ////
-				//////////////////////////////////
+	///////////////////////////////////
+	//// add your code to here ////
+	//////////////////////////////////
 				
 	} catch (error) {
 		throw error;
@@ -315,7 +340,7 @@ const handler = async () => {
                 this.awsAccessKey = access_key.value;
                 this.awsBucketName = bucket_name.value;
                 this.awsSecretKey = secret_key.value;
-                this.region = region.value;
+                this.awsRegion = region.value;
                 this.iamRoleArn = iam_role_arn.value;
                 this.iamRoleArnEvent = iam_role_arn_event.value;
 
@@ -335,8 +360,8 @@ const handler = async () => {
             ) {
                 startTestButton.disabled = true;
             } else {
-                this.name = name.value;
-                this.description = description.value;
+                this.nameLambda = name.value;
+                this.descriptionLambda = description.value;
                 this.rangeTime = range_time.value;
                 this.shippingToken = shipping_token.value;
                 startTestButton.disabled = false;
@@ -345,6 +370,9 @@ const handler = async () => {
     };
     init = () => {
         this.initPage();
+        this.submitEnvVariables();
+        this.envVariablesAddButton();
+        this.onInputUpdate();
         this.tabLogic();
         this.testLocal();
         this.configFormHandle();
@@ -356,13 +384,109 @@ const handler = async () => {
             .querySelector('.test-locally')
             .addEventListener('click', async (e) => {
                 const responseModify = await this.customFetch(
-                    { code: editor.getValue() },
+                    {
+                        code: editor.getValue(),
+                        token: document.querySelector('#shipping_token').value,
+                    },
                     settings.endPointUrls.modifyFileLocalUrl,
                 );
                 //TODO: handle
             });
     };
+    onInputUpdate = () => {
+        const keysArr = Object.keys(this._listOfFields);
+        keysArr.forEach((key) => {
+            document
+                .querySelector(`[name='${key}']`)
+                .addEventListener('input', (e) => {
+                    this[this._listOfFields[key]] = e.target.value;
+                });
+        });
+    };
     validationFields = () => {};
+
+    createEnvVariable = (id) => {
+        const buttonAdd = document.createElement('div');
+        buttonAdd.classList.add('button-add');
+        buttonAdd.addEventListener('click', this.buttonAddClickHandler);
+        buttonAdd.setAttribute('envVariable', id);
+        const iconDiv = document.createElement('div');
+        iconDiv.classList.add('icon_plus');
+        const iconEl = document.createElement('p');
+        iconEl.classList.add('icon-content');
+        iconEl.textContent = '+';
+        iconDiv.appendChild(iconEl);
+        buttonAdd.appendChild(iconDiv);
+        const divFormControlVarialbe = document.createElement('div');
+        divFormControlVarialbe.classList.add('form-control-variable');
+        const divControlKey = this.createInputField(
+            id,
+            'form-control-key',
+            'Key',
+        );
+        const divControlValue = this.createInputField(
+            id,
+            'form-control-value',
+            'Value',
+        );
+
+        divFormControlVarialbe.appendChild(divControlKey);
+        divFormControlVarialbe.appendChild(divControlValue);
+        divFormControlVarialbe.appendChild(buttonAdd);
+
+        wrapperEnvVariables.appendChild(divFormControlVarialbe);
+    };
+    createInputField = (id, classWrapper, labelContent) => {
+        const divWrapper = document.createElement('div');
+
+        divWrapper.classList.add(classWrapper);
+        const labelControl = document.createElement('label');
+        labelControl.textContent = labelContent;
+        labelControl.classList.add('form_label_variable');
+
+        const inputControl = document.createElement('input');
+        inputControl.setAttribute('id', `${labelContent.toLowerCase()}_${id}`);
+        inputControl.setAttribute(
+            'name',
+            `${labelContent.toLowerCase()}_${id}`,
+        );
+        inputControl.classList.add('form_input_variable');
+
+        divWrapper.appendChild(labelControl);
+        divWrapper.appendChild(inputControl);
+        return divWrapper;
+    };
+    buttonAddClickHandler = (e) => {
+        const inputEnvKey = document.querySelector(
+            `[name='key_${this.envVariableCounter}']`,
+        ).value;
+        const inputEnvValue = document.querySelector(
+            `[name='value_${this.envVariableCounter}']`,
+        ).value;
+        if (inputEnvKey === '') {
+            this.errorDisplay('Please fill input Key');
+            return;
+        }
+        if (inputEnvValue === '') {
+            this.errorDisplay('Please fill input Value');
+            return;
+        }
+        this._listOfEnvVariables.push({
+            [inputEnvKey]: inputEnvValue,
+        });
+        this.envVariableCounter = this.envVariableCounter + 1;
+        this.createEnvVariable(this.envVariableCounter);
+    };
+    envVariablesAddButton = () => {
+        document
+            .querySelector('.button-add')
+            .addEventListener('click', this.buttonAddClickHandler);
+    };
+    submitEnvVariables = () => {
+        formEnvVariable.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
+    };
 }
 
 const pageBuilder = new PageBuilder();

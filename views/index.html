@@ -39,6 +39,9 @@
 						<div class="tab-control-item" isTab="aws">
 							<p>AWS Settings</p>
 						</div>
+						<div class="tab-control-item" isTab="env-variables">
+							<p>Enviromnent Variables</p>
+						</div>
 						<div class="tab-control-item " isTab="code">
 							<p>Code Editor</p>
 						</div>
@@ -48,6 +51,43 @@
 			<div class="container">
 				<div class="row">
 					<div class="tab">
+						<div class="tab-body-item" isTabBody="env-variables">
+							<div class="row">
+								<div class="wrapper-env">
+									<div class="env-variables">
+										<h2 class="title-h2-white">Add env Variables</h2>
+
+										<p class="description-env"> Fields working only for function what deployed to
+											the cloud</p>
+									</div>
+									<form action="" class="env_variables">
+										<div class="env-variables-controls-list">
+											<div class="form-control-variable">
+												<div class="form-control-key">
+													<label class="form_label_variable" for="">Key</label>
+													<input class="form_input_variable" type="text" name="key_1"
+														id="key_1">
+												</div>
+												<div class="form-control-value">
+													<label class="form_label_variable" for="">Value</label>
+													<input class="form_input_variable" type="text" name="value_1"
+														id="value_1">
+												</div>
+												<div class="button-add" envVariable="1">
+													<div class="icon_plus">
+														<p class="icon-content">
+															+
+														</p>
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<button class="submission" type="submit">Set env variables</button>
+									</form>
+								</div>
+							</div>
+						</div>
 						<div class="tab-body-item " isTabBody="code">
 							<div class="row">
 								<div class="form-side">

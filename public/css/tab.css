@@ -12,14 +12,6 @@
     display: flex;
 }
 
-.submission {
-    background: #F7C15C;
-    border: 0px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-top: 15px;
-}
-
 .tab-control-item.active {
     border: 1px solid #3d506d;
     background: #3d506d;
@@ -40,7 +32,7 @@
     margin: 0;
     text-align: center;
     color: #fff;
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-size: 12px;
     font-weight: bold;
     font-weight: 400;
@@ -60,4 +52,10 @@
 
 .tab-control-item {
     display: flex;
+}
+
+.wrapper-env {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }

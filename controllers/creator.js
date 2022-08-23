@@ -8,7 +8,7 @@ const { updateFile } = require('../utils/update-function');
 const { updateFileLocal } = require('../utils/update-function-local');
 const { createLambda } = require('../utils/lambda-creator');
 const { cloudWatchEvent } = require('../utils/cloudWatchEvent');
-const { NAME_OF_ZIP_FILE } = require('../utils/constants');
+// const { NAME_OF_ZIP_FILE } = require('../utils/constants');
 
 exports.modifyFile = async (req, res, next) => {
     const { code } = req.body;
@@ -26,9 +26,12 @@ exports.modifyFile = async (req, res, next) => {
 };
 
 exports.createZip = async (req, res, next) => {
+    const { name } = req.body;
+
     try {
-        const resp = await fileToZip()
+        const resp = await fileToZip(name)
             .then((result) => {
+                console.log(result);
                 return result;
             })
             .catch((err) => {
@@ -46,15 +49,16 @@ exports.createZip = async (req, res, next) => {
 };
 
 exports.uploadZipToS3 = async (req, res, next) => {
-    const { accessKey, secretKey, bucketName } = req.body;
-    const fileRoute = path.join(__dirname, '..', NAME_OF_ZIP_FILE);
-
+    const { accessKey, secretKey, bucketName, name } = req.body;
+    const nameZip =
+        name.split(' ').length > 0 ? name.split(' ').join('-') : name;
+    const fileRoute = path.join(__dirname, '..', `${nameZip}.zip`);
     try {
         const readData = fs.readFileSync(fileRoute);
         let result;
         if (readData) {
             result = await uploadFileOnS3(
-                NAME_OF_ZIP_FILE,
+                `${nameZip}.zip`,
                 readData,
                 accessKey,
                 secretKey,
@@ -83,8 +87,8 @@ exports.createLambda = async (req, res, next) => {
         secretKey,
         iamRoleArn,
         region,
+        listEnvVariables,
     } = req.body;
-
     try {
         const lambdaResp = await createLambda(
             name,
@@ -95,6 +99,7 @@ exports.createLambda = async (req, res, next) => {
             secretKey,
             iamRoleArn,
             region,
+            listEnvVariables,
         );
         if (lambdaResp.error) {
             throw Error(lambdaResp.err);
@@ -108,10 +113,26 @@ exports.createLambda = async (req, res, next) => {
 };
 
 exports.addEventBridge = async (req, res, next) => {
-    const { name, range_time, iamRoleArnEvent } = req.body;
+    const {
+        name,
+        rangeTime,
+        iamRoleArnEvent,
+        region,
+        accessKey,
+        secretKey,
+        accountId,
+    } = req.body;
 
     try {
-        const resp = await cloudWatchEvent(name, range_time, iamRoleArnEvent);
+        const resp = await cloudWatchEvent(
+            name,
+            rangeTime,
+            region,
+            accessKey,
+            secretKey,
+            iamRoleArnEvent,
+            accountId,
+        );
         if (resp.error) {
             throw Error(resp.err);
         }
@@ -125,13 +146,16 @@ exports.addEventBridge = async (req, res, next) => {
 };
 
 exports.modifyFileLocally = async (req, res, next) => {
-    const { code, token } = req.body;
+    const { code, token, name } = req.body;
 
     try {
         const resp = await updateFileLocal(code);
         if (resp) {
+            console.log(resp);
             res.statusCode = 200;
-            shell.exec(`node ./service/lambdaFunctionLocal/index.js ${token}`);
+            shell.exec(
+                `node ./utils/lambdaFunctionLocal/index.js ${token} ${name}`,
+            );
             res.send({ error: false, message: 'File was created' });
         }
     } catch (err) {

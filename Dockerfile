@@ -10,6 +10,12 @@ COPY ./package.json ./
 RUN npm install
 COPY ./ ./
 
+WORKDIR /usr/app/service/lambdaFunction
+
+RUN npm install
+
+WORKDIR /usr/app
+
 #Default command
 EXPOSE 8080
 

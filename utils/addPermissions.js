@@ -1,14 +1,20 @@
 const AWS = require('aws-sdk');
 const { CLOUDWATCH_EVENT } = require('./constants');
 
-exports.addPermissions = async (name) => {
+exports.addPermissions = async (
+    name,
+    accessKey,
+    secretKey,
+    region,
+    accountId,
+) => {
     try {
         AWS.config.update({
-            accessKeyId: process.env.ACCESS_KEY,
-            secretAccessKey: process.env.SECRET_KEY,
+            accessKeyId: accessKey,
+            secretAccessKey: secretKey,
         });
         const lambda = new AWS.Lambda({
-            region: process.env.REGION,
+            region: region,
         });
         return new Promise((resolve, reject) => {
             var params = {
@@ -16,7 +22,7 @@ exports.addPermissions = async (name) => {
                 FunctionName: name || LAMBDA_FUNCTION_NAME /* required */,
                 Principal: 'events.amazonaws.com' /* required */,
                 StatementId: 'my-scheduled-event' /* required */,
-                SourceArn: `arn:aws:events:${process.env.REGION}:${process.env.ACCOUNT_ID}:rule/${CLOUDWATCH_EVENT}`,
+                SourceArn: `arn:aws:events:${region}:${accountId}:rule/${CLOUDWATCH_EVENT}`,
             };
             lambda.addPermission(params, function (err, data) {
                 if (err) reject({ error: true, err }); // an error occurred

@@ -5,23 +5,22 @@ const { startFileLocally, endFileLocally } = require('../helper/index-config');
 const readWriteAsync = async (code, filePath) => {
     try {
         const fileStarts = startFileLocally.split('\n');
-
+        const IDENTIFIER_CODE = `///////////////////////////////////`;
         const fileEnds = endFileLocally.split('\n');
-
-        const newValue = fileStarts.concat(code.split('\n'));
+        const extractCode = code.split(IDENTIFIER_CODE);
+        console.log(extractCode.length);
+        const newValue = fileStarts.concat(extractCode[1].split('\n'));
         const resultToWrite = newValue.concat(fileEnds).join('\n');
-
         return new Promise((resolve, reject) => {
             fs.writeFile(filePath, resultToWrite, 'utf-8', function (err) {
-                if (err) reject(err);
+                if (err) reject({ error: true, err });
                 resolve({ error: false, message: 'Function created' });
             });
         });
     } catch (err) {
-        console.log(err);
         return {
             error: true,
-            message: err,
+            err,
         };
     }
 };
@@ -34,7 +33,7 @@ exports.updateFileLocal = async (code) => {
     const filePath = path.join(
         __dirname,
         '..',
-        'service',
+        'utils',
         'lambdaFunctionLocal',
         'index.js',
     );

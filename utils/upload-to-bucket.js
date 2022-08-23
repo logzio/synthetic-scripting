@@ -9,12 +9,12 @@ exports.uploadFileOnS3 = async (
 ) => {
     try {
         AWS.config.update({
-            accessKeyId: access_key || process.env.ACCESS_KEY,
-            secretAccessKey: secret_key || process.env.SECRET_KEY,
+            accessKeyId: access_key,
+            secretAccessKey: secret_key,
         });
         const s3bucket = new AWS.S3();
         const params = {
-            Bucket: bucket_name || process.env.BUCKET_NAME,
+            Bucket: bucket_name,
             Key: fileName,
             Body: fileData,
             ContentType: 'application/zip',
