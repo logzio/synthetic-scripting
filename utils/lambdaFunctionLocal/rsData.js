@@ -21,7 +21,7 @@ const readSendData = (token, error = '', name) => {
                 logger.log({
                     ...log,
                     statusTest: status,
-                    statusResult: error ? 1 : 0,
+                    statusResult: error ? 0 : 1,
                     sessionId,
                     firstEnterence,
                     nameTest: name,
