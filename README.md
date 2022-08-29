@@ -12,7 +12,7 @@
 
 Docker image will run a Node.js mini app. Open http://localhost:8080 in your Browser to access the UI that helps you establish connection between your app and Logz.io.
 
-## Define script for running test
+## Define a script for running the test
 
 1. In tab `General Settings`, fill in all the required fields.
 
