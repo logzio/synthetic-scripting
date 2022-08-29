@@ -49,7 +49,7 @@ Here you can define the environment variable that can be attached to your Lambda
 
 ![UI four screen](assets/four-screen.png)
 
-You can define code here for your test using [playwright.dev](https://playwright.dev). But please put your code specific between comments
+Here you can define the code for your test using [playwright.dev](https://playwright.dev). Put your code between the comments.
 
 4. After set all values and define code of test what you want to run.
    You can you can click `Test locally` if everything works you will see metrics from one your test.
