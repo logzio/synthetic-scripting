@@ -14,7 +14,7 @@ Docker image will run a Node.js mini app. Open http://localhost:8080 in your Bro
 
 ## Define script for running test
 
-1. On a First tab `General Settings` you will see Please fill all reqiured fields.
+1. In tab `General Settings`, fill in all the required fields.
 
 ![UI first screen](assets/first-screen.png)
 
