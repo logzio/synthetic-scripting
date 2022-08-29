@@ -21,7 +21,7 @@ Docker image will run a Node.js mini app. Open http://localhost:8080 in your Bro
 | Field                                                    | Description                                                                                                               |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | Name of the Lambda (Required)                            | Lambda function name what will be created. This name will also be used to identify the Lambda function in Logz.io Dashboard |
-| Description (Optional)                                   | Lambda function description what will be create                                                                           |
+| Description (Optional)                                   | Lambda function description                                                                           |
 | Logz.io shipping Token (Required)                        | Your Logz.io logs shipping token.                                                                                       |
 | Time range for sending logs (Default: 1 minute) | Define the range in a minutes to run a Lambda function (using cloudBridge event)                                             |
 
