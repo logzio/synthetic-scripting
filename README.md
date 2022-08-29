@@ -53,7 +53,7 @@ You can define code here for your test using [playwright.dev](https://playwright
 
 4. After set all values and define code of test what you want to run.
    You can you can click `Test locally` if everything works you will see metrics from one your test.
-   For Deploy your lambda function you can click `Deploy to the cloud`. You will see a status of all steps what is running behind. if Everything is good you need to see
+   To deploy the Lambda function, click `Deploy to the cloud`. You will see status of all the steps running in the background. The following message appears when the checks are completed:
 
 ![UI final screen](assets/final.png)
 
