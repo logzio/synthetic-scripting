@@ -10,7 +10,7 @@
 
 `docker run -p 8080:8080 -d --name synthetic-script logzio/synthetic-script:latest`
 
-Docker image will run Node js mini app. Go to http://localhost:8080, on you Browser you will see UI that help you to create Connection between your app and logz.io.
+Docker image will run a Node.js mini app. Open http://localhost:8080 in your Browser to access the UI that helps you establish connection between your app and Logz.io.
 
 ## Define script for running test
 
