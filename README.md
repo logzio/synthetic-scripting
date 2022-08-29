@@ -6,7 +6,7 @@
 
 `docker pull logzio/synthetic-script:latest`
 
-2. Run the docker
+2. Run the Docker container.
 
 `docker run -p 8080:8080 -d --name synthetic-script logzio/synthetic-script:latest`
 
