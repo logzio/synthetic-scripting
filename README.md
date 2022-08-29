@@ -51,7 +51,7 @@ Here you can define the environment variable that can be attached to your Lambda
 
 Here you can define the code for your test using [playwright.dev](https://playwright.dev). Put your code between the comments.
 
-4. After set all values and define code of test what you want to run.
+4. After setting all the values and defining the test code,
    You can you can click `Test locally` if everything works you will see metrics from one your test.
    To deploy the Lambda function, click `Deploy to the cloud`. You will see status of all the steps running in the background. The following message appears when the checks are completed:
 
