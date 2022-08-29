@@ -2,7 +2,7 @@
 
 ## Run Application
 
-1. Pull the Docker image
+1. Pull the Docker image.
 
 `docker pull logzio/synthetic-script:latest`
 
