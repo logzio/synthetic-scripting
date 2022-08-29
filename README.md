@@ -43,7 +43,7 @@ Docker image will run a Node.js mini app. Open http://localhost:8080 in your Bro
 
 ![UI third screen](assets/third-screen.png)
 
-You can define here env variable that can be attach for your lambda function and you can use it in Code Editor as `process.env.KEY` where Key you can define in that section and it will be prepresent inside you lambda function
+Here you can define the environment variable that can be attached to your Lambda function. You can use it in the Code Editor as `process.env.KEY`. You can define the KEY parameter, which will be present in the Lambda function
 
 3. On A Fourth tab `Code Editor` you will see.
 
