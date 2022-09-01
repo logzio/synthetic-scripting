@@ -1,12 +1,12 @@
 const fs = require('fs');
-const path = require('path');
 const convertHarToJSON = require('./convertHarToJSON');
 const loggerGenerator = require('./logger');
 const errorStatusHandler = require('./statusError');
 const createSessionId = require('./sessionId');
+const createResponseStatusClass = require('./responseStatusClass');
 
 const readSendData = (error = '') => {
-    const logger = loggerGenerator(process.env.TOKEN);
+    const logger = loggerGenerator();
     const sessionId = createSessionId();
     const status = errorStatusHandler(error);
     const harsInDir = fs.readdirSync('/tmp');
@@ -27,6 +27,14 @@ const readSendData = (error = '') => {
                         sessionId,
                         firstEnterence,
                         nameTest: process.env.NAME_FUNCTION,
+                        ...(log.responseStatus
+                            ? {
+                                  responseStatusClass:
+                                      createResponseStatusClass(
+                                          log.responseStatus,
+                                      ),
+                              }
+                            : {}),
                     });
                 });
             }

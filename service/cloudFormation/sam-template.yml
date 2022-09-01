@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: "This is an AWS Lambda function that collects metrics for Synthetic Scripting. Lambda uses Playwright to send test results to logz.io metrics dashboard"
+Parameters:
+  LogzioListenerUrl:
+    Type: "String"
+    Description: "The Logz.io listener URL for your region. You can find explanations here: https://docs.logz.io/user-guide/accounts/account-region.html" 
+    Default: ""
+  
+  LogzioToken:
+    Type: "String"
+    Description: "Logz.io account token."
+
+  AWSBucket:
+    Type: "String"
+    Description: "AWS bucket where was uploaded lambdaFunction"
+
+  ZipNameRoute:
+    Type: "String"
+    Description: "Zip route in AWS Bucket what was uploaded before"
+
+  LambdaTestName:
+     Type: "String"
+     Description: "Name of the test what do you want to try to check"
+
+  Timeout:
+     Type: "String"
+     Description: "Schedule timeout for Lambda(ex. rate(1 minute), rate(5 minutes), rate(1 day) etc.)"
+  
+
+Resources:
+  ScheduledLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri:
+        Bucket: !Ref AWSBucket
+        Key: !Ref ZipNameRoute
+      Handler: index.handler
+      Description: Lambda Function to run playwright test
+      FunctionName: !Ref LambdaTestName
+      MemorySize: 512
+      Timeout: 60
+      Events:
+        CronEvent:
+          Type: Schedule
+          Properties:
+            Schedule: !Ref Timeout
+            Name: RateSchedule
+            Description: Trigger Lambda once in a minute
+      Environment:
+        Variables:
+          LISTENER_URL: !Ref LogzioListenerUrl
+          TOKEN: !Ref LogzioToken
+          NAME: !Ref LambdaTestName

@@ -25,8 +25,24 @@
 		</div>
 		<div class="nav"></div>
 	</header>
+	<!-- <div class="controller">
+		<div class="container">
+			<div class="row">
+				<div class="deploy-to-cloud-controller">
+					<button class="deploy-to-cloud-controller-button"> Define lambda function settings </button>
+				</div>
+				<div class="download-cf-controller">
+					<button class="download-cf-controller-button">Define Cloud Formation settings</button>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	<div class="progress-bar">
+		<div class="bar"></div>
+	</div>
 	<main class="main-section">
 		<div class="main-wrapper">
+
 
 			<div class="container">
 				<div class="row">
@@ -64,12 +80,12 @@
 										<div class="env-variables-controls-list">
 											<div class="form-control-variable">
 												<div class="form-control-key">
-													<label class="form_label_variable" for="">Key</label>
+													<label class="form_label_variable">Key</label>
 													<input class="form_input_variable" type="text" name="key_1"
 														id="key_1">
 												</div>
 												<div class="form-control-value">
-													<label class="form_label_variable" for="">Value</label>
+													<label class="form_label_variable">Value</label>
 													<input class="form_input_variable" type="text" name="value_1"
 														id="value_1">
 												</div>
@@ -109,14 +125,16 @@
 									<h2 class="title-h2-white">Config for AWS</h2>
 									<form action="" class="config-form">
 										<div class="form-control">
-											<label class="form_label" for="">Aws Access Key <div class="tooltip">
+											<label class="form_label" for="access_key">Aws Access Key <div
+													class="tooltip">
 													<div class="icon-tooltip">?</div><span class="tooltip-text">Your AWS
 														access key ID.</span>
 												</div></label>
 											<input class="form_input" type="text" name="access_key" id="access_key" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Aws Secret Key <div class="tooltip">
+											<label class="form_label" for="secret_key">Aws Secret Key <div
+													class="tooltip">
 													<div class="icon-tooltip">?</div><span class="tooltip-text">Your AWS
 														secret key ID.</span>
 												</div> </label>
@@ -124,7 +142,7 @@
 										</div>
 
 										<div class="form-control">
-											<label class="form_label" for="">Bucket Name
+											<label class="form_label" for="bucket_name">Bucket Name
 												<div class="tooltip">
 													<div class="icon-tooltip">?</div><span class="tooltip-text">The
 														bucket
@@ -147,7 +165,7 @@
 											<input class="form_input" type="text" name="bucket_name" id="bucket_name" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Aws Region
+											<label class="form_label" for="region">Aws Region
 												<div class="tooltip">
 													<div class="icon-tooltip">?</div><span class="tooltip-text">Your
 														region
@@ -158,8 +176,8 @@
 											</label>
 											<input class="form_input" type="text" name="region" id="region" />
 										</div>
-										<div class="form-control">
-											<label class="form_label" for="">Aws AccountId
+										<!-- <div class="form-control">
+											<label class="form_label" for="account_id">Aws AccountId
 												<div class="tooltip">
 													<div class="icon-tooltip">?</div><span class="tooltip-text">AWS
 														account ID.</span>
@@ -167,9 +185,9 @@
 
 											</label>
 											<input class="form_input" type="text" name="account_id" id="account_id" />
-										</div>
-										<div class="form-control">
-											<label class="form_label" for="">AWS IAM Role Lambda Create
+										</div> -->
+										<!-- <div class="form-control">
+											<label class="form_label" for="iam_role_arn">AWS IAM Role Lambda Create
 												<div class="tooltip">
 													<div class="icon-tooltip">?</div><span class="tooltip-text"> The
 														Amazon
@@ -183,10 +201,11 @@
 												id="iam_role_arn" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">AWS IAM Role Event Put </label>
+											<label class="form_label" for="iam_role_arn_event">AWS IAM Role Event Put
+											</label>
 											<input class="form_input" type="text" name="iam_role_arn_event"
 												id="iam_role_arn_event" />
-										</div>
+										</div> -->
 										<div class="button-control">
 											<button class="submission" type="submit">
 												Accept Configs
@@ -202,20 +221,26 @@
 									<h2 class="title-h2-white">General Config</h2>
 									<form action="" class="general-form">
 										<div class="form-control">
-											<label class="form_label" for="">Name of the Lambda</label>
+											<label class="form_label" for="name">Name of the Lambda</label>
 											<input class="form_input" name="name" id="name" type="text" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Description</label>
+											<label class="form_label" for="description">Description</label>
 											<input class="form_input" name="description" id="description" type="text" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Logz.io shipping Token</label>
+											<label class="form_label" for="shipping_token">Logz.io shipping
+												Token</label>
 											<input class="form_input" type="text" name="shipping_token"
 												id="shipping_token" />
 										</div>
 										<div class="form-control">
-											<label class="form_label" for="">Range time for send data to the
+											<label class="form_label" for="listener_url">Logz.io Listener Url</label>
+											<input class="form_input" type="text" name="listener_url"
+												id="listener_url" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="range_time">Range time for send data to the
 												logs</label>
 											<select class="select-control" name="range_time" id="range_time">
 												<option default value="1">1 minute</option>
@@ -243,12 +268,13 @@
 			<div class="start-test">
 				<div class="button-control">
 
-					<button class="submission submission-test">
+					<button disabled class="submission submission-test">
 						Deploy to the cloud
 					</button>
-					<button class="submission test-locally">
+					<button disabled class="submission test-locally">
 						Test Locally
 					</button>
+					<button class="download-template">Donwload CloudFormation Template</button>
 					<div class="link-har hidden">
 						<a href="/public/output/local.har" target="_blank">Download Created Har file</a>
 					</div>
@@ -556,40 +582,12 @@
 	<div class="errorStatus">
 		<p class="errorMessage"></p>
 	</div>
-	<div class="backtrop">
-		<div class="loadingio-spinner-spin-r97nm33plq8">
-			<div class="ldio-kugicms7vi">
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-				</div>
-			</div>
-		</div>
+	<div class="notification-container">
+
 	</div>
 	<footer class="footer"></footer>
 </body>
 <script src="/scripts/src-min-noconflict/ace.js" charset="utf-8"></script>
-<!-- <script src="/scripts/ace-master/src/ace.js" charset="utf-8"></script> -->
 <script src="/scripts/src-min-noconflict/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="/scripts/src-min-noconflict/ext-language_tools.js"></script>

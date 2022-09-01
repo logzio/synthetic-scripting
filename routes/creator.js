@@ -16,4 +16,6 @@ router.post('/add-eventbridge', creatorController.addEventBridge);
 
 router.post('/modify-file-local', creatorController.modifyFileLocally);
 
+router.post('/create-cf-zip', creatorController.createZipCF);
+
 module.exports = router;

@@ -28,3 +28,19 @@
     justify-content: flex-end;
     cursor: pointer;
 }
+
+.download-template {
+    margin-top: 13px;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    padding: 10px;
+    transition: 0.3s all ease-in-out;
+    cursor: pointer;
+}
+
+.download-template:hover {
+    background: #fff;
+    color: #2a3547;
+}

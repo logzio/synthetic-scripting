@@ -14,6 +14,13 @@ editor.session.on('changeMode', function (e, session) {
 });
 editor.session.setMode('ace/mode/javascript');
 
+const BASE_URL = 'http://localhost:8080';
+
+const typeOfNotification = {
+    warning: 'warning',
+    success: 'success',
+};
+
 const settings = {
     notificationLoaded: '.loaded',
     notificationFailed: '.loaded-fail',
@@ -31,9 +38,15 @@ const settings = {
         createLambdaUrl: '/api/create-lambda',
         addEventBridgeUrl: '/api/add-eventbridge',
         modifyFileLocalUrl: '/api/modify-file-local',
+        createCfZip: '/api/create-cf-zip',
     },
 };
 
+const notificationSideStatus = document.querySelector(
+    '.notification-container',
+);
+
+const progressBar = document.querySelector('.bar');
 const notificationFileModify = document.querySelector('.fileCreated');
 const notificationZipCreate = document.querySelector('.fileZip');
 const notificationZipUpload = document.querySelector('.zipUploaded');
@@ -53,6 +66,9 @@ const generalForm = document.querySelector('.general-form');
 const allGeneralInputs = document.querySelectorAll('.general-form input');
 
 const startTestButton = document.querySelector('.submission-test');
+const startTestLocallyButton = document.querySelector('.test-locally');
+
+const downloadCFButton = document.querySelector('.download-template');
 
 class PageBuilder {
     constructor() {
@@ -60,11 +76,10 @@ class PageBuilder {
         this.awsSecretKey = null;
         this.awsBucketName = null;
         this.shippingToken = null;
-        this.awsAccountId = null;
         this.awsRegion = null;
+        this.listenerUrl = null;
         this.createNewOne = null;
-        this.iamRoleArn = null;
-        this.iamRoleArnEvent = null;
+
         this.rangeTime = 1;
         this.nameLambda = null;
         this.descriptionLambda = null;
@@ -77,15 +92,14 @@ class PageBuilder {
             secret_key: 'awsSecretKey',
             bucket_name: 'awsBucketName',
             region: 'awsRegion',
-            account_id: 'awsAccountId',
-            iam_role_arn: 'iamRoleArn',
-            iam_role_arn_event: 'iamRoleArnEvent',
+
             shipping_token: 'shippingToken',
             range_time: 'rangeTime',
+            listener_url: 'listenerUrl',
         };
     }
     customFetch = async (bodyToSend, url) => {
-        return await fetch(`http://localhost:8080${url}`, {
+        return await fetch(`${BASE_URL}${url}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -220,9 +234,9 @@ class PageBuilder {
                             secretKey: this.awsSecretKey,
                             bucketName: this.awsBucketName,
                             token: this.shippingToken,
-                            iamRoleArn: this.iamRoleArn,
                             region: this.awsRegion,
                             listEnvVariables: this._listOfEnvVariables,
+                            listenerUrl: this.listenerUrl,
                         },
                         settings.endPointUrls.createLambdaUrl,
                     );
@@ -247,11 +261,9 @@ class PageBuilder {
                     {
                         name: this.nameLambda,
                         rangeTime: this.rangeTime,
-                        iamRoleArnEvent: this.iamRoleArnEvent,
                         accessKey: this.awsAccessKey,
                         secretKey: this.awsSecretKey,
                         region: this.awsRegion,
-                        accountId: this.awsAccountId,
                     },
                     settings.endPointUrls.addEventBridgeUrl,
                 );
@@ -261,6 +273,8 @@ class PageBuilder {
                         null,
                         'Range time added',
                     );
+                    //update progressBar
+                    this.updateProgressBar('code', 'add');
                 } else {
                     this.errorDisplay(cloudBridgeEventResp.errorData);
                     this.displayFailedStatus(notificationAddRange);
@@ -315,15 +329,14 @@ const handler = async () => {
             });
         });
     };
-    configFormHandle = () => {
+    configFormHandler = () => {
         configForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const {
                 access_key,
                 secret_key,
                 bucket_name,
-                iam_role_arn_event,
-                iam_role_arn,
+
                 region,
             } = e.target;
 
@@ -331,40 +344,63 @@ const handler = async () => {
                 access_key.value === '' ||
                 secret_key.value === '' ||
                 bucket_name.value === '' ||
-                iam_role_arn.value === '' ||
-                iam_role_arn_event.value === '' ||
                 region.value === ''
             ) {
                 startTestButton.disabled = true;
+                this.addNotification(
+                    'Please fill all the fields in Config Form',
+                    typeOfNotification.warning,
+                );
             } else {
                 this.awsAccessKey = access_key.value;
                 this.awsBucketName = bucket_name.value;
                 this.awsSecretKey = secret_key.value;
                 this.awsRegion = region.value;
-                this.iamRoleArn = iam_role_arn.value;
-                this.iamRoleArnEvent = iam_role_arn_event.value;
 
                 startTestButton.disabled = false;
+                this.addNotification(
+                    'AWS configuration submitted',
+                    typeOfNotification.success,
+                );
+                this.updateProgressBar('general', 'add');
             }
         });
     };
     generalFormHandler = () => {
         generalForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const { name, description, range_time, shipping_token } = e.target;
+            const {
+                name,
+                description,
+                range_time,
+                shipping_token,
+                listener_url,
+            } = e.target;
 
             if (
                 name.value === '' ||
                 description.value === '' ||
+                listener_url.value === '' ||
                 shipping_token.value === ''
             ) {
                 startTestButton.disabled = true;
+                this.addNotification(
+                    'Please fill all the fields in General Form',
+                    typeOfNotification.warning,
+                );
             } else {
                 this.nameLambda = name.value;
                 this.descriptionLambda = description.value;
                 this.rangeTime = range_time.value;
                 this.shippingToken = shipping_token.value;
-                startTestButton.disabled = false;
+                this.listenerUrl = listener_url.value;
+                this.addNotification(
+                    'General Form submitted',
+                    typeOfNotification.success,
+                );
+                this.updateProgressBar('aws', 'add');
+                startTestLocallyButton.disabled = false;
+                // startTestButton.disabled = false;
             }
         });
     };
@@ -375,23 +411,38 @@ const handler = async () => {
         this.onInputUpdate();
         this.tabLogic();
         this.testLocal();
-        this.configFormHandle();
+        this.configFormHandler();
         this.generalFormHandler();
+
         this.setDefault();
+        this.downloadCFTemplate();
+        // this.onChangeEditor();
     };
     testLocal = async () => {
-        document
-            .querySelector('.test-locally')
-            .addEventListener('click', async (e) => {
-                const responseModify = await this.customFetch(
-                    {
-                        code: editor.getValue(),
-                        token: document.querySelector('#shipping_token').value,
-                    },
-                    settings.endPointUrls.modifyFileLocalUrl,
+        startTestLocallyButton.addEventListener('click', async (e) => {
+            const responseLocal = await this.customFetch(
+                {
+                    code: editor.getValue(),
+                    token: document.querySelector('#shipping_token').value,
+                    name: this.nameLambda,
+                    listenerUrl: document.querySelector('#listener_url').value,
+                },
+                settings.endPointUrls.modifyFileLocalUrl,
+            );
+            if (!responseLocal.error) {
+                this.addNotification(
+                    'Local Test successfuly ended',
+                    typeOfNotification.success,
                 );
-                //TODO: handle
-            });
+            } else {
+                this.addNotification(
+                    'Something went wrong please check data what you provided',
+                    typeOfNotification.warning,
+                );
+                this.errorDisplay(responseLocal.errorData);
+                return false;
+            }
+        });
     };
     onInputUpdate = () => {
         const keysArr = Object.keys(this._listOfFields);
@@ -471,6 +522,10 @@ const handler = async () => {
             this.errorDisplay('Please fill input Value');
             return;
         }
+        this.addNotification(
+            `Key: ${inputEnvKey} with Value: ${inputEnvValue} added to Lambda configuration`,
+            typeOfNotification.success,
+        );
         this._listOfEnvVariables.push({
             [inputEnvKey]: inputEnvValue,
         });
@@ -485,7 +540,101 @@ const handler = async () => {
     submitEnvVariables = () => {
         formEnvVariable.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            this.addNotification(
+                `Enviroment variables added to the lambda function.`,
+                typeOfNotification.success,
+            );
         });
+    };
+
+    addNotification = (message, type) => {
+        const divNotification = document.createElement('div');
+        divNotification.classList.add('notification-message');
+        divNotification.classList.add(type);
+        const elementParagraph = document.createElement('p');
+        elementParagraph.textContent = message;
+        elementParagraph.classList.add('notification-message-element');
+
+        divNotification.appendChild(elementParagraph);
+        notificationSideStatus.appendChild(divNotification);
+
+        setTimeout(() => {
+            divNotification.remove();
+        }, 10000);
+        // <div class="notification-message success">
+        // 	<p class="notification-message-element">Submitted General Form </p>
+        // </div>
+        // clearTimeout(displayMessageRight);
+    };
+
+    updateProgressBar = (step, status) => {
+        switch (step) {
+            case 'general':
+                progressBar.style.width = `${
+                    +progressBar.style.width.replace('%', '') + 33
+                }%`;
+                break;
+            case 'aws':
+                progressBar.style.width = `${
+                    +progressBar.style.width.replace('%', '') + 33
+                }%`;
+                break;
+            case 'code':
+                progressBar.style.width = `${
+                    +progressBar.style.width.replace('%', '') + 34
+                }%`;
+                break;
+            default:
+                progressBar.style.width = 0;
+        }
+    };
+    downloadCFTemplate = async () => {
+        downloadCFButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            notificationFileModify.style.display = 'flex';
+            const responseModify = await this.customFetch(
+                { code: editor.getValue() },
+                settings.endPointUrls.modifyFileUrl,
+            );
+            if (!responseModify.error) {
+                this.displayGoodStatus(
+                    notificationFileModify,
+                    notificationZipCreate,
+                    'Function Created',
+                );
+            } else {
+                this.errorDisplay(responseModify.errorData);
+                this.displayFailedStatus(notificationFileModify);
+                return false;
+            }
+            const responseToZip = await this.customFetch(
+                { name: this.nameLambda, envList: this._listOfEnvVariables },
+                settings.endPointUrls.createCfZip,
+            );
+
+            if (!responseToZip.error) {
+                this.displayGoodStatus(
+                    notificationZipCreate,
+                    null,
+                    'Zip Downloaded',
+                );
+                this.downloadZip(responseToZip.zip);
+            } else {
+                this.errorDisplay(responseToZip.errorData);
+                this.displayFailedStatus(notificationZipCreate);
+                return false;
+            }
+        });
+    };
+    downloadZip = (zip) => {
+        let elem = window.document.createElement('a');
+        elem.href = 'data:application/zip;base64,' + zip;
+        elem.download = 'cloudFormation.zip';
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
     };
 }
 

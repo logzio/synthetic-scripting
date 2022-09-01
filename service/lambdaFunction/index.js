@@ -22,7 +22,11 @@ const playwright = require('playwright-aws-lambda');
 			
 	
 
-					
+	await page.goto('https://app.logz.io/#/login');
+await page.type('[name="email"]', 'test@testlogz.io');
+await page.type('[name="password"]', 'qwertyuio');
+await page.click('button[type="submit"]');
+await page.waitForTimeout(10000);				
 	
 
 

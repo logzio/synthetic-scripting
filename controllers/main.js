@@ -1,4 +1,3 @@
-exports.homepage = async (req, res, next) => {
-    // const { framework, script } = req.query;
+exports.homepage = async (_, res) => {
     res.render('index.html');
 };

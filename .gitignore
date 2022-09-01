@@ -10,3 +10,9 @@ local.har
 /service/selenium_old
 /selenium-test
 dump.js
+/output
+/views/steps.html
+/public/cssV2/main.css
+/public/cssV2/styles.css
+/public/scripts/steps.js
+/utils/AIMRole_bkp.js

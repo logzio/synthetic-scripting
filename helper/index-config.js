@@ -56,7 +56,6 @@ module.exports = {
 			page = await context.newPage();
 	`,
     endFileLocally: `    } catch (error) {
-		console.log('is here?', error);
 		err= error.message;
     } finally {
         if (browser) {
@@ -64,8 +63,7 @@ module.exports = {
             await browser.close();
         }
     }
-
-    readSendData(process.argv[2], err, process.argv[3]);
+    readSendData(process.argv[2], err, process.argv[3], process.argv[4]);
     return true;
 };
 handler();`,
