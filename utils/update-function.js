@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const logger = require('./logger');
 const { startFile, endFile } = require('../helper/index-config');
+/**
+ * @param  {string} code - Code snippet from ace editor inside Playwright test code
+ * @param  {string} filePath
+ */
 const readWriteAsync = async (code, filePath) => {
     try {
         const fileStarts = startFile.split('\n');
@@ -16,13 +21,16 @@ const readWriteAsync = async (code, filePath) => {
             });
         });
     } catch (err) {
+        logger(err);
         return {
             error: true,
             err,
         };
     }
 };
-
+/**
+ * @param  {} code
+ */
 exports.updateFile = async (code) => {
     const filePath = path.join(
         __dirname,
@@ -39,6 +47,7 @@ exports.updateFile = async (code) => {
         }
         return fileStatus;
     } catch (err) {
+        logger(err);
         return {
             error: true,
             err,

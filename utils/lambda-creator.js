@@ -1,8 +1,25 @@
 const AWS = require('aws-sdk');
 
-const { LAMBDA_FUNCTION_NAME } = require('./constants');
+const {
+    LAMBDA_FUNCTION_NAME,
+    BASIC_EXECUTION_ROLE_NAME,
+} = require('./constants');
+const { AIMRole } = require('./AIM-role');
+const { getAccountId } = require('./get-account-id');
+const { logger } = require('./logger');
 
-// Set the parameters.
+/**
+ * Function Create and Assign proper roles to Lambda Function
+ * @param  {string} functionName - Name of Lambda Function
+ * @param  {string} description - Description of Lambda Function
+ * @param  {string} token - Shipping token from logzio
+ * @param  {string} bucketName - AWS Bucket name
+ * @param  {string} accessKey -  AWS Access Key
+ * @param  {string} secretKey - AWS secret Key
+ * @param  {string} region -  AWS region where need to create synthetic logic
+ * @param  {object} listEnvVariables - list of envariment variable for Lambda Function
+ * @param  {string} listenerUrl  - Logzio listener url to send metrics/logs
+ */
 
 exports.createLambda = async (
     functionName,
@@ -11,40 +28,59 @@ exports.createLambda = async (
     bucketName,
     accessKey,
     secretKey,
-    iamRoleArn,
     region,
     listEnvVariables,
+    listenerUrl,
 ) => {
+    const accountId = await getAccountId(accessKey, secretKey);
+
+    const policyArn = `arn:aws:iam::${accountId}:policy/service-role/AWSLambdaBasicExecutionRole`;
+
+    const pathToRole = 'lambdaRole.json';
     let variables = {};
     listEnvVariables.forEach((envVariable) => {
         variables = { ...variables, ...envVariable };
     });
+
     const nameZip =
         functionName.split(' ').length > 0
             ? functionName.split(' ').join('-')
             : functionName;
-    const params = {
-        Code: {
-            S3Bucket: bucketName, // BUCKET_NAME
-            S3Key: `${nameZip}.zip`, // ZIP_FILE_NAME
-        },
-        FunctionName: functionName || LAMBDA_FUNCTION_NAME,
-        Handler: 'index.handler',
-        Role: iamRoleArn, // IAM_ROLE_ARN; e.g., arn:aws:iam::650138640062:role/v3-lambda-tutorial-lambda-role
-        Runtime: 'nodejs16.x',
-        Description: description,
-        MemorySize: 512,
-        Timeout: 80,
-        Environment: {
-            Variables: {
-                ...variables,
-                TOKEN: token,
-                NAME_FUNCTION: functionName,
-            },
-        },
-    };
+
     try {
-        // const lambda = new LambdaClient({ region: process.env.REGION });
+        const iamRole = await AIMRole(
+            accessKey,
+            secretKey,
+            BASIC_EXECUTION_ROLE_NAME,
+            pathToRole,
+            policyArn,
+        );
+
+        if (iamRole.err) {
+            throw iamRole.err;
+        }
+        const params = {
+            Code: {
+                S3Bucket: bucketName, // BUCKET_NAME
+                S3Key: `${nameZip}.zip`, // ZIP_FILE_NAME
+            },
+            FunctionName: functionName || LAMBDA_FUNCTION_NAME,
+            Handler: 'index.handler',
+            Role: iamRole.arn, // IAM_ROLE_ARN; e.g., arn:aws:iam::650138640062:role/v3-lambda-tutorial-lambda-role
+            Runtime: 'nodejs16.x',
+            Description: description,
+            MemorySize: 512,
+            Timeout: 80,
+            Environment: {
+                Variables: {
+                    ...variables,
+                    TOKEN: token,
+                    LISTENER_URL: listenerUrl,
+                    NAME_FUNCTION: functionName,
+                },
+            },
+        };
+
         AWS.config.update({
             accessKeyId: accessKey,
             secretAccessKey: secretKey,
@@ -65,7 +101,7 @@ exports.createLambda = async (
             });
         });
     } catch (err) {
-        console.log('Error', err); // an error occurred
+        logger(err);
         return {
             error: true,
             err,

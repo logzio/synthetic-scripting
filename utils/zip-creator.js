@@ -1,10 +1,12 @@
 const fs = require('fs');
 const archiver = require('archiver');
 const path = require('path');
-const { NAME_OF_ZIP_FILE } = require('./constants');
+const logger = require('./logger');
 
 const sourceDir = path.join(__dirname, '..', 'service', 'lambdaFunction');
-
+/**
+ * @param  {string} name - Name of Lambda Function using for name of the Zip
+ */
 exports.fileToZip = async (name) => {
     const nameZip =
         name.split(' ').length > 0 ? name.split(' ').join('-') : name;
@@ -17,7 +19,7 @@ exports.fileToZip = async (name) => {
                 archive
                     .directory(sourceDir, false)
                     .on('error', (err) => {
-                        return reject({
+                        reject({
                             error: true,
                             err,
                         });
@@ -29,7 +31,7 @@ exports.fileToZip = async (name) => {
                 );
                 archive.finalize();
             } catch (err) {
-                console.log(err);
+                logger(err);
                 reject({
                     error: true,
                     err,
@@ -37,6 +39,7 @@ exports.fileToZip = async (name) => {
             }
         });
     } catch (err) {
+        logger(err);
         return {
             error: true,
             err,

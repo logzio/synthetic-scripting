@@ -1,9 +1,9 @@
 const { SUCCESS_MESSAGE } = require('../constants');
 
-const statusErrorHandler = (err) => {
+const statusErrorHandler = (err = '') => {
     let status;
-    const arrErr = err.split('\n');
     if (err) {
+        const arrErr = err.split('\n');
         if (arrErr.length > 1) {
             status = arrErr
                 .map((message) => (message.split('')[0] !== '=' ? message : ''))

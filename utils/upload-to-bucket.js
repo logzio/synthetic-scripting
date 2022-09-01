@@ -1,5 +1,12 @@
 const AWS = require('aws-sdk');
-
+const { logger } = require('./logger');
+/**
+ * @param  {string} fileName
+ * @param  {string} fileData
+ * @param  {string} access_key
+ * @param  {string} secret_key
+ * @param  {string} bucket_name
+ */
 exports.uploadFileOnS3 = async (
     fileName,
     fileData,
@@ -30,7 +37,7 @@ exports.uploadFileOnS3 = async (
             });
         });
     } catch (err) {
-        console.log(err);
+        logger(err);
         return { error: true, err };
     }
 };

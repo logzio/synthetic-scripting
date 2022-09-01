@@ -1,11 +1,20 @@
 const AWS = require('aws-sdk');
-const { CLOUDWATCH_EVENT } = require('./constants');
+const { PUT_RULE_ROLE_NAME } = require('./constants');
+const logger = require('./logger');
 
+/**
+ * @param  {string} name - Name of Lambda Function and Name of the Test
+ * @param  {string} accessKey - AWS Access Key from AWS Account
+ * @param  {string} secretKey - AWS Secret Key from AWS Account
+ * @param  {string} region - AWS Region where  need to add permission
+ * @param  {string} accountId - AWS Account ID
+ */
 exports.addPermissions = async (
     name,
     accessKey,
     secretKey,
     region,
+    rangeTime,
     accountId,
 ) => {
     try {
@@ -14,15 +23,16 @@ exports.addPermissions = async (
             secretAccessKey: secretKey,
         });
         const lambda = new AWS.Lambda({
-            region: region,
+            region,
         });
+
         return new Promise((resolve, reject) => {
-            var params = {
-                Action: 'lambda:InvokeFunction' /* required */,
-                FunctionName: name || LAMBDA_FUNCTION_NAME /* required */,
-                Principal: 'events.amazonaws.com' /* required */,
-                StatementId: 'my-scheduled-event' /* required */,
-                SourceArn: `arn:aws:events:${region}:${accountId}:rule/${CLOUDWATCH_EVENT}`,
+            const params = {
+                Action: 'lambda:InvokeFunction',
+                FunctionName: name,
+                Principal: 'events.amazonaws.com',
+                StatementId: 'my-scheduled-event',
+                SourceArn: `arn:aws:events:${region}:${accountId}:rule/${rangeTime}-${PUT_RULE_ROLE_NAME}`,
             };
             lambda.addPermission(params, function (err, data) {
                 if (err) reject({ error: true, err }); // an error occurred
@@ -30,6 +40,7 @@ exports.addPermissions = async (
             });
         });
     } catch (err) {
+        logger(err);
         return {
             error: true,
             err,

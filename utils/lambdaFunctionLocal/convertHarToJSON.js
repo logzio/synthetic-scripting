@@ -29,7 +29,7 @@ const entryPattern = {
 };
 
 const convertHarToJSON = (harFile) => {
-    let flatEntries = [];
+    const flatEntries = [];
     try {
         harFile.log.entries.forEach((entry, entryIndex) => {
             const currentEntry = match(entry, entryPattern);

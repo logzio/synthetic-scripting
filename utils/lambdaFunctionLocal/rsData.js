@@ -4,11 +4,12 @@ const convertHarToJSON = require('./convertHarToJSON');
 const loggerGenerator = require('./logger');
 const errorStatusHandler = require('./statusError');
 const createSessionId = require('./sessionId');
+const createResponseStatusClass = require('./responseStatusClass');
 
-const readSendData = (token, error = '', name) => {
+const readSendData = (token, error = '', name, listenerUrl) => {
     const sessionId = createSessionId();
     const status = errorStatusHandler(error);
-    const logger = loggerGenerator(token);
+    const logger = loggerGenerator(token, listenerUrl);
     const harsInDir = fs.readdirSync('./capture-hars');
 
     try {
@@ -25,12 +26,18 @@ const readSendData = (token, error = '', name) => {
                     sessionId,
                     firstEnterence,
                     nameTest: name,
+                    ...(log.responseStatus
+                        ? {
+                              responseStatusClass: createResponseStatusClass(
+                                  log.responseStatus,
+                              ),
+                          }
+                        : {}),
                 });
             });
         });
         return true;
     } catch (err) {
-        console.log(err);
         return err;
     }
 };

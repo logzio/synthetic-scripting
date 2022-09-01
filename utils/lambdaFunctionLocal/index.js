@@ -24,7 +24,6 @@ const handler = async () => {
             await browser.close();
         }
     }
-
     readSendData(process.argv[2], err, process.argv[3]);
     return true;
 };
