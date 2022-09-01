@@ -84,13 +84,13 @@ exports.AIMRole = async (
         const role = await createRole(iam, roleName, pathToRole);
 
         if (role.err) {
-            throw err;
+            throw role.err;
         }
 
         const setPolicyStatus = await setPolicy(iam, roleName, policyArn);
 
         if (setPolicyStatus.err) {
-            throw err;
+            throw setPolicyStatus.err;
         }
 
         return { arn: role.Role.Arn };
