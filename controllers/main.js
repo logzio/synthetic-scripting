@@ -1,3 +1,3 @@
-exports.homepage = async (_, res) => {
+exports.homepage = async (req, res) => {
     res.render('index.html');
 };
