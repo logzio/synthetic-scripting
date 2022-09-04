@@ -26,7 +26,7 @@ Parameters:
   Timeout:
      Type: "String"
      Description: "Schedule timeout for Lambda(ex. rate(1 minute), rate(5 minutes), rate(1 day) etc.)"
-  
+##Add Input Env Variables  
 
 Resources:
   ScheduledLambda:

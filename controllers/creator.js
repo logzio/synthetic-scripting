@@ -157,11 +157,10 @@ exports.modifyFileLocally = async (req, res) => {
 };
 
 exports.createZipCF = async (req, res) => {
-    const { listEnvVariables } = req.body;
+    const { envList } = req.body;
 
     try {
-        await setupCFTemplate(listEnvVariables);
-
+        await setupCFTemplate(envList);
         await fileToZipCF();
 
         const filetext = fs.readFileSync(
@@ -169,7 +168,7 @@ exports.createZipCF = async (req, res) => {
         );
 
         res.status(200).send({
-            img: new Buffer.from(filetext).toString('base64'),
+            zip: new Buffer.from(filetext).toString('base64'),
         });
     } catch (err) {
         logger(err);
