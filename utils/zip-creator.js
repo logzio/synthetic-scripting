@@ -4,6 +4,7 @@ const path = require('path');
 const logger = require('./logger');
 
 const sourceDir = path.join(__dirname, '..', 'service', 'lambdaFunction');
+
 /**
  * @param  {string} name - Name of Lambda Function using for name of the Zip
  */

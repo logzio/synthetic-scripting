@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const convertHarToJSON = require('./convertHarToJSON');
+const convertToNumber = require('./convertToNumber');
 const loggerGenerator = require('./logger');
 const errorStatusHandler = require('./statusError');
 const createSessionId = require('./sessionId');
@@ -19,17 +20,18 @@ const readSendData = (token, error = '', name, listenerUrl) => {
             const firstEnterence = json.log.entries[0].request.url;
             const parsedData = convertHarToJSON(json);
             parsedData.result.forEach((log) => {
+                const convertedLog = convertToNumber(log);
                 logger.log({
-                    ...log,
+                    ...convertedLog,
                     statusTest: status,
                     statusResult: error ? 0 : 1,
                     sessionId,
                     firstEnterence,
                     nameTest: name,
-                    ...(log.responseStatus
+                    ...(convertedLog.responseStatus
                         ? {
                               responseStatusClass: createResponseStatusClass(
-                                  log.responseStatus,
+                                  convertedLog.responseStatus,
                               ),
                           }
                         : {}),
