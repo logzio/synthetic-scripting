@@ -52,7 +52,7 @@ exports.setupCFTemplate = async (listEnvVariables) => {
 };
 /**
  * Update CloudFormation Template populate Env Variables to Template
- * @param  {object} envList - Object with envariment keys and envariment values
+ * @param  {object} envList - Object with Environment keys and Environment values
  * @param  {string} template -  YML file content with pre defined values
  */
 const updateTemplate = (envList, template) => {
@@ -61,13 +61,18 @@ const updateTemplate = (envList, template) => {
     envList.forEach((env) => {
         const key = Object.keys(env);
 
-        const inputField = `  LambdaEnvVariable${key[0]}:
+        const inputField = `  LambdaEnvVariable${key[0].replace(
+            /[^a-zA-Z0-9 ]/g,
+            '',
+        )}:
     Type: "String"
-    Description: "Auto generated envariment variable ${key[0]}";
+    Description: "Auto generated Environment variable ${key[0]}"
    `;
         samTemplate.splice(1, 0, inputField);
 
-        const lineOfEnvVariable = `          ${key[0]}: !Ref LambdaEnvVariable${key[0]}`;
+        const lineOfEnvVariable = `          ${
+            key[0]
+        }: !Ref LambdaEnvVariable${key[0].replace(/[^a-zA-Z0-9 ]/g, '')}`;
         samTemplate.push(lineOfEnvVariable);
     });
     return samTemplate.join('\n');

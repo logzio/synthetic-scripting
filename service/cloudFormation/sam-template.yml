@@ -52,4 +52,4 @@ Resources:
         Variables:
           LISTENER_URL: !Ref LogzioListenerUrl
           TOKEN: !Ref LogzioToken
-          NAME: !Ref LambdaTestName
+          NAME_FUNCTION: !Ref LambdaTestName
