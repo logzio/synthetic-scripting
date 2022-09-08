@@ -77,7 +77,7 @@ exports.AIMRole = async (
             return { arn: getIfRoleExists.Role.Arn };
         }
     } catch (err) {
-        logger("Role Doesn't exist process to create");
+        logger("Role Doesn't exist. Start process to create IAM Role.");
     }
 
     try {
