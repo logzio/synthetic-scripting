@@ -10,8 +10,7 @@ const { createLambda } = require('../utils/lambda-creator');
 const { cloudWatchEvent } = require('../utils/cloudWatchEvent');
 const { setupCFTemplate } = require('../utils/setup-cf-template');
 const { fileToZipCF } = require('../utils/zip-cf-creator');
-
-exports.modifyFile = async (req, res) => {
+const { handlerLocally } = (exports.modifyFile = async (req, res) => {
     const { code } = req.body;
 
     try {
@@ -25,7 +24,7 @@ exports.modifyFile = async (req, res) => {
         logger(err);
         res.status(400).send({ error: true, errorData: err.toString() });
     }
-};
+});
 
 exports.createZip = async (req, res) => {
     const { name } = req.body;
@@ -157,10 +156,17 @@ exports.modifyFileLocally = async (req, res) => {
 };
 
 exports.createZipCF = async (req, res) => {
-    const { envList } = req.body;
+    const { envList, name, description, token, listener, rangeTime } = req.body;
 
     try {
-        await setupCFTemplate(envList);
+        await setupCFTemplate(
+            envList,
+            name,
+            description,
+            token,
+            listener,
+            rangeTime,
+        );
         await fileToZipCF();
 
         const filetext = fs.readFileSync(

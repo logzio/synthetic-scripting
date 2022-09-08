@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    /* transition: .3s all ease-in-out; */
+}
+
+html,
+body {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: rgb(231, 231, 231) 30%;
+    /* font-family: 'Ubuntu', sans-serif */
+}
+.body_wrapper {
+    box-sizing: border-box;
+}
+
+.step {
+    display: none;
+}
+
+.first_step {
+    display: flex;
+}

@@ -1,5 +1,7 @@
 const editor = ace.edit('editor');
-editor.setTheme('ace/theme/monokai');
+// editor.setTheme('ace/theme/monokai');
+editor.setTheme('ace/theme/tomorrow');
+
 editor.session.on('changeMode', function (e, session) {
     if ('ace/mode/javascript' === session.getMode().$id) {
         if (!!session.$worker) {
@@ -70,6 +72,66 @@ const startTestLocallyButton = document.querySelector('.test-locally');
 
 const downloadCFButton = document.querySelector('.download-template');
 
+class Select {
+    constructor(parameters, rootClassName) {
+        this.parameters = parameters;
+        this.rootClassName = rootClassName;
+    }
+    renderSelect = () => {
+        const labelSelect = document.createElement('div');
+        const listDropdown = document.createElement('ul');
+        listDropdown.classList.add('dropdown-list');
+        labelSelect.classList.add('label-select');
+        this.parameters.forEach((el) => {
+            const liElement = document.createElement('li');
+            liElement.classList.add('dropdown-list-element');
+
+            liElement.setAttribute('default', el.default);
+            liElement.setAttribute('value', el.name);
+            liElement.textContent = el.name;
+            listDropdown.appendChild(liElement);
+        });
+
+        labelSelect.textContent = this.parameters[0].name;
+
+        document
+            .querySelector(`.${this.rootClassName}`)
+            .appendChild(labelSelect);
+        document
+            .querySelector(`.${this.rootClassName}`)
+            .appendChild(listDropdown);
+    };
+
+    openClose = () => {
+        const labelSelect = document.querySelector(
+            `.${this.rootClassName} .label-select`,
+        );
+
+        labelSelect.addEventListener('click', (e) => {
+            console.log('sss');
+        });
+    };
+
+    onClickHandler = () => {};
+
+    onChange = () => {};
+
+    init = () => {
+        this.renderSelect();
+        this.openClose();
+    };
+}
+
+const select = new Select(
+    [
+        { name: 'Playwright', default: true, isDisabled: false },
+        { name: 'Selenium', default: false, isDisabled: true },
+        { name: 'Pupeeter', default: false, isDisabled: true },
+    ],
+    'select-code-snippet',
+);
+select.init();
+
 class PageBuilder {
     constructor() {
         this.awsAccessKey = null;
@@ -97,6 +159,7 @@ class PageBuilder {
             range_time: 'rangeTime',
             listener_url: 'listenerUrl',
         };
+        this.snippetLanguage = 'playwright';
     }
     customFetch = async (bodyToSend, url) => {
         return await fetch(`${BASE_URL}${url}`, {
@@ -610,7 +673,15 @@ const handler = async () => {
                 return false;
             }
             const responseToZip = await this.customFetch(
-                { name: this.nameLambda, envList: this._listOfEnvVariables },
+                {
+                    envList: this._listOfEnvVariables,
+                    name: this.nameLambda,
+                    description: this.descriptionLambda,
+                    token: this.shippingToken,
+                    bucket: this.awsBucketName,
+                    listener: this.listenerUrl,
+                    rangeTime: this.rangeTime,
+                },
                 settings.endPointUrls.createCfZip,
             );
 
@@ -636,6 +707,7 @@ const handler = async () => {
         elem.click();
         document.body.removeChild(elem);
     };
+    initDropdown = () => {};
 }
 
 const pageBuilder = new PageBuilder();
