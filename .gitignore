@@ -3,6 +3,7 @@ node_modules
 lambdaFunction.zip
 responseCreationLambda.json
 archive_cloudformation-creator.js
+setup-cf-template-all.js
 local.har
 /mock
 /service/selenium-v2
