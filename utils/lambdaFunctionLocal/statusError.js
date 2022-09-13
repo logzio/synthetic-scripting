@@ -4,6 +4,7 @@ const statusErrorHandler = (err = '') => {
     let status;
     if (err) {
         const arrErr = err.split('\n');
+
         if (arrErr.length > 1) {
             status = arrErr
                 .map((message) => (message.split('')[0] !== '=' ? message : ''))
@@ -14,6 +15,7 @@ const statusErrorHandler = (err = '') => {
     } else {
         status = SUCCESS_MESSAGE;
     }
+    console.log(status);
 
     return status;
 };

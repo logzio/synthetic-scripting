@@ -17,4 +17,7 @@ dump.js
 /public/scripts/steps.js
 /utils/AIMRole_bkp.js
 cloudFormation.zip
-/client
+
+/views_old
+/public_old
+/test

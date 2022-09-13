@@ -10,7 +10,10 @@ const { createLambda } = require('../utils/lambda-creator');
 const { cloudWatchEvent } = require('../utils/cloudWatchEvent');
 const { setupCFTemplate } = require('../utils/setup-cf-template');
 const { fileToZipCF } = require('../utils/zip-cf-creator');
-const { handlerLocally } = (exports.modifyFile = async (req, res) => {
+
+// const handlerLocally = require('../utils/lambdaFunctionLocal/index');
+
+exports.modifyFile = async (req, res) => {
     const { code } = req.body;
 
     try {
@@ -24,7 +27,7 @@ const { handlerLocally } = (exports.modifyFile = async (req, res) => {
         logger(err);
         res.status(400).send({ error: true, errorData: err.toString() });
     }
-});
+};
 
 exports.createZip = async (req, res) => {
     const { name } = req.body;
@@ -137,17 +140,23 @@ exports.addEventBridge = async (req, res) => {
 };
 
 exports.modifyFileLocally = async (req, res) => {
-    const { code, token, name, listenerUrl } = req.body;
+    const { code } = req.body;
 
     try {
         const resp = await updateFileLocal(code);
+        console.log(resp);
         if (resp) {
+            let statusTest;
             shell.exec(
-                `node ./utils/lambdaFunctionLocal/index.js ${token} ${name} ${listenerUrl}`,
+                `node ./utils/lambdaFunctionLocal/index.js`,
+                function (_, stdout) {
+                    console.log(stdout);
+                    statusTest = stdout;
+                    res.statusCode = 201;
+                    res.send({ error: false, message: statusTest });
+                },
             );
-
-            res.statusCode = 201;
-            res.send({ error: false, message: 'File was created' });
+            //  statusTest = await handlerLocally();
         }
     } catch (err) {
         logger(err);
@@ -156,7 +165,8 @@ exports.modifyFileLocally = async (req, res) => {
 };
 
 exports.createZipCF = async (req, res) => {
-    const { envList, name, description, token, listener, rangeTime } = req.body;
+    const { envList, name, description, token, bucket, listener, rangeTime } =
+        req.body;
 
     try {
         await setupCFTemplate(
@@ -164,10 +174,11 @@ exports.createZipCF = async (req, res) => {
             name,
             description,
             token,
+            bucket,
             listener,
             rangeTime,
         );
-        await fileToZipCF();
+        await fileToZipCF(name);
 
         const filetext = fs.readFileSync(
             path.join(__dirname, '..', 'cloudFormation.zip'),

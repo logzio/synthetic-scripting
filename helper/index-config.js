@@ -37,7 +37,7 @@ module.exports = {
     return true;
 };`,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
-
+	const errorStatusHandler = require('./statusError');
 	
 	const handlerLocally = async () => {
 		let context = null;
@@ -48,14 +48,19 @@ module.exports = {
 			context = await browser.newContext();
 			page = await context.newPage();
 	`,
-    endFileLocally: `    } catch (error) {
-		err= error.message;
+    endFileLocally: `       } catch (error) {
+        err = error.message;
     } finally {
         if (browser) {
             await context.close();
             await browser.close();
         }
     }
-    return true;
-};`,
+    let status = errorStatusHandler(err);
+    return status;
+
+};
+handlerLocally()
+// module.exports = handlerLocally;
+`,
 };

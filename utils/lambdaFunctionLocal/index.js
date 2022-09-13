@@ -1,6 +1,5 @@
 const playwright = require('playwright-aws-lambda');
 const errorStatusHandler = require('./statusError');
-// const readSendData = require('./rsData');
 
 const handlerLocally = async () => {
     let context = null;
@@ -19,8 +18,7 @@ const handlerLocally = async () => {
         }
     }
     let status = errorStatusHandler(err);
-    // readSendData(process.argv[2], err, process.argv[3], process.argv[4]);
     return status;
 };
-// handler();
-module.exports = handlerLocally;
+handlerLocally();
+// module.exports = handlerLocally;

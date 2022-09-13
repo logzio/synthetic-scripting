@@ -9,9 +9,18 @@ const creatorRoutes = require('./routes/creator');
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('views', __dirname + '/views');
-app.engine('html', require('ejs').renderFile);
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization',
+    );
+    next();
+});
+// app.set('views', __dirname + '/views');
+// app.engine('html', require('ejs').renderFile);
 
 app.use(mainRoutes);
 app.use('/api', creatorRoutes);

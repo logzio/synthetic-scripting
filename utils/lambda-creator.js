@@ -17,7 +17,7 @@ const { logger } = require('./logger');
  * @param  {string} accessKey -  AWS Access Key
  * @param  {string} secretKey - AWS secret Key
  * @param  {string} region -  AWS region where need to create synthetic logic
- * @param  {object} listEnvVariables - list of envariment variable for Lambda Function
+ * @param  {object} listEnvVariables - list of Environment variable for Lambda Function
  * @param  {string} listenerUrl  - Logzio listener url to send metrics/logs
  */
 

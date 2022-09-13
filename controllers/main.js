@@ -1,7 +1,3 @@
 exports.homepage = async (req, res) => {
-    res.render('index.html');
-};
-
-exports.homepageV2 = async (req, res) => {
-    res.render('steps.html');
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
 };

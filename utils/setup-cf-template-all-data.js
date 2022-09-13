@@ -13,6 +13,7 @@ const dirOutput = path.join(__dirname, '..', 'output');
  * @param  {string} rangeTime - Code snippet from ace editor inside Playwright test code
 
  */
+
 exports.setupCFTemplate = async (
     listEnvVariables,
     name,
@@ -112,7 +113,7 @@ const updateTemplateRequiredData = (
     // #add timeout
     samTemplate = samTemplate.split('#add name of the text');
     const timeOut = `            Schedule: rate(${rangeTime} minute${
-        parseInt(rangeTime) === 1 ? '' : 's'
+        parseInt(rangeTime, 10) === 1 ? '' : 's'
     })`;
     samTemplate.splice(1, 0, timeOut);
     //  token
