@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Metrics sender</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;700&display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+	<header class="header">
+		<div class="logo">
+			<svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<circle cx="21" cy="21" r="21" fill="#E7E7E7" />
+				<path fill-rule="evenodd" clip-rule="evenodd"
+					d="M9 27.9168L20.5 34.5571L32 27.9168V14.6383L20.5 8L9.57529 14.3087C9.35493 14.4355 9.21842 14.6734 9.21842 14.9269C9.21842 15.1804 9.35493 15.4183 9.57529 15.5451L20.0027 21.5652V26.8247L9 20.4731V27.9168ZM20.498 33.4084L9.99262 27.3435V22.1932L14.6831 24.9003L14.6822 24.9018L20.4605 28.2814L26.5235 24.7828V17.7837L20.4624 14.2852L14.9223 17.4835L10.4899 14.925L20.5 9.14669L31.0035 15.2136V27.3435L20.498 33.4084ZM15.9158 18.057L20.5 20.7032L25.0463 18.0774L20.4624 15.4319L15.9158 18.057ZM25.5309 18.9448L20.9973 21.5633V26.8253L25.5309 24.2095V18.9448Z"
+					fill="#002E42" />
+			</svg>
+		</div>
+		<div class="nav"></div>
+	</header>
+	<!-- <div class="controller">
+		<div class="container">
+			<div class="row">
+				<div class="deploy-to-cloud-controller">
+					<button class="deploy-to-cloud-controller-button"> Define lambda function settings </button>
+				</div>
+				<div class="download-cf-controller">
+					<button class="download-cf-controller-button">Define Cloud Formation settings</button>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	<div class="progress-bar">
+		<div class="bar"></div>
+	</div>
+	<main class="main-section">
+		<div class="main-wrapper">
+
+
+			<div class="container">
+				<div class="row">
+					<div class="tab-control">
+
+
+						<div class="tab-control-item active" isTab="general">
+							<p>General Settings</p>
+						</div>
+						<div class="tab-control-item" isTab="aws">
+							<p>AWS Settings</p>
+						</div>
+						<div class="tab-control-item" isTab="env-variables">
+							<p>Enviromnent Variables</p>
+						</div>
+						<div class="tab-control-item " isTab="code">
+							<p>Code Editor</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="tab">
+						<div class="tab-body-item" isTabBody="env-variables">
+							<div class="row">
+								<div class="wrapper-env">
+									<div class="env-variables">
+										<h2 class="title-h2-white">Add env Variables</h2>
+
+										<p class="description-env"> Fields working only for function what deployed to
+											the cloud</p>
+									</div>
+									<form action="" class="env_variables">
+										<div class="env-variables-controls-list">
+											<div class="form-control-variable">
+												<div class="form-control-key">
+													<label class="form_label_variable">Key</label>
+													<input class="form_input_variable" type="text" name="key_1"
+														id="key_1">
+												</div>
+												<div class="form-control-value">
+													<label class="form_label_variable">Value</label>
+													<input class="form_input_variable" type="text" name="value_1"
+														id="value_1">
+												</div>
+												<div class="button-add" envVariable="1">
+													<div class="icon_plus">
+														<p class="icon-content">
+															+
+														</p>
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<button class="submission" type="submit">Set env variables</button>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="tab-body-item " isTabBody="code">
+							<div class="row">
+								<div class="form-side">
+									<form class="form-element" id="generalForm">
+
+
+										<div class="form-editor">
+											<div id="editor"></div>
+										</div>
+
+									</form>
+								</div>
+								<div class="info-side"></div>
+							</div>
+						</div>
+						<div class="tab-body-item" isTabBody="aws">
+							<div class="row">
+								<div class="config-settings">
+									<h2 class="title-h2-white">Config for AWS</h2>
+									<form action="" class="config-form">
+										<div class="form-control">
+											<label class="form_label" for="access_key">Aws Access Key <div
+													class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">Your AWS
+														access key ID.</span>
+												</div></label>
+											<input class="form_input" type="text" name="access_key" id="access_key" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="secret_key">Aws Secret Key <div
+													class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">Your AWS
+														secret key ID.</span>
+												</div> </label>
+											<input class="form_input" type="text" name="secret_key" id="secret_key" />
+										</div>
+
+										<div class="form-control">
+											<label class="form_label" for="bucket_name">Bucket Name
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">The
+														bucket
+														name
+														to which the PUT action was initiated.
+														<br />
+														When using this action with an access point, you must direct
+														requests to the access point hostname. The access point hostname
+														takes the form
+														AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com.
+														When
+														using this action with an access point through the Amazon Web
+														Services SDKs, you provide the access point ARN in place of the
+														bucket name. For more information about access point ARNs, see
+														Using
+														access points in the Amazon S3 User Guide.</span>
+												</div>
+
+											</label>
+											<input class="form_input" type="text" name="bucket_name" id="bucket_name" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="region">Aws Region
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">Your
+														region
+														to send
+														service requests to.</span>
+												</div>
+
+											</label>
+											<input class="form_input" type="text" name="region" id="region" />
+										</div>
+										<!-- <div class="form-control">
+											<label class="form_label" for="account_id">Aws AccountId
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text">AWS
+														account ID.</span>
+												</div>
+
+											</label>
+											<input class="form_input" type="text" name="account_id" id="account_id" />
+										</div> -->
+										<!-- <div class="form-control">
+											<label class="form_label" for="iam_role_arn">AWS IAM Role Lambda Create
+												<div class="tooltip">
+													<div class="icon-tooltip">?</div><span class="tooltip-text"> The
+														Amazon
+														Resource
+														Name (ARN) of the function's execution role.
+													</span>
+												</div>
+
+											</label>
+											<input class="form_input" type="text" name="iam_role_arn"
+												id="iam_role_arn" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="iam_role_arn_event">AWS IAM Role Event Put
+											</label>
+											<input class="form_input" type="text" name="iam_role_arn_event"
+												id="iam_role_arn_event" />
+										</div> -->
+										<div class="button-control">
+											<button class="submission" type="submit">
+												Accept Configs
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="tab-body-item active" isTabBody="general">
+							<div class="row">
+								<div class="config-settings">
+									<h2 class="title-h2-white">General Config</h2>
+									<form action="" class="general-form">
+										<div class="form-control">
+											<label class="form_label" for="name">Name of the Lambda</label>
+											<input class="form_input" name="name" id="name" type="text" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="description">Description</label>
+											<input class="form_input" name="description" id="description" type="text" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="shipping_token">Logz.io shipping
+												Token</label>
+											<input class="form_input" type="text" name="shipping_token"
+												id="shipping_token" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="listener_url">Logz.io Listener Url</label>
+											<input class="form_input" type="text" name="listener_url"
+												id="listener_url" />
+										</div>
+										<div class="form-control">
+											<label class="form_label" for="range_time">Range time for send data to the
+												logs</label>
+											<select class="select-control" name="range_time" id="range_time">
+												<option default value="1">1 minute</option>
+												<option value="2">2 minutes</option>
+												<option value="5">5 minutes</option>
+												<option value="10">10 minutes</option>
+												<option value="30">30 minutes</option>
+												<option value="60">60 minutes</option>
+											</select>
+										</div>
+										<div class="button-control">
+											<button class="submission" type="submit">
+												Accept Configs
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="sidebar-wrapper">
+			<div class="start-test">
+				<div class="button-control">
+
+					<button disabled class="submission submission-test">
+						Deploy to the cloud
+					</button>
+					<button disabled class="submission test-locally">
+						Test Locally
+					</button>
+					<button class="download-template">Donwload CloudFormation Template</button>
+					<div class="link-har hidden">
+						<a href="/public/output/local.har" target="_blank">Download Created Har file</a>
+					</div>
+				</div>
+			</div>
+			<div class="status-container">
+				<h3 class="title-white">Flow</h3>
+				<div class="notification">
+					<div class="notification-item fileCreated">
+						<div class="title-wrapper">
+							<h4 class="title-h4-white">Function Creating</h4>
+						</div>
+						<div class="status">
+							<div class="loading">
+								<div class="loadingio-spinner-spin-r97nm33plq8">
+									<div class="ldio-kugicms7vi">
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="loaded"><svg style="enable-background:new 0 0 64 64;" viewBox="0 0 64 64">
+									<g>
+										<g id="Icon-Check" transform="translate(328.000000, 278.000000)">
+											<path class="st0" fill="rgb(59, 196, 155)"
+												d="M-296-222.6c-12.9,0-23.4-10.5-23.4-23.4c0-12.9,10.5-23.4,23.4-23.4     c12.9,0,23.4,10.5,23.4,23.4C-272.6-233.1-283.1-222.6-296-222.6L-296-222.6z M-296-266.9c-11.5,0-20.9,9.4-20.9,20.9     s9.4,20.9,20.9,20.9s20.9-9.4,20.9-20.9S-284.5-266.9-296-266.9L-296-266.9z"
+												id="Fill-43" />
+											<polyline fill="rgb(59, 196, 155)" class="st0" id="Fill-44"
+												points="-298.8,-235.9 -310.7,-247.9 -308.9,-249.7 -298.8,-239.5 -283.1,-255.2      -281.3,-253.4 -298.8,-235.9    " />
+										</g>
+									</g>
+								</svg></div>
+							<div class="loaded-fail">
+								<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+									<path fill="red"
+										d="M32,56A24,24,0,1,1,56,32,24,24,0,0,1,32,56Zm0-46A22,22,0,1,0,54,32,22,22,0,0,0,32,10Z" />
+									<path fill="red"
+										d="M41.55,42.55a1,1,0,0,1-.71-.3L21.75,23.16a1,1,0,1,1,1.41-1.41L42.25,40.84a1,1,0,0,1,0,1.41A1,1,0,0,1,41.55,42.55Z" />
+									<path fill="red"
+										d="M22.45,42.55a1,1,0,0,1-.7-.3,1,1,0,0,1,0-1.41L40.84,21.75a1,1,0,1,1,1.41,1.41L23.16,42.25A1,1,0,0,1,22.45,42.55Z" />
+								</svg>
+							</div>
+						</div>
+					</div>
+					<div class="notification-item fileZip">
+						<div class="title-wrapper">
+							<h4 class="title-h4-white">Zip Creating</h4>
+						</div>
+						<div class="status">
+							<div class="loading">
+								<div class="loadingio-spinner-spin-r97nm33plq8">
+									<div class="ldio-kugicms7vi">
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="loaded"><svg style="enable-background:new 0 0 64 64;" viewBox="0 0 64 64">
+									<g>
+										<g id="Icon-Check" transform="translate(328.000000, 278.000000)">
+											<path class="st0" fill="rgb(59, 196, 155)"
+												d="M-296-222.6c-12.9,0-23.4-10.5-23.4-23.4c0-12.9,10.5-23.4,23.4-23.4     c12.9,0,23.4,10.5,23.4,23.4C-272.6-233.1-283.1-222.6-296-222.6L-296-222.6z M-296-266.9c-11.5,0-20.9,9.4-20.9,20.9     s9.4,20.9,20.9,20.9s20.9-9.4,20.9-20.9S-284.5-266.9-296-266.9L-296-266.9z"
+												id="Fill-43" />
+											<polyline fill="rgb(59, 196, 155)" class="st0" id="Fill-44"
+												points="-298.8,-235.9 -310.7,-247.9 -308.9,-249.7 -298.8,-239.5 -283.1,-255.2      -281.3,-253.4 -298.8,-235.9    " />
+										</g>
+									</g>
+								</svg></div>
+							<div class="loaded-fail">
+								<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+									<path fill="red"
+										d="M32,56A24,24,0,1,1,56,32,24,24,0,0,1,32,56Zm0-46A22,22,0,1,0,54,32,22,22,0,0,0,32,10Z" />
+									<path fill="red"
+										d="M41.55,42.55a1,1,0,0,1-.71-.3L21.75,23.16a1,1,0,1,1,1.41-1.41L42.25,40.84a1,1,0,0,1,0,1.41A1,1,0,0,1,41.55,42.55Z" />
+									<path fill="red"
+										d="M22.45,42.55a1,1,0,0,1-.7-.3,1,1,0,0,1,0-1.41L40.84,21.75a1,1,0,1,1,1.41,1.41L23.16,42.25A1,1,0,0,1,22.45,42.55Z" />
+								</svg>
+							</div>
+						</div>
+					</div>
+					<div class="notification-item zipUploaded">
+						<div class="title-wrapper">
+							<h4 class="title-h4-white">Zip Uploading</h4>
+						</div>
+						<div class="status">
+							<div class="loading">
+								<div class="loadingio-spinner-spin-r97nm33plq8">
+									<div class="ldio-kugicms7vi">
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="loaded"><svg style="enable-background:new 0 0 64 64;" viewBox="0 0 64 64">
+									<g>
+										<g id="Icon-Check" transform="translate(328.000000, 278.000000)">
+											<path class="st0" fill="rgb(59, 196, 155)"
+												d="M-296-222.6c-12.9,0-23.4-10.5-23.4-23.4c0-12.9,10.5-23.4,23.4-23.4     c12.9,0,23.4,10.5,23.4,23.4C-272.6-233.1-283.1-222.6-296-222.6L-296-222.6z M-296-266.9c-11.5,0-20.9,9.4-20.9,20.9     s9.4,20.9,20.9,20.9s20.9-9.4,20.9-20.9S-284.5-266.9-296-266.9L-296-266.9z"
+												id="Fill-43" />
+											<polyline fill="rgb(59, 196, 155)" class="st0" id="Fill-44"
+												points="-298.8,-235.9 -310.7,-247.9 -308.9,-249.7 -298.8,-239.5 -283.1,-255.2      -281.3,-253.4 -298.8,-235.9    " />
+										</g>
+									</g>
+								</svg></div>
+							<div class="loaded-fail">
+								<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+									<path fill="red"
+										d="M32,56A24,24,0,1,1,56,32,24,24,0,0,1,32,56Zm0-46A22,22,0,1,0,54,32,22,22,0,0,0,32,10Z" />
+									<path fill="red"
+										d="M41.55,42.55a1,1,0,0,1-.71-.3L21.75,23.16a1,1,0,1,1,1.41-1.41L42.25,40.84a1,1,0,0,1,0,1.41A1,1,0,0,1,41.55,42.55Z" />
+									<path fill="red"
+										d="M22.45,42.55a1,1,0,0,1-.7-.3,1,1,0,0,1,0-1.41L40.84,21.75a1,1,0,1,1,1.41,1.41L23.16,42.25A1,1,0,0,1,22.45,42.55Z" />
+								</svg>
+							</div>
+						</div>
+					</div>
+					<div class="notification-item functionCreated">
+						<div class="title-wrapper">
+							<h4 class="title-h4-white">Lambda Creating</h4>
+						</div>
+						<div class="status">
+							<div class="loading">
+								<div class="loadingio-spinner-spin-r97nm33plq8">
+									<div class="ldio-kugicms7vi">
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="loaded"><svg style="enable-background:new 0 0 64 64;" viewBox="0 0 64 64">
+									<g>
+										<g id="Icon-Check" transform="translate(328.000000, 278.000000)">
+											<path class="st0" fill="rgb(59, 196, 155)"
+												d="M-296-222.6c-12.9,0-23.4-10.5-23.4-23.4c0-12.9,10.5-23.4,23.4-23.4     c12.9,0,23.4,10.5,23.4,23.4C-272.6-233.1-283.1-222.6-296-222.6L-296-222.6z M-296-266.9c-11.5,0-20.9,9.4-20.9,20.9     s9.4,20.9,20.9,20.9s20.9-9.4,20.9-20.9S-284.5-266.9-296-266.9L-296-266.9z"
+												id="Fill-43" />
+											<polyline fill="rgb(59, 196, 155)" class="st0" id="Fill-44"
+												points="-298.8,-235.9 -310.7,-247.9 -308.9,-249.7 -298.8,-239.5 -283.1,-255.2      -281.3,-253.4 -298.8,-235.9    " />
+										</g>
+									</g>
+								</svg></div>
+
+							<div class="loaded-fail">
+								<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+									<path fill="red"
+										d="M32,56A24,24,0,1,1,56,32,24,24,0,0,1,32,56Zm0-46A22,22,0,1,0,54,32,22,22,0,0,0,32,10Z" />
+									<path fill="red"
+										d="M41.55,42.55a1,1,0,0,1-.71-.3L21.75,23.16a1,1,0,1,1,1.41-1.41L42.25,40.84a1,1,0,0,1,0,1.41A1,1,0,0,1,41.55,42.55Z" />
+									<path fill="red"
+										d="M22.45,42.55a1,1,0,0,1-.7-.3,1,1,0,0,1,0-1.41L40.84,21.75a1,1,0,1,1,1.41,1.41L23.16,42.25A1,1,0,0,1,22.45,42.55Z" />
+								</svg>
+							</div>
+						</div>
+					</div>
+					<div class="notification-item timeoutAdded">
+						<div class="title-wrapper">
+							<h4 class="title-h4-white">Range time adding</h4>
+						</div>
+						<div class="status">
+							<div class="loading">
+								<div class="loadingio-spinner-spin-r97nm33plq8">
+									<div class="ldio-kugicms7vi">
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+										<div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="loaded"><svg style="enable-background:new 0 0 64 64;" viewBox="0 0 64 64">
+									<g>
+										<g id="Icon-Check" transform="translate(328.000000, 278.000000)">
+											<path class="st0" fill="rgb(59, 196, 155)"
+												d="M-296-222.6c-12.9,0-23.4-10.5-23.4-23.4c0-12.9,10.5-23.4,23.4-23.4     c12.9,0,23.4,10.5,23.4,23.4C-272.6-233.1-283.1-222.6-296-222.6L-296-222.6z M-296-266.9c-11.5,0-20.9,9.4-20.9,20.9     s9.4,20.9,20.9,20.9s20.9-9.4,20.9-20.9S-284.5-266.9-296-266.9L-296-266.9z"
+												id="Fill-43" />
+											<polyline fill="rgb(59, 196, 155)" class="st0" id="Fill-44"
+												points="-298.8,-235.9 -310.7,-247.9 -308.9,-249.7 -298.8,-239.5 -283.1,-255.2      -281.3,-253.4 -298.8,-235.9    " />
+										</g>
+									</g>
+								</svg></div>
+
+							<div class="loaded-fail">
+								<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+									<path fill="red"
+										d="M32,56A24,24,0,1,1,56,32,24,24,0,0,1,32,56Zm0-46A22,22,0,1,0,54,32,22,22,0,0,0,32,10Z" />
+									<path fill="red"
+										d="M41.55,42.55a1,1,0,0,1-.71-.3L21.75,23.16a1,1,0,1,1,1.41-1.41L42.25,40.84a1,1,0,0,1,0,1.41A1,1,0,0,1,41.55,42.55Z" />
+									<path fill="red"
+										d="M22.45,42.55a1,1,0,0,1-.7-.3,1,1,0,0,1,0-1.41L40.84,21.75a1,1,0,1,1,1.41,1.41L23.16,42.25A1,1,0,0,1,22.45,42.55Z" />
+								</svg>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<div class="errorStatus">
+		<p class="errorMessage"></p>
+	</div>
+	<div class="notification-container">
+
+	</div>
+	<footer class="footer"></footer>
+</body>
+<script src="/scripts/src-min-noconflict/ace.js" charset="utf-8"></script>
+<script src="/scripts/src-min-noconflict/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="/scripts/src-min-noconflict/ext-language_tools.js"></script>
+<script src="/scripts/script.js"></script>
+
+</html>

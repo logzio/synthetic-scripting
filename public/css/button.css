@@ -1,0 +1,46 @@
+.icon_plus {
+    display: flex;
+    color: #fff;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid;
+    justify-content: center;
+    align-content: center;
+    border-radius: 5px;
+}
+.icon-content {
+    margin: 0px;
+    line-height: 31px;
+}
+.submission {
+    background: #f7c15c;
+    border: 0px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+.button-add {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+.download-template {
+    margin-top: 13px;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    padding: 10px;
+    transition: 0.3s all ease-in-out;
+    cursor: pointer;
+}
+
+.download-template:hover {
+    background: #fff;
+    color: #2a3547;
+}

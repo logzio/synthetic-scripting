@@ -1,0 +1,38 @@
+.form-control {
+    position: relative;
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    margin-bottom: 20px;
+}
+.form-editor {
+    min-height: 400px;
+    position: relative;
+    width: 100%;
+}
+.form-element {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.form-side {
+    width: 100%;
+    padding: 10px;
+}
+.form-control-variable {
+    display: flex;
+    margin-bottom: 20px;
+    align-content: center;
+}
+.form-control-key {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    margin-right: 10px;
+}
+.form-control-value {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin-right: 10px;
+}

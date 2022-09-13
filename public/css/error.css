@@ -1,0 +1,15 @@
+
+.errorStatus {
+    background: #bc10179e;
+    color: #fff;
+    max-width: 600px;
+    margin: auto;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 20px;
+	display: none;
+}
+
+.errorMessage {
+    margin: 0;
+}

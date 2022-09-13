@@ -1,0 +1,11 @@
+.main-section{
+    display: flex;
+    flex-direction: row;
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+}
+.main-wrapper {
+    max-width: 600px;
+    width: 100%;
+}
