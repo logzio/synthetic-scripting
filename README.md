@@ -1,5 +1,7 @@
 # synthetic-scripting
 
+Synthetic-scripting mini app to emulate and monitor a custom user experience by scripting browsers that navigate your website, take specific actions, and ensure specific elements are present. Synthetic-scripting app help to define tests( with playwright) to test custom user experience.
+
 ## Run Application
 
 1. Pull the Docker image.
@@ -15,6 +17,8 @@ Docker image will run a Node.js mini app. Open http://localhost:8080 in your Bro
 ## Define a script for running the test
 
 1. In tab `General Settings`, fill in all the required fields.
+
+To test Locally please provide all required fields and add test to `Code Editor` section.
 
 ![UI first screen](assets/first-screen.png)
 
