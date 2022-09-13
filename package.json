@@ -3,6 +3,13 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "author": "Anton Kolomiiets <anton.kolomiiets@logz.io>",
+    "contributors": [
+        {
+            "name": "Anton Kolomiiets",
+            "email": "resdenia@gmail.com"
+        }
+    ],
     "scripts": {
         "test": "jest",
         "dev": "nodemon index.js",
@@ -12,7 +19,6 @@
         "build": "npm run build --prefix client",
         "container": "node index.js"
     },
-    "author": "",
     "license": "ISC",
     "dependencies": {
         "@aws-sdk/client-cloudformation": "^3.142.0",

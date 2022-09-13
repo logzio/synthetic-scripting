@@ -11,8 +11,6 @@ const { cloudWatchEvent } = require('../utils/cloudWatchEvent');
 const { setupCFTemplate } = require('../utils/setup-cf-template');
 const { fileToZipCF } = require('../utils/zip-cf-creator');
 
-// const handlerLocally = require('../utils/lambdaFunctionLocal/index');
-
 exports.modifyFile = async (req, res) => {
     const { code } = req.body;
 
@@ -150,13 +148,20 @@ exports.modifyFileLocally = async (req, res) => {
             shell.exec(
                 `node ./utils/lambdaFunctionLocal/index.js`,
                 function (_, stdout) {
-                    console.log(stdout);
-                    statusTest = stdout;
+                    stdout.split('\n').forEach((line) => {
+                        const arrayWords = line.split(' ');
+                        if (
+                            arrayWords.length > 1 &&
+                            arrayWords[0] === 'ToDisplay'
+                        ) {
+                            arrayWords.shift();
+                            statusTest = arrayWords.join(' ');
+                        }
+                    });
                     res.statusCode = 201;
                     res.send({ error: false, message: statusTest });
                 },
             );
-            //  statusTest = await handlerLocally();
         }
     } catch (err) {
         logger(err);

@@ -1,4 +1,4 @@
-const { SUCCESS_MESSAGE } = require('../constants');
+const { SUCCESS_MESSAGE, SEPARATOR } = require('../constants');
 
 const statusErrorHandler = (err = '') => {
     let status;
@@ -15,7 +15,8 @@ const statusErrorHandler = (err = '') => {
     } else {
         status = SUCCESS_MESSAGE;
     }
-    console.log(status);
+
+    console.log(SEPARATOR, status);
 
     return status;
 };

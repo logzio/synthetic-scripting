@@ -79,17 +79,11 @@ class Api {
 			settings.endPointUrls.modifyFileLocalUrl,
 		);
 		if (!responseLocal.error) {
-			// this.addNotification(
-			//     'Local Test successfuly ended',
-			//     typeOfNotification.success,
-			// );
+			//  TODO: need to send data for render status
+
 			return responseLocal
 		} else {
-			// this.addNotification(
-			//     'Something went wrong please check data what you provided',
-			//     typeOfNotification.warning,
-			// );
-			// this.errorDisplay(responseLocal.errorData);
+
 			return responseLocal
 
 		}
@@ -97,21 +91,15 @@ class Api {
 
 	initPage = async (rangeTime: number, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, description?: string) => {
 
-		// notificationFileModify.style.display = 'flex';
 		const responseModify = await this.customFetch(
 			{ code: codeSnippet },
 			settings.endPointUrls.modifyFileUrl,
 		);
 		if (!responseModify.error) {
-			// this.displayGoodStatus(
-			//     notificationFileModify,
-			//     notificationZipCreate,
-			//     'Function Created',
-			// );
-			// return responseModify;
+			//  TODO: need to send data for render status
+
 		} else {
-			// this.errorDisplay(responseModify.errorData);
-			// this.displayFailedStatus(notificationFileModify);
+
 			return responseModify;
 		}
 		const responseToZip = await this.customFetch(
@@ -119,14 +107,11 @@ class Api {
 			settings.endPointUrls.createZipUrl,
 		);
 		if (!responseToZip.error) {
-			// this.displayGoodStatus(
-			//     notificationZipCreate,
-			//     notificationZipUpload,
-			//     'Zip Created',
-			// );
+
+			//  TODO: need to send data for render status
+
 		} else {
-			// this.errorDisplay(responseToZip.errorData);
-			// this.displayFailedStatus(notificationZipCreate);
+
 			return responseToZip;
 		}
 
@@ -140,11 +125,8 @@ class Api {
 			settings.endPointUrls.uploadZipUrl,
 		);
 		if (!responseUploadZip.error) {
-			// this.displayGoodStatus(
-			// 	notificationZipUpload,
-			// 	notificationLambdaCreate,
-			// 	'Zip Uploaded',
-			// );
+			//  TODO: need to send data for render status
+
 			const response = await this.customFetch(
 				{
 					name,
@@ -161,19 +143,14 @@ class Api {
 			);
 
 			if (!response.error) {
-				// this.displayGoodStatus(
-				// 	notificationLambdaCreate,
-				// 	notificationAddRange,
-				// 	'Lambda Created',
-				// );
+				//  TODO: need to send data for render status
+
 			} else {
-				// this.errorDisplay(response.errorData);
-				// this.displayFailedStatus(notificationLambdaCreate);
+
 				return response;
 			}
 		} else {
-			// this.errorDisplay(responseUploadZip.errorData);
-			// this.displayFailedStatus(notificationZipUpload);
+
 			return responseUploadZip;
 		}
 		const cloudBridgeEventResp = await this.customFetch(
@@ -187,16 +164,9 @@ class Api {
 			settings.endPointUrls.addEventBridgeUrl,
 		);
 		if (!cloudBridgeEventResp.error) {
-			// this.displayGoodStatus(
-			// 	notificationAddRange,
-			// 	null,
-			// 	'Range time added',
-			// );
-			//update progressBar
-			// this.updateProgressBar('code', 'add');
+			//  TODO: need to send data for render status
 		} else {
-			// this.errorDisplay(cloudBridgeEventResp.errorData);
-			// this.displayFailedStatus(notificationAddRange);
+
 			return cloudBridgeEventResp;
 		}
 	};
@@ -207,14 +177,10 @@ class Api {
 			settings.endPointUrls.modifyFileUrl,
 		);
 		if (!responseModify.error) {
-			// this.displayGoodStatus(
-			//     notificationFileModify,
-			//     notificationZipCreate,
-			//     'Function Created',
-			// );
+			//  TODO: need to send data for render status
+
 		} else {
-			// this.errorDisplay(responseModify.errorData);
-			// this.displayFailedStatus(notificationFileModify);
+
 			return responseModify;
 		}
 		const responseToZip = await this.customFetch(
@@ -231,15 +197,11 @@ class Api {
 		);
 
 		if (!responseToZip.error) {
-			// this.displayGoodStatus(
-			//     notificationZipCreate,
-			//     null,
-			//     'Zip Downloaded',
-			// );
+			//  TODO: need to send data for render status
+
 			downloadZip(responseToZip.zip);
 		} else {
-			// this.errorDisplay(responseToZip.errorData);
-			// this.displayFailedStatus(notificationZipCreate);
+
 			return responseToZip;
 		}
 	};
