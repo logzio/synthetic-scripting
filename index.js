@@ -19,8 +19,8 @@ app.use((req, res, next) => {
     );
     next();
 });
-// app.set('views', __dirname + '/views');
-// app.engine('html', require('ejs').renderFile);
+
+
 
 app.use(mainRoutes);
 app.use('/api', creatorRoutes);

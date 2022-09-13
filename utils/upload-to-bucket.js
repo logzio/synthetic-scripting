@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const { logger } = require('./logger');
+
 /**
  * @param  {string} fileName
  * @param  {string} fileData
@@ -7,6 +8,7 @@ const { logger } = require('./logger');
  * @param  {string} secret_key
  * @param  {string} bucket_name
  */
+
 exports.uploadFileOnS3 = async (
     fileName,
     fileData,

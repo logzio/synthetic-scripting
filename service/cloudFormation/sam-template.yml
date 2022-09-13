@@ -34,13 +34,10 @@ Resources:
     Properties:
       Runtime: nodejs14.x
       CodeUri:
-#add Bucket name
         Bucket: !Ref AWSBucket
-#add zipNameRoute        
         Key: !Ref ZipNameRoute
       Handler: index.handler
       Description: Lambda Function to run playwright test
-#add name of the text
       FunctionName: !Ref LambdaTestName
       MemorySize: 512
       Timeout: 60
@@ -48,7 +45,6 @@ Resources:
         CronEvent:
           Type: Schedule
           Properties:
-#add timeout
             Schedule: !Ref Timeout
             Name: RateSchedule
             Description: Trigger Lambda once in a minute
