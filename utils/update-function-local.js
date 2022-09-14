@@ -3,8 +3,8 @@ const path = require('path');
 const { startFileLocally, endFileLocally } = require('../helper/index-config');
 const { logger } = require('./logger');
 /**
- * @param  {} code
- * @param  {} filePath
+ * @param  {string} code - Code snippet from ace editor inside Playwright test code
+ * @param  {string} filePath
  */
 const readWriteAsync = async (code, filePath) => {
     try {

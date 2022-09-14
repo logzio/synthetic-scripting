@@ -97,11 +97,19 @@ type EnvVariable = {
     [key: string]: string;
 };
 
+type ErrorObject = {
+    errorMessage: string;
+    errorTitle: string;
+};
+
 const Home: FunctionComponent = () => {
     const [activeRangeTime, setActiveRangeTime] = useState<string>('1 minute');
     const [methodTest, setMethodTest] = useState<string>('Cloud');
     const [isError, setIsError] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [errorData, setErrorMessage] = useState<ErrorObject>({
+        errorMessage: '',
+        errorTitle: '',
+    });
     const [codeSnippet, setCodeSnippet] = useState<string>(defaultCode);
     const [activeStep, setActiveStep] = useState<string>('edit_code');
 
@@ -152,8 +160,8 @@ const Home: FunctionComponent = () => {
         setActiveStep(activeStep);
         let response: any;
         if (activeStep === 'download') {
-            setIsError(false);
-            setErrorMessage('');
+            onCloseHandler();
+
             const validation = validateMetaDownload(
                 configs.name.value,
                 configs.token.value,
@@ -162,7 +170,10 @@ const Home: FunctionComponent = () => {
                 configs.bucketName.value,
             );
             if (!validation.status) {
-                displayErrorMessage(validation.errorMessage);
+                displayErrorMessage(
+                    validation.errorTitle,
+                    validation.errorMessage,
+                );
                 return;
             }
 
@@ -180,8 +191,7 @@ const Home: FunctionComponent = () => {
             );
         }
         if (activeStep === 'cloud') {
-            setIsError(false);
-            setErrorMessage('');
+            onCloseHandler();
             const validation = validateMetaDeploy(
                 configs.name.value,
                 configs.token.value,
@@ -193,7 +203,10 @@ const Home: FunctionComponent = () => {
             );
 
             if (!validation.status) {
-                displayErrorMessage(validation.errorMessage);
+                displayErrorMessage(
+                    validation.errorTitle,
+                    validation.errorMessage,
+                );
                 return;
             }
             response = await api.initPage(
@@ -215,18 +228,14 @@ const Home: FunctionComponent = () => {
 
         if (activeStep === 'cloud' || activeStep === 'download') {
             if (response!.error) {
-                displayErrorMessage(response.errorData);
+                displayErrorMessage(response.errorTitle, response.errorData);
                 return;
             }
         }
     };
-    const displayErrorMessage = (errorMessage: string) => {
+    const displayErrorMessage = (errorTitle: string, errorMessage: string) => {
         setIsError(true);
-        setErrorMessage(errorMessage);
-        setTimeout(() => {
-            setIsError(false);
-            setErrorMessage('');
-        }, 10000);
+        setErrorMessage({ errorMessage, errorTitle });
     };
     const onChangeCloudProviderHandler = (option: string) => {
         setActiveCloudProvider(option);
@@ -249,6 +258,14 @@ const Home: FunctionComponent = () => {
     };
     const onSetEnvVariableHandler = (listEnv: EnvVariable[]) => {
         setEnvList(listEnv);
+    };
+
+    const onCloseHandler = () => {
+        setIsError(false);
+        setErrorMessage({
+            errorMessage: '',
+            errorTitle: '',
+        });
     };
 
     return (
@@ -275,7 +292,13 @@ const Home: FunctionComponent = () => {
                 activeStep={activeStep}
                 onChangeStep={onChangeStepHandler}
             />
-            {isError ? <Error>{errorMessage}</Error> : ''}
+            {isError ? (
+                <Error title={errorData.errorTitle} onClose={onCloseHandler}>
+                    {errorData.errorMessage}
+                </Error>
+            ) : (
+                ''
+            )}
         </Layout>
     );
 };

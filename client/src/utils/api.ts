@@ -64,7 +64,6 @@ class Api {
 			})
 			.catch((err) => {
 				console.log(err);
-				//display error
 				return err.json();
 			});
 	};
