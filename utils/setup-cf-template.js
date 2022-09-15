@@ -37,7 +37,7 @@ exports.setupCFTemplate = async (
                 'utf8',
             ),
         );
-
+        fs.rmSync(dirOutput, { recursive: true, force: true });
         if (!fs.existsSync(dirOutput)) {
             fs.mkdirSync(dirOutput);
         }

@@ -11,6 +11,7 @@ const ButtonYellow = styled.button`
     border: 0px;
     padding: 6px 10px;
     cursor: pointer;
+    height: 30px;
 `;
 const ButtonWhite = styled.button`
     font-family: 'Roboto';

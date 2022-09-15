@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import styled from 'styled-components';
 import Button from '../../components/Button';
+import Spinner from '../../components/Spinner';
 
 const ButtonWrapper = styled.div`
     position: relative;
@@ -9,20 +10,23 @@ const ButtonWrapper = styled.div`
     margin-right: auto;
     width: calc(100% - 284px);
     max-width: 1280px;
-    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
 `;
 const ButtonRow = styled.div`
     margin-right: 15px;
     margin-left: 15px;
+    height: 30px;
+    display: flex;
 `;
 type Props = {
+    isDownload: boolean;
     methodTest: string;
     onChangeStep: (name: string) => void;
     activeStep: string;
 };
 const ButtonContainer: FunctionComponent<Props> = ({
+    isDownload,
     methodTest,
     onChangeStep,
     activeStep,
@@ -65,7 +69,7 @@ const ButtonContainer: FunctionComponent<Props> = ({
                                 }}
                                 type='yellow'
                             >
-                                Download
+                                {!isDownload ? 'Download' : <Spinner />}
                             </Button>
                         )}
                     </>

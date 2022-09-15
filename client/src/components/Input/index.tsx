@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 
 import styled from 'styled-components';
 
@@ -8,6 +8,10 @@ const InputWrapper = styled.input`
     border: 1px solid #e7e7e7;
     border-radius: 3px;
     padding: 6px 8px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #002e42;
 `;
 
 type Props = {

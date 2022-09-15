@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
 import Container from '../../components/Container';
 import Text from '../../components/Text';
@@ -13,7 +13,10 @@ import Select from '../../components/Select';
 import Label from '../../components/Label';
 import Input from '../../components/Input';
 import Tooltip from '../../components/Tooltip';
+import Status from '../../components/Status';
+
 const ContainerSteps = styled.div`
+    position: relative;
     background: #fff;
     padding: 24px;
     border: 1px solid #e7e7e7;
@@ -21,6 +24,7 @@ const ContainerSteps = styled.div`
     margin-bottom: 24px;
     margin-left: 15px;
     margin-right: 15px;
+    height: 100%;
 `;
 
 const TopWrapper = styled.div`
@@ -68,6 +72,8 @@ const FormControlSection = styled.div`
 `;
 
 type Props = {
+    stageDisplay: boolean;
+    stageDeploy: string;
     methodTest: string;
     activeRangeTime: string;
     activeCloudProvider: string;
@@ -82,6 +88,8 @@ type Meta = {
 };
 
 const ExportDeploy: FunctionComponent<Props> = ({
+    stageDisplay,
+    stageDeploy,
     methodTest,
     activeRangeTime,
     activeCloudProvider,
@@ -93,6 +101,23 @@ const ExportDeploy: FunctionComponent<Props> = ({
     const onToggleHandler = (option: string) => {
         onChangeMethodTest(option);
     };
+    // const [stage, setStage] = useState<string>('function-creating');
+    // const [counter, setCounter] = useState<number>(0);
+
+    // const changeStage = () => {
+    //     const stageArr = [
+    //         'function-creating',
+    //         'zip-creating',
+    //         'zip-uploading',
+    //         'lambda-creating',
+    //         'range-time-adding',
+    //         'range-time-added',
+    //         'stage-failed',
+    //     ];
+
+    //     setStage(stageArr[counter]);
+    //     setCounter((prev) => prev + 1);
+    // };
 
     return (
         <Container>
@@ -289,6 +314,15 @@ const ExportDeploy: FunctionComponent<Props> = ({
                 ) : (
                     ''
                 )}
+                {stageDisplay ? <Status stage={stageDeploy} /> : ''}
+                {/* <button
+                    style={{
+                        position: 'absolute',
+                    }}
+                    onClick={changeStage}
+                >
+                    click
+                </button> */}
             </ContainerSteps>
         </Container>
     );

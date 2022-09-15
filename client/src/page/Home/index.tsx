@@ -112,8 +112,10 @@ const Home: FunctionComponent = () => {
     });
     const [codeSnippet, setCodeSnippet] = useState<string>(defaultCode);
     const [activeStep, setActiveStep] = useState<string>('edit_code');
-
+    const [stageDeploy, setStageDeploy] = useState<string>('function-creating');
+    const [stageDisplay, setStageDisplay] = useState<boolean>(false);
     const [envList, setEnvList] = useState<EnvVariable[]>([]);
+    const [isDownload, setIsDownload] = useState<boolean>(false);
     const [configs, setConfigs] = useState<MetaConfig>({
         codeSnippet: {
             value: '',
@@ -153,6 +155,12 @@ const Home: FunctionComponent = () => {
             isValid: true,
         },
     });
+    const onStage = (stage: string) => {
+        setStageDeploy(stage);
+    };
+    const onDownload = (step: boolean) => {
+        setIsDownload(step);
+    };
 
     const [activeCloudProvider, setActiveCloudProvider] =
         useState<string>('AWS');
@@ -187,10 +195,14 @@ const Home: FunctionComponent = () => {
                 configs.bucketName.value,
                 configs.token.value,
                 configs.listener.value,
+                (step: boolean) => {
+                    onDownload(step);
+                },
                 configs.description?.value,
             );
         }
         if (activeStep === 'cloud') {
+            setStageDisplay(true);
             onCloseHandler();
             const validation = validateMetaDeploy(
                 configs.name.value,
@@ -222,13 +234,20 @@ const Home: FunctionComponent = () => {
                 configs.listener.value,
                 configs.region.value,
                 envList,
+                (stage: string) => {
+                    onStage(stage);
+                },
                 configs.description?.value,
             );
         }
 
         if (activeStep === 'cloud' || activeStep === 'download') {
             if (response!.error) {
-                displayErrorMessage(response.errorTitle, response.errorData);
+                setStageDeploy('stage-failed');
+                displayErrorMessage(
+                    response.errorTitle,
+                    response.errorData.err.message,
+                );
                 return;
             }
         }
@@ -267,17 +286,29 @@ const Home: FunctionComponent = () => {
             errorTitle: '',
         });
     };
-
+    const uniqueEnvVariable = (isUnique: boolean) => {
+        if (isUnique) {
+            setIsError(true);
+            setErrorMessage({
+                errorMessage:
+                    ' Enviroment Variable already exist. Please define unique Key.',
+                errorTitle: 'Enviroment Variable',
+            });
+        }
+    };
     return (
         <Layout activeStep={activeStep}>
             {activeStep === 'edit_code' ? (
                 <EditCodeContainer
+                    uniqueKey={uniqueEnvVariable}
                     codeSnippet={codeSnippet}
                     setCodeSnippet={onSetCodeSnippetHandler}
                     setEnvVariable={onSetEnvVariableHandler}
                 />
             ) : (
                 <ExportDeploy
+                    stageDisplay={stageDisplay}
+                    stageDeploy={stageDeploy}
                     methodTest={methodTest}
                     activeRangeTime={activeRangeTime}
                     activeCloudProvider={activeCloudProvider}
@@ -288,6 +319,7 @@ const Home: FunctionComponent = () => {
                 />
             )}
             <ButtonContainer
+                isDownload={isDownload}
                 methodTest={methodTest}
                 activeStep={activeStep}
                 onChangeStep={onChangeStepHandler}

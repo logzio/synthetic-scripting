@@ -5,6 +5,7 @@ interface CustomResponse {
 	zip?: string;
 	error?: boolean;
 	errorData?: string;
+	errorTitle?: string;
 	message?: string;
 }
 
@@ -78,27 +79,29 @@ class Api {
 			settings.endPointUrls.modifyFileLocalUrl,
 		);
 		if (!responseLocal.error) {
-			//  TODO: need to send data for render status
 
 			return responseLocal
 		} else {
-
+			responseLocal.errorTitle = 'Local Test';
 			return responseLocal
 
 		}
 	};
 
-	initPage = async (rangeTime: number, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, description?: string) => {
+	initPage = async (rangeTime: number, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: string) => void, description?: string) => {
 
 		const responseModify = await this.customFetch(
 			{ code: codeSnippet },
 			settings.endPointUrls.modifyFileUrl,
 		);
+
+
+
 		if (!responseModify.error) {
 			//  TODO: need to send data for render status
-
+			onStage('zip-creating')
 		} else {
-
+			responseModify.errorTitle = 'Script Create';
 			return responseModify;
 		}
 		const responseToZip = await this.customFetch(
@@ -106,10 +109,12 @@ class Api {
 			settings.endPointUrls.createZipUrl,
 		);
 		if (!responseToZip.error) {
+			onStage('zip-uploading')
 
 			//  TODO: need to send data for render status
 
 		} else {
+			responseToZip.errorTitle = 'Zip Create';
 
 			return responseToZip;
 		}
@@ -125,6 +130,7 @@ class Api {
 		);
 		if (!responseUploadZip.error) {
 			//  TODO: need to send data for render status
+			onStage('lambda-creating')
 
 			const response = await this.customFetch(
 				{
@@ -142,14 +148,16 @@ class Api {
 			);
 
 			if (!response.error) {
+				onStage('range-time-adding')
+
 				//  TODO: need to send data for render status
 
 			} else {
-
+				responseUploadZip.errorTitle = 'Lambda Create';
 				return response;
 			}
 		} else {
-
+			responseUploadZip.errorTitle = 'Zip Upload';
 			return responseUploadZip;
 		}
 		const cloudBridgeEventResp = await this.customFetch(
@@ -163,22 +171,23 @@ class Api {
 			settings.endPointUrls.addEventBridgeUrl,
 		);
 		if (!cloudBridgeEventResp.error) {
+			onStage('range-time-added')
 			//  TODO: need to send data for render status
 		} else {
-
+			responseUploadZip.errorTitle = 'Schedule Rade Add';
 			return cloudBridgeEventResp;
 		}
 	};
-	downloadCFTemplate = async (codeSnippet: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, listener: string, description?: string) => {
+	downloadCFTemplate = async (codeSnippet: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
+		onDownload(true)
 
 		const responseModify = await this.customFetch(
 			{ code: codeSnippet },
 			settings.endPointUrls.modifyFileUrl,
 		);
 		if (!responseModify.error) {
-			//  TODO: need to send data for render status
-
 		} else {
+			responseModify.errorTitle = 'Create File';
 
 			return responseModify;
 		}
@@ -196,10 +205,13 @@ class Api {
 		);
 
 		if (!responseToZip.error) {
-			//  TODO: need to send data for render status
+			onDownload(false)
 
 			downloadZip(responseToZip.zip);
 		} else {
+			onDownload(false)
+
+			responseModify.errorTitle = 'Create ZIP';
 
 			return responseToZip;
 		}

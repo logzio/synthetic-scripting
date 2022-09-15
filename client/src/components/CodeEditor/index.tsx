@@ -2,6 +2,7 @@ import React, { FunctionComponent, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 
 import styled from 'styled-components';
+import Spinner from '../Spinner';
 
 const CodeEditorWrapper = styled.div`
     border: 1px solid #e7e7e7;
@@ -9,18 +10,30 @@ const CodeEditorWrapper = styled.div`
     border-radius: 4px;
     position: relative;
     width: 70%;
-    max-height: 430px;
     height: 100%;
     overflow: hidden;
+`;
+
+const Loading = styled.div`
+	display:flex;
+	z-index 1000;
+	position:absolute;
+	top:0px;
+	width:100%;
+	height:100%;
+	background-color: rgb(255 255 255 / 69%);
+    justify-content: center;
 `;
 
 type Props = {
     codeSnippet: string;
     setCodeSnippet: (val: string) => void;
+    loading: boolean;
 };
 const CodeEditor: FunctionComponent<Props> = ({
     setCodeSnippet,
     codeSnippet,
+    loading,
 }) => {
     const editorRef = useRef(null);
 
@@ -37,12 +50,20 @@ const CodeEditor: FunctionComponent<Props> = ({
     return (
         <CodeEditorWrapper>
             <Editor
-                height='90vh'
+                // height='100%'
                 defaultLanguage='javascript'
                 defaultValue={codeSnippet}
                 onMount={handleEditorDidMount}
                 onChange={onChangeHandler}
             />
+
+            {loading ? (
+                <Loading>
+                    <Spinner />
+                </Loading>
+            ) : (
+                ''
+            )}
         </CodeEditorWrapper>
     );
 };

@@ -31,6 +31,7 @@ const ContainerSteps = styled.div`
     margin-bottom: 24px;
     margin-right: 15px;
     margin-left: 15px;
+    height: 100%;
 `;
 const SelectWrapper = styled.div`
     position: relative;
@@ -41,6 +42,7 @@ const SelectWrapper = styled.div`
 const MainWrapper = styled.div`
     display: flex;
     justify-content: space-between;
+    height: 80%;
 `;
 
 const BottomWrapper = styled.div`
@@ -72,31 +74,38 @@ type EnvVariable = {
     [key: string]: string;
 };
 type Props = {
+    uniqueKey: (isUnique: boolean) => void;
     codeSnippet: string;
     setCodeSnippet: (val: string) => void;
     setEnvVariable: (envVariable: EnvVariable[]) => void;
 };
 
 const EditCodeContainer: FunctionComponent<Props> = ({
+    uniqueKey,
     codeSnippet,
     setCodeSnippet,
     setEnvVariable,
 }) => {
     const [codeLanguage, setCodeLanguage] = useState<string>('Playwright');
+    const [loading, setLoading] = useState<boolean>(false);
     const [testStatus, setTestStatus] = useState<string>('');
     const onChangeSelect = (option: string) => {
         setCodeLanguage(option);
     };
 
     const startTestLocally = async () => {
+        setLoading(true);
         const response = await api.testLocal(codeSnippet);
 
         if (response!.error && response!.errorData) {
             setTestStatus(response!.errorData);
+            setLoading(false);
             return;
         }
 
         if (response.message) {
+            setLoading(false);
+
             setTestStatus(response.message);
         }
     };
@@ -122,10 +131,14 @@ const EditCodeContainer: FunctionComponent<Props> = ({
                 </TopWrapper>
                 <MainWrapper>
                     <CodeEditor
+                        loading={loading}
                         setCodeSnippet={setCodeSnippet}
                         codeSnippet={codeSnippet}
                     />
-                    <EnvVariableWrapper onSetListEnvVariable={setEnvVariable} />
+                    <EnvVariableWrapper
+                        uniqueKey={uniqueKey}
+                        onSetListEnvVariable={setEnvVariable}
+                    />
                 </MainWrapper>
                 <BottomWrapper>
                     <Text tag={'p'}>Test your script</Text>

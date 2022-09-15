@@ -1,4 +1,6 @@
-
+type EnvVariable = {
+	[key: string]: string;
+};
 export const validateMetaDeploy = (name: string, token: string, listener: string, region: string, bucket: string, accessKey: string, secretKey: string) => {
 
 	//  TODO:Refactor to more reuseful code
@@ -117,4 +119,24 @@ export const validateMetaDownload = (name: string, token: string, listener: stri
 		errorTitle: 'No error'
 	};
 
+}
+
+
+export const containsKeys = (newEnvVariable: EnvVariable, list: EnvVariable[]) => {
+	const newKey = Object.keys(newEnvVariable)[0];
+	console.log(newKey)
+	console.log(list);
+	for (let i = 0; i < list.length; i++) {
+		console.log(list[i])
+		console.log(Object.keys(list[i])[0])
+		if (newKey === Object.keys(list[i])[0]) {
+			return true;
+		}
+
+		// if (list.hasOwnProperty(x) && list[x] === obj) {
+		// 	return true;
+		// }
+	}
+
+	return false;
 }
