@@ -10,42 +10,13 @@ import Error from '../../components/Error';
 import api from '../../utils/api';
 import { rangeTimeVariable } from '../../utils/selectOptions';
 import { validateMetaDeploy, validateMetaDownload } from '../../utils/validate';
-const defaultCode = `const playwright = require('playwright-aws-lambda');
-const readSendData = require('./rsData');
+import { DEFAULT_CODE } from '../../utils/constants';
 
-const handler = async () => {
-	let context = null;
-	let browser = null;
-	try {
-	browser = await playwright.launchChromium(false);
-	context = await browser.newContext({
-		recordHar: {
-			path: './capture-hars/example.har',
-			mode: 'full',
-			content: 'omit',
-		},
-    });
-	const page = await context.newPage();
-	//////////////////////////////////
-	//// add your code from here ////
-	///////////////////////////////////
-					
-	///////////////////////////////////
-	//// add your code to here ////
-	//////////////////////////////////
-				
-	} catch (error) {
-		throw error;
-	} finally {
-		if (browser) {
-			await context.close();
-			await browser.close();
-		}
-	}
-	
-	readSendData();
-	return true;
-};`;
+type StatusProps = {
+    message: string;
+    isSuccessful: boolean;
+    isEnd: boolean;
+};
 
 type Meta = {
     field: string;
@@ -110,9 +81,13 @@ const Home: FunctionComponent = () => {
         errorMessage: '',
         errorTitle: '',
     });
-    const [codeSnippet, setCodeSnippet] = useState<string>(defaultCode);
+    const [codeSnippet, setCodeSnippet] = useState<string>(DEFAULT_CODE);
     const [activeStep, setActiveStep] = useState<string>('edit_code');
-    const [stageDeploy, setStageDeploy] = useState<string>('function-creating');
+    const [stageDeploy, setStageDeploy] = useState<StatusProps>({
+        message: 'Function creating...',
+        isSuccessful: true,
+        isEnd: false,
+    });
     const [stageDisplay, setStageDisplay] = useState<boolean>(false);
     const [envList, setEnvList] = useState<EnvVariable[]>([]);
     const [isDownload, setIsDownload] = useState<boolean>(false);
@@ -155,7 +130,7 @@ const Home: FunctionComponent = () => {
             isValid: true,
         },
     });
-    const onStage = (stage: string) => {
+    const onStage = (stage: StatusProps) => {
         setStageDeploy(stage);
     };
     const onDownload = (step: boolean) => {
@@ -234,7 +209,7 @@ const Home: FunctionComponent = () => {
                 configs.listener.value,
                 configs.region.value,
                 envList,
-                (stage: string) => {
+                (stage: StatusProps) => {
                     onStage(stage);
                 },
                 configs.description?.value,
@@ -243,7 +218,11 @@ const Home: FunctionComponent = () => {
 
         if (activeStep === 'cloud' || activeStep === 'download') {
             if (response!.error) {
-                setStageDeploy('stage-failed');
+                // setStageDeploy({
+                //     message: 'Failed',
+                //     isSuccessful: false,
+                //     isEnd: false,
+                // });
                 displayErrorMessage(
                     response.errorTitle,
                     response.errorData.err.message,
@@ -255,6 +234,16 @@ const Home: FunctionComponent = () => {
     const displayErrorMessage = (errorTitle: string, errorMessage: string) => {
         setIsError(true);
         setErrorMessage({ errorMessage, errorTitle });
+    };
+
+    const statusGoBackHandler = (step: string) => {
+        setActiveStep(step);
+        setStageDeploy({
+            message: 'Function creating...',
+            isSuccessful: true,
+            isEnd: false,
+        });
+        setStageDisplay(false);
     };
     const onChangeCloudProviderHandler = (option: string) => {
         setActiveCloudProvider(option);
@@ -296,6 +285,7 @@ const Home: FunctionComponent = () => {
             });
         }
     };
+
     return (
         <Layout activeStep={activeStep}>
             {activeStep === 'edit_code' ? (
@@ -312,6 +302,7 @@ const Home: FunctionComponent = () => {
                     methodTest={methodTest}
                     activeRangeTime={activeRangeTime}
                     activeCloudProvider={activeCloudProvider}
+                    statusGoBackHandler={statusGoBackHandler}
                     onChangeMethodTest={onChangeMethodTestHandler}
                     onChangeRangeTime={updateRangeTimeHandler}
                     onChangeCloudProvider={onChangeCloudProviderHandler}

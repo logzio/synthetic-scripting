@@ -8,7 +8,11 @@ interface CustomResponse {
 	errorTitle?: string;
 	message?: string;
 }
-
+type StatusProps = {
+	message: string;
+	isSuccessful: boolean;
+	isEnd: boolean;
+};
 
 const settings = {
 	notificationLoaded: '.loaded',
@@ -88,7 +92,7 @@ class Api {
 		}
 	};
 
-	initPage = async (rangeTime: number, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: string) => void, description?: string) => {
+	initPage = async (rangeTime: number, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: StatusProps) => void, description?: string) => {
 
 		const responseModify = await this.customFetch(
 			{ code: codeSnippet },
@@ -99,8 +103,17 @@ class Api {
 
 		if (!responseModify.error) {
 			//  TODO: need to send data for render status
-			onStage('zip-creating')
+			onStage({
+				message: 'ZIP Creating...',
+				isSuccessful: true,
+				isEnd: false,
+			})
 		} else {
+			onStage({
+				message: 'Function create failed',
+				isSuccessful: false,
+				isEnd: false,
+			})
 			responseModify.errorTitle = 'Script Create';
 			return responseModify;
 		}
@@ -109,11 +122,22 @@ class Api {
 			settings.endPointUrls.createZipUrl,
 		);
 		if (!responseToZip.error) {
-			onStage('zip-uploading')
+			onStage({
+				message: 'ZIP uploading...',
+				isSuccessful: true,
+				isEnd: false,
+			})
 
 			//  TODO: need to send data for render status
 
 		} else {
+
+			onStage({
+				message: 'ZIP create failed',
+				isSuccessful: false,
+				isEnd: false,
+			})
+
 			responseToZip.errorTitle = 'Zip Create';
 
 			return responseToZip;
@@ -129,37 +153,58 @@ class Api {
 			settings.endPointUrls.uploadZipUrl,
 		);
 		if (!responseUploadZip.error) {
-			//  TODO: need to send data for render status
-			onStage('lambda-creating')
+			onStage({
+				message: 'Lambda function creating...',
+				isSuccessful: true,
+				isEnd: false,
+			})
 
-			const response = await this.customFetch(
-				{
-					name,
-					description,
-					accessKey,
-					secretKey,
-					bucketName,
-					token,
-					region,
-					listEnvVariables,
-					listenerUrl,
-				},
-				settings.endPointUrls.createLambdaUrl,
-			);
 
-			if (!response.error) {
-				onStage('range-time-adding')
-
-				//  TODO: need to send data for render status
-
-			} else {
-				responseUploadZip.errorTitle = 'Lambda Create';
-				return response;
-			}
 		} else {
+			onStage({
+				message: 'ZIP upload failed',
+				isSuccessful: false,
+				isEnd: false,
+			})
 			responseUploadZip.errorTitle = 'Zip Upload';
 			return responseUploadZip;
 		}
+
+		const response = await this.customFetch(
+			{
+				name,
+				description,
+				accessKey,
+				secretKey,
+				bucketName,
+				token,
+				region,
+				listEnvVariables,
+				listenerUrl,
+			},
+			settings.endPointUrls.createLambdaUrl,
+		);
+
+		if (!response.error) {
+			// onStage('range-time-adding')
+			onStage({
+				message: 'Schedule Rate adding...',
+				isSuccessful: true,
+				isEnd: false,
+			})
+			//  TODO: need to send data for render status
+
+		} else {
+			onStage({
+				message: 'Lambda function creating...',
+				isSuccessful: false,
+				isEnd: false,
+			})
+			responseUploadZip.errorTitle = 'Lambda Create';
+			return response;
+		}
+
+
 		const cloudBridgeEventResp = await this.customFetch(
 			{
 				name,
@@ -171,9 +216,18 @@ class Api {
 			settings.endPointUrls.addEventBridgeUrl,
 		);
 		if (!cloudBridgeEventResp.error) {
-			onStage('range-time-added')
-			//  TODO: need to send data for render status
+
+			onStage({
+				message: 'Shedule Rate added',
+				isSuccessful: true,
+				isEnd: true,
+			})			//  TODO: need to send data for render status
 		} else {
+			onStage({
+				message: 'Shedule Rate add failed',
+				isSuccessful: false,
+				isEnd: false,
+			})
 			responseUploadZip.errorTitle = 'Schedule Rade Add';
 			return cloudBridgeEventResp;
 		}

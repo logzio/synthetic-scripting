@@ -70,13 +70,19 @@ const FormControlSection = styled.div`
     width: 30%;
     position: relative;
 `;
+type StatusProps = {
+    message: string;
+    isSuccessful: boolean;
+    isEnd: boolean;
+};
 
 type Props = {
     stageDisplay: boolean;
-    stageDeploy: string;
+    stageDeploy: StatusProps;
     methodTest: string;
     activeRangeTime: string;
     activeCloudProvider: string;
+    statusGoBackHandler: (option: string) => void;
     onChangeMethodTest: (option: string) => void;
     onChangeRangeTime: (option: string) => void;
     onChangeCloudProvider: (option: string) => void;
@@ -93,6 +99,7 @@ const ExportDeploy: FunctionComponent<Props> = ({
     methodTest,
     activeRangeTime,
     activeCloudProvider,
+    statusGoBackHandler,
     onChangeMethodTest,
     onChangeRangeTime,
     onChangeCloudProvider,
@@ -297,7 +304,14 @@ const ExportDeploy: FunctionComponent<Props> = ({
                 ) : (
                     ''
                 )}
-                {stageDisplay ? <Status stage={stageDeploy} /> : ''}
+                {stageDisplay ? (
+                    <Status
+                        stage={stageDeploy}
+                        goBackHandler={statusGoBackHandler}
+                    />
+                ) : (
+                    ''
+                )}
             </ContainerSteps>
         </Container>
     );

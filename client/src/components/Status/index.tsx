@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 import Button from '../Button';
@@ -37,14 +37,21 @@ const StatusText = styled.div`
     opacity: 0;
     margin-top: 4px;
     transtion: bottom 0.5s ease, opacity 0.5s ease;
-
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     &.display {
+        transition-delay: 0.6s;
         opacity: 1;
-        bottom: 10px;
+        bottom: 0px;
     }
     &.hide {
-        bottom: -10px;
+        bottom: 10px;
         opacity: 0;
+    }
+    &.withButton {
+        bottom: -46px;
     }
 `;
 
@@ -74,21 +81,42 @@ const StatusIcon = styled.svg`
     }
 `;
 
-type Props = {
-    stage: string;
+type StatusProps = {
+    message: string;
+    isSuccessful: boolean;
+    isEnd: boolean;
 };
 
-const Status: FunctionComponent<Props> = ({ stage }) => {
+type Props = {
+    stage: StatusProps;
+    goBackHandler: (step: string) => void;
+};
+
+const Status: FunctionComponent<Props> = ({ stage, goBackHandler }) => {
+    const [isSuccessful, setIsSuccessful] = useState<boolean>(true);
+    const [message, setMessage] = useState<string>('Function Creating...');
+    const [isEnd, setIsEnd] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const goBack = () => {
-        console.log('goBack');
+        goBackHandler('edit_code');
     };
+    useEffect(() => {
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            setMessage(stage.message);
+            setIsSuccessful(stage.isSuccessful);
+            setIsEnd(stage.isEnd);
+        }, 600);
+    }, [stage]);
+
     return (
         <StatusWrapper>
             <StatusRow>
                 <StatusIcon
-                    className={`${
-                        stage === 'range-time-added' ? 'success' : ''
-                    } ${stage === 'stage-failed' ? 'stage-fail' : ''}`}
+                    className={`${isEnd ? 'success' : ''} ${
+                        !isSuccessful ? 'stage-fail' : ''
+                    }`}
                     width='20'
                     height='21'
                     viewBox='0 0 20 21'
@@ -112,56 +140,18 @@ const Status: FunctionComponent<Props> = ({ stage }) => {
 
                 <StatusRowText>
                     <StatusText
-                        className={
-                            stage === 'function-creating' ? 'display' : 'hide'
-                        }
+                        className={`${isLoading ? 'hide' : 'display'} ${
+                            !isSuccessful || isEnd ? 'withButton' : ''
+                        }`}
                     >
-                        Function Creating...
-                    </StatusText>
-                    <StatusText
-                        className={
-                            stage === 'zip-creating' ? 'display' : 'hide'
-                        }
-                    >
-                        ZIP Creating...
-                    </StatusText>
-                    <StatusText
-                        className={
-                            stage === 'zip-uploading' ? 'display' : 'hide'
-                        }
-                    >
-                        ZIP Uploading...
-                    </StatusText>
-                    <StatusText
-                        className={
-                            stage === 'lambda-creating' ? 'display' : 'hide'
-                        }
-                    >
-                        Lambda Creating...
-                    </StatusText>
-                    <StatusText
-                        className={
-                            stage === 'range-time-adding' ? 'display' : 'hide'
-                        }
-                    >
-                        Schedule Rate adding...
-                    </StatusText>
-                    <StatusText
-                        className={
-                            stage === 'range-time-added' ? 'display' : 'hide'
-                        }
-                    >
-                        Schedule Rate added.
-                    </StatusText>
-                    <StatusText
-                        className={
-                            stage === 'stage-failed' ? 'display' : 'hide'
-                        }
-                    >
-                        {stage}
-                        <Button onClick={goBack} type='white'>
-                            Go back
-                        </Button>
+                        {message}
+                        {isEnd || !isSuccessful ? (
+                            <Button onClick={goBack} type='white'>
+                                Go back
+                            </Button>
+                        ) : (
+                            ''
+                        )}
                     </StatusText>
                 </StatusRowText>
             </StatusRow>
