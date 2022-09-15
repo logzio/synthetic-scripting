@@ -89,11 +89,18 @@ const EditCodeContainer: FunctionComponent<Props> = ({
     const [codeLanguage, setCodeLanguage] = useState<string>('Playwright');
     const [loading, setLoading] = useState<boolean>(false);
     const [testStatus, setTestStatus] = useState<string>('');
+    const [isCodeValid, setIsCodeValid] = useState<boolean>(true);
     const onChangeSelect = (option: string) => {
         setCodeLanguage(option);
     };
 
     const startTestLocally = async () => {
+        setTestStatus('');
+        if (!isCodeValid) {
+            setTestStatus('Please check code snippet you have error');
+            return;
+        }
+
         setLoading(true);
         const response = await api.testLocal(codeSnippet);
 
@@ -108,6 +115,9 @@ const EditCodeContainer: FunctionComponent<Props> = ({
 
             setTestStatus(response.message);
         }
+    };
+    const isValidHandler = (isValidResult: boolean) => {
+        setIsCodeValid(isValidResult);
     };
 
     return (
@@ -131,6 +141,7 @@ const EditCodeContainer: FunctionComponent<Props> = ({
                 </TopWrapper>
                 <MainWrapper>
                     <CodeEditor
+                        isValid={isValidHandler}
                         loading={loading}
                         setCodeSnippet={setCodeSnippet}
                         codeSnippet={codeSnippet}

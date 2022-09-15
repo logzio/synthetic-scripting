@@ -101,23 +101,6 @@ const ExportDeploy: FunctionComponent<Props> = ({
     const onToggleHandler = (option: string) => {
         onChangeMethodTest(option);
     };
-    // const [stage, setStage] = useState<string>('function-creating');
-    // const [counter, setCounter] = useState<number>(0);
-
-    // const changeStage = () => {
-    //     const stageArr = [
-    //         'function-creating',
-    //         'zip-creating',
-    //         'zip-uploading',
-    //         'lambda-creating',
-    //         'range-time-adding',
-    //         'range-time-added',
-    //         'stage-failed',
-    //     ];
-
-    //     setStage(stageArr[counter]);
-    //     setCounter((prev) => prev + 1);
-    // };
 
     return (
         <Container>
@@ -315,14 +298,6 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     ''
                 )}
                 {stageDisplay ? <Status stage={stageDeploy} /> : ''}
-                {/* <button
-                    style={{
-                        position: 'absolute',
-                    }}
-                    onClick={changeStage}
-                >
-                    click
-                </button> */}
             </ContainerSteps>
         </Container>
     );

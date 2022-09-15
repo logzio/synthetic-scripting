@@ -286,7 +286,7 @@ const Home: FunctionComponent = () => {
             errorTitle: '',
         });
     };
-    const uniqueEnvVariable = (isUnique: boolean) => {
+    const uniqueEnvVariableHandler = (isUnique: boolean) => {
         if (isUnique) {
             setIsError(true);
             setErrorMessage({
@@ -300,7 +300,7 @@ const Home: FunctionComponent = () => {
         <Layout activeStep={activeStep}>
             {activeStep === 'edit_code' ? (
                 <EditCodeContainer
-                    uniqueKey={uniqueEnvVariable}
+                    uniqueKey={uniqueEnvVariableHandler}
                     codeSnippet={codeSnippet}
                     setCodeSnippet={onSetCodeSnippetHandler}
                     setEnvVariable={onSetEnvVariableHandler}

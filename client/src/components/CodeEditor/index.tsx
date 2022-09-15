@@ -26,11 +26,13 @@ const Loading = styled.div`
 `;
 
 type Props = {
+    isValid: (isValidResult: boolean) => void;
     codeSnippet: string;
     setCodeSnippet: (val: string) => void;
     loading: boolean;
 };
 const CodeEditor: FunctionComponent<Props> = ({
+    isValid,
     setCodeSnippet,
     codeSnippet,
     loading,
@@ -42,7 +44,18 @@ const CodeEditor: FunctionComponent<Props> = ({
         // you can store it in `useRef` for further usage
         editorRef.current = editor;
     };
-
+    function handleEditorValidation(markers: any) {
+        let isValidResult = true;
+        // model markers
+        markers.forEach((marker: any) => {
+            if (marker.severity > 3) {
+                isValidResult = false;
+                isValid(isValidResult);
+                return;
+            }
+        });
+        isValid(isValidResult);
+    }
     const onChangeHandler = (value: any, event: any) => {
         setCodeSnippet(value);
     };
@@ -50,11 +63,11 @@ const CodeEditor: FunctionComponent<Props> = ({
     return (
         <CodeEditorWrapper>
             <Editor
-                // height='100%'
                 defaultLanguage='javascript'
                 defaultValue={codeSnippet}
                 onMount={handleEditorDidMount}
                 onChange={onChangeHandler}
+                onValidate={handleEditorValidation}
             />
 
             {loading ? (
