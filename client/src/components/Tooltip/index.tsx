@@ -40,6 +40,7 @@ const TooltipText = styled.div`
     top: -5px;
     box-shadow: 0px 6px 19px rgb(79 118 178 / 14%);
     left: 25px;
+    min-width: 150px;
 
     &.active {
         display: block;

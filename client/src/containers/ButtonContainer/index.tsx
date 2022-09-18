@@ -25,6 +25,97 @@ type Props = {
     onChangeStep: (name: string) => void;
     activeStep: string;
 };
+
+const renderButtons = (
+    activeStep: string,
+    methodTest: string,
+    isDownload: boolean,
+    onChangeStep: (name: string) => void,
+) => {
+    switch (activeStep) {
+        case 'edit_code':
+            return (
+                <>
+                    <Button
+                        onClick={() => {
+                            onChangeStep('deploy');
+                        }}
+                        type='yellow'
+                    >
+                        Next
+                    </Button>
+                </>
+            );
+
+        case 'deploy':
+            return (
+                <>
+                    <Button
+                        onClick={() => {
+                            onChangeStep('edit_code');
+                        }}
+                        type='transparent'
+                    >
+                        Back
+                    </Button>
+                    {methodTest === 'Cloud' ? (
+                        <Button
+                            onClick={() => {
+                                onChangeStep('cloud');
+                            }}
+                            type='yellow'
+                        >
+                            Deploy
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={() => {
+                                onChangeStep('download');
+                            }}
+                            type='yellow'
+                        >
+                            {!isDownload ? 'Download' : <Spinner />}
+                        </Button>
+                    )}
+                </>
+            );
+        case 'download':
+            return (
+                <>
+                    <Button
+                        onClick={() => {
+                            onChangeStep('edit_code');
+                        }}
+                        type='transparent'
+                    >
+                        Back
+                    </Button>
+                    {methodTest === 'Cloud' ? (
+                        <Button
+                            onClick={() => {
+                                onChangeStep('cloud');
+                            }}
+                            type='yellow'
+                        >
+                            Deploy
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={() => {
+                                onChangeStep('download');
+                            }}
+                            type='yellow'
+                        >
+                            {!isDownload ? 'Download' : <Spinner />}
+                        </Button>
+                    )}
+                </>
+            );
+        default:
+            return;
+    }
+};
+
 const ButtonContainer: FunctionComponent<Props> = ({
     isDownload,
     methodTest,
@@ -34,45 +125,11 @@ const ButtonContainer: FunctionComponent<Props> = ({
     return (
         <ButtonWrapper>
             <ButtonRow>
-                {activeStep === 'edit_code' ? (
-                    <Button
-                        onClick={() => {
-                            onChangeStep('deploy');
-                        }}
-                        type='yellow'
-                    >
-                        Next
-                    </Button>
-                ) : (
-                    <>
-                        <Button
-                            onClick={() => {
-                                onChangeStep('edit_code');
-                            }}
-                            type='transparent'
-                        >
-                            Back
-                        </Button>
-                        {methodTest === 'Cloud' ? (
-                            <Button
-                                onClick={() => {
-                                    onChangeStep('cloud');
-                                }}
-                                type='yellow'
-                            >
-                                Deploy
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={() => {
-                                    onChangeStep('download');
-                                }}
-                                type='yellow'
-                            >
-                                {!isDownload ? 'Download' : <Spinner />}
-                            </Button>
-                        )}
-                    </>
+                {renderButtons(
+                    activeStep,
+                    methodTest,
+                    isDownload,
+                    onChangeStep,
                 )}
             </ButtonRow>
         </ButtonWrapper>

@@ -19,11 +19,17 @@ const EnvVariableInput = styled.div`
     margin-bottom: 24px;
     width: 100%;
 
+    &:first-child {
+        margin-top: 24px;
+    }
+
     input {
         width: 100%;
     }
 `;
-const EnvVariableDisplay = styled.div``;
+const EnvVariableDisplay = styled.div`
+    margin-top: 24px;
+`;
 
 type EnvVariable = {
     [key: string]: string;
@@ -95,14 +101,20 @@ const EnvVariableContainer: FunctionComponent<Props> = ({
     };
     return (
         <EnvVariableWrapper>
-            <Text tag='h2'>Add Enviroment Variable</Text>
-
+            <Text tag='h2'>Enviroment Variable</Text>
+            <Text tag={'p'}>
+                Add key-value pairs for the environment variables that you use
+                in the script.
+            </Text>
             <EnvVariableDisplay>
                 {renderEnvVariableHandler()}
             </EnvVariableDisplay>
             <EnvVariableInput>
                 <Label>
-                    Key <Tooltip>this is tooltip</Tooltip>
+                    Key
+                    <Tooltip>
+                        Key of an environment variable used in the script.
+                    </Tooltip>
                 </Label>
                 <Input
                     name={`key_${counterEnvVariable}`}
@@ -114,7 +126,10 @@ const EnvVariableContainer: FunctionComponent<Props> = ({
             </EnvVariableInput>
             <EnvVariableInput>
                 <Label>
-                    Value <Tooltip>this is tooltip</Tooltip>
+                    Value
+                    <Tooltip>
+                        Value of the environment variable used in the script.
+                    </Tooltip>
                 </Label>
                 <Input
                     name={`value_${counterEnvVariable}`}

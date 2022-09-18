@@ -112,14 +112,19 @@ const ExportDeploy: FunctionComponent<Props> = ({
     return (
         <Container>
             <ContainerSteps>
-                <Text tag='h2'>Export or deplot to cloud</Text>
+                <Text tag='h2'>
+                    Download template or deploy directly to cloud
+                </Text>
                 <Toggle
                     options={availableMethod}
                     onToggle={onToggleHandler}
                     activeToggle={methodTest}
                 />
                 <TopWrapper>
-                    <Text tag='p'>some info</Text>
+                    <Text tag='p'>
+                        Use this feature to locally generate and download a
+                        template that you can upload to your cloud environment.
+                    </Text>
                     <SelectWrapper>
                         <Select
                             options={availableCloudProviders}
@@ -132,7 +137,9 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     <FormControl>
                         <Label>
                             <IconStar>*</IconStar> Function Name
-                            <Tooltip>this is tooltip</Tooltip>
+                            <Tooltip>
+                                Name of the function for your test script.
+                            </Tooltip>
                         </Label>
                         <Input
                             name='name'
@@ -153,7 +160,7 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     <FormControl>
                         <Label>
                             <IconStar>*</IconStar> Logz.io logs token
-                            <Tooltip>this is tooltip</Tooltip>
+                            <Tooltip>Your Logz.io log shipping token.</Tooltip>
                         </Label>
                         <Input
                             name='token'
@@ -172,7 +179,7 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     <FormControl>
                         <Label>
                             <IconStar>*</IconStar> Logz.io Listener
-                            <Tooltip>this is tooltip</Tooltip>
+                            <Tooltip>Your Logz.io listener URL.</Tooltip>
                         </Label>
                         <Input
                             name='listener'
@@ -192,7 +199,11 @@ const ExportDeploy: FunctionComponent<Props> = ({
                 <TwoColumns>
                     <FormControlDescription>
                         <Label>
-                            Description <Tooltip>this is tooltip</Tooltip>
+                            Description{' '}
+                            <Tooltip>
+                                Description of your function for the test
+                                script.
+                            </Tooltip>
                         </Label>
                         <Input
                             name='desciption'
@@ -211,7 +222,7 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     <FormControlSection>
                         <Label>
                             <IconStar>*</IconStar> Scheduling Rate
-                            <Tooltip>this is tooltip</Tooltip>
+                            <Tooltip>Scheduling rate for the function.</Tooltip>
                         </Label>
                         <Select
                             options={availableTimeRange}
@@ -224,7 +235,9 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     <FormControl>
                         <Label>
                             <IconStar>*</IconStar> Bucket name
-                            <Tooltip>this is tooltip</Tooltip>
+                            <Tooltip>
+                                Name of the bucket to upload the function to.
+                            </Tooltip>
                         </Label>
                         <Input
                             name='bucketName'
@@ -243,7 +256,10 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     <FormControl>
                         <Label>
                             <IconStar>*</IconStar>Region
-                            <Tooltip>this is tooltip</Tooltip>
+                            <Tooltip>
+                                AWS region of the bucket to upload the function
+                                to.
+                            </Tooltip>
                         </Label>
                         <Input
                             name='region'
@@ -265,7 +281,9 @@ const ExportDeploy: FunctionComponent<Props> = ({
                         <FormControl>
                             <Label>
                                 <IconStar>*</IconStar> Access key
-                                <Tooltip>this is tooltip</Tooltip>
+                                <Tooltip>
+                                    Access key to your cloud environment.
+                                </Tooltip>
                             </Label>
                             <Input
                                 name='accessKey'
@@ -284,7 +302,9 @@ const ExportDeploy: FunctionComponent<Props> = ({
                         <FormControl>
                             <Label>
                                 <IconStar>*</IconStar> Secret Key
-                                <Tooltip>this is tooltip</Tooltip>
+                                <Tooltip>
+                                    Secret key to your cloud environment.
+                                </Tooltip>
                             </Label>
                             <Input
                                 name='secretKey'

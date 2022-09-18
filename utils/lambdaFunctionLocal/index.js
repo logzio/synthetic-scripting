@@ -1,19 +1,15 @@
 const playwright = require('playwright-aws-lambda');
-	const errorStatusHandler = require('./statusError');
-	
-	const handlerLocally = async () => {
-		let context = null;
-		let err = null;
-		let page = null;
-		try {
-			browser = await playwright.launchChromium(false);
-			context = await browser.newContext();
-			page = await context.newPage();
-	
+const errorStatusHandler = require('./statusError');
 
-					
-	
-       } catch (error) {
+const handlerLocally = async () => {
+    let context = null;
+    let err = null;
+    let page = null;
+    try {
+        browser = await playwright.launchChromium(false);
+        context = await browser.newContext();
+        page = await context.newPage();
+    } catch (error) {
         err = error.message;
     } finally {
         if (browser) {
@@ -23,7 +19,6 @@ const playwright = require('playwright-aws-lambda');
     }
     let status = errorStatusHandler(err);
     return status;
-
 };
-handlerLocally()
+handlerLocally();
 // module.exports = handlerLocally;

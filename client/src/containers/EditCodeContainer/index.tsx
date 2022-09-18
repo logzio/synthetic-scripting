@@ -127,8 +127,10 @@ const EditCodeContainer: FunctionComponent<Props> = ({
                     <TextWrapper>
                         <Text tag={'h2'}> Edit your code</Text>
                         <Text tag={'p'}>
-                            Choose Code Editor and then write some code ... then
-                            do ...
+                            Select the required test framework from the dropdown
+                            <br />
+                            menu on the right and write your script in the text
+                            box below.
                         </Text>
                     </TextWrapper>
                     <SelectWrapper>
@@ -152,7 +154,9 @@ const EditCodeContainer: FunctionComponent<Props> = ({
                     />
                 </MainWrapper>
                 <BottomWrapper>
-                    <Text tag={'p'}>Test your script</Text>
+                    <Text tag={'p'}>
+                        Click this button to test your script.
+                    </Text>
                     <Button onClick={startTestLocally} type='white'>
                         Test script
                     </Button>
