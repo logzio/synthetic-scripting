@@ -15,15 +15,6 @@ type StatusProps = {
 };
 
 const settings = {
-	notificationLoaded: '.loaded',
-	notificationFailed: '.loaded-fail',
-	statusName: {
-		functionCreated: 'Function Created',
-		zipCreated: 'Zip Created',
-		zipUploaded: 'Zip Uploaded',
-		lambdaCreated: 'Lambda Created',
-		rangeTimeAdded: 'Range time added',
-	},
 	endPointUrls: {
 		modifyFileUrl: '/api/modify-file',
 		createZipUrl: '/api/create-zip',

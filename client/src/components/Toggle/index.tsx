@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 type Option = {
     name: string;
-    // value: string;
 };
 
 type Props = {
@@ -22,7 +21,6 @@ const ToggleElement = styled.li`
     padding: 6px 8px;
     border: 1px solid #849dc5;
     color: #696969;
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

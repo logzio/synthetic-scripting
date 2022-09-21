@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 const H2Section = styled.h2`
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -11,7 +10,6 @@ const H2Section = styled.h2`
     margin-bottom: 16px;
 `;
 const ParagraphSection = styled.p`
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

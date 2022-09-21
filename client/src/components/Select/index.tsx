@@ -11,7 +11,6 @@ const LabelSelect = styled.div`
     border-radius: 3px;
     padding: 7px 8px;
     background: #f7f7f7;
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -47,7 +46,6 @@ const DropdownListElement = styled.li`
     padding: 6px 10px 6px 5px;
     cursor: pointer;
     transition: 0.3s all ease-in-out;
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
