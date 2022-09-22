@@ -25,18 +25,23 @@ const ListWrapper = styled.ul`
     list-style: none;
 `;
 
-const ListElement = styled.li`
+type liProp = {
+    step: boolean;
+};
+const ListElement = styled.li<liProp>`
     margin-bottom: 8px;
     display: flex;
     align-items: center;
-
-    &.active p {
-        font-weight: 500;
-    }
-    &.active div {
-        background: #6585b6;
-        color: #fff;
-    }
+    ${(props) =>
+        props.step
+            ? `&>p {
+					font-weight: 500;
+				}
+				&>div {
+					background: #6585b6;
+					color: #fff;
+				}`
+            : ''}
 `;
 const IconNumberWrapper = styled.div`
     width: 24px;
@@ -66,18 +71,14 @@ const Sidebar: FunctionComponent<Props> = ({ activeStep }) => {
             <SidebarContainer>
                 <ListWrapper>
                     <ListElement
-                        className={`${
-                            activeStep === 'edit_code' ? 'active' : ''
-                        }`}
+                        step={activeStep === 'edit_code' ? true : false}
                     >
                         <IconNumberWrapper>
                             <span>1</span>
                         </IconNumberWrapper>
                         <TextElement>Edit your code</TextElement>
                     </ListElement>
-                    <ListElement
-                        className={`${activeStep === 'deploy' ? 'active' : ''}`}
-                    >
+                    <ListElement step={activeStep === 'deploy' ? true : false}>
                         <IconNumberWrapper>
                             <span>2</span>
                         </IconNumberWrapper>

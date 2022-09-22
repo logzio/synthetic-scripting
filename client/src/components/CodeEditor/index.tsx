@@ -2,7 +2,7 @@ import React, { FunctionComponent, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 
 import styled from 'styled-components';
-import Spinner from '../Spinner';
+import { ReactComponent as SpinnerIcon } from '../../assets/icons/spinner.svg';
 
 const CodeEditorWrapper = styled.div`
     border: 1px solid #e7e7e7;
@@ -23,6 +23,7 @@ const Loading = styled.div`
 	height:100%;
 	background-color: rgb(255 255 255 / 69%);
     justify-content: center;
+	align-items: center;
 `;
 
 type Props = {
@@ -72,7 +73,7 @@ const CodeEditor: FunctionComponent<Props> = ({
 
             {loading ? (
                 <Loading>
-                    <Spinner />
+                    <SpinnerIcon />
                 </Loading>
             ) : (
                 ''

@@ -1,8 +1,10 @@
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
 * {
     box-sizing: border-box;
     margin: 0;
-    /* transition: .3s all ease-in-out; */
-    font-family: 'Roboto';
+
 }
 
 html,
@@ -42,3 +44,6 @@ body {
         opacity: 1;
     }
 }
+`;
+
+export default GlobalStyle;

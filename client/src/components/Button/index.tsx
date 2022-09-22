@@ -14,7 +14,6 @@ const ButtonYellow = styled.button`
     height: 30px;
 `;
 const ButtonWhite = styled.button`
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;

@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import styled from 'styled-components';
 import Button from '../../components/Button';
-import Spinner from '../../components/Spinner';
+import { ReactComponent as SpinnerIcon } from '../../assets/icons/spinner.svg';
 
 const ButtonWrapper = styled.div`
     position: relative;
@@ -74,7 +74,18 @@ const renderButtons = (
                             }}
                             type='yellow'
                         >
-                            {!isDownload ? 'Download' : <Spinner />}
+                            {!isDownload ? (
+                                'Download'
+                            ) : (
+                                <SpinnerIcon
+                                    style={{
+                                        padding: '0px 25px ',
+                                        shapeRendering: 'auto',
+                                        width: '82px',
+                                        height: '100%',
+                                    }}
+                                />
+                            )}
                         </Button>
                     )}
                 </>
@@ -106,7 +117,18 @@ const renderButtons = (
                             }}
                             type='yellow'
                         >
-                            {!isDownload ? 'Download' : <Spinner />}
+                            {!isDownload ? (
+                                'Download'
+                            ) : (
+                                <SpinnerIcon
+                                    style={{
+                                        padding: '0px 25px ',
+                                        shapeRendering: 'auto',
+                                        width: '82px',
+                                        height: '100%',
+                                    }}
+                                />
+                            )}
                         </Button>
                     )}
                 </>

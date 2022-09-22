@@ -2,12 +2,10 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 const LabelWrapper = styled.label`
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-
     color: #696969;
     margin-bottom: 4px;
     display: flex;
