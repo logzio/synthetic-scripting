@@ -42,7 +42,7 @@ const SelectWrapper = styled.div`
 const MainWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-    height: 80%;
+    height: 75%;
 `;
 
 const BottomWrapper = styled.div`

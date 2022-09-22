@@ -29,6 +29,14 @@ const ListElement = styled.li`
     margin-bottom: 8px;
     display: flex;
     align-items: center;
+
+    &.active p {
+        font-weight: 500;
+    }
+    &.active div {
+        background: #6585b6;
+        color: #fff;
+    }
 `;
 const IconNumberWrapper = styled.div`
     width: 24px;
@@ -40,11 +48,6 @@ const IconNumberWrapper = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-
-    &.active {
-        background: #6585b6;
-        color: #fff;
-    }
 `;
 
 const TextElement = styled.p`
@@ -54,10 +57,6 @@ const TextElement = styled.p`
     line-height: 16px;
 
     color: #6585b6;
-
-    &.active {
-        font-weight: 500;
-    }
 `;
 
 type Props = { activeStep: string };
@@ -66,37 +65,23 @@ const Sidebar: FunctionComponent<Props> = ({ activeStep }) => {
         <SidebarWrapper>
             <SidebarContainer>
                 <ListWrapper>
-                    <ListElement>
-                        <IconNumberWrapper
-                            className={`${
-                                activeStep === 'edit_code' ? 'active' : ''
-                            }`}
-                        >
+                    <ListElement
+                        className={`${
+                            activeStep === 'edit_code' ? 'active' : ''
+                        }`}
+                    >
+                        <IconNumberWrapper>
                             <span>1</span>
                         </IconNumberWrapper>
-                        <TextElement
-                            className={`${
-                                activeStep === 'edit_code' ? 'active' : ''
-                            }`}
-                        >
-                            Edit your code
-                        </TextElement>
+                        <TextElement>Edit your code</TextElement>
                     </ListElement>
-                    <ListElement>
-                        <IconNumberWrapper
-                            className={`${
-                                activeStep === 'deploy' ? 'active' : ''
-                            }`}
-                        >
+                    <ListElement
+                        className={`${activeStep === 'deploy' ? 'active' : ''}`}
+                    >
+                        <IconNumberWrapper>
                             <span>2</span>
                         </IconNumberWrapper>
-                        <TextElement
-                            className={`${
-                                activeStep === 'deploy' ? 'active' : ''
-                            }`}
-                        >
-                            Explore /deploy
-                        </TextElement>
+                        <TextElement>Explore /deploy</TextElement>
                     </ListElement>
                 </ListWrapper>
             </SidebarContainer>
