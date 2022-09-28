@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: "This is an AWS Lambda function that collects metrics for Synthetic Scripting. Lambda uses Playwright to send test results to logz.io metrics dashboard"
+
+
+Resources:
+  ScheduledLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri:
+#add Bucket name
+        Bucket: string
+#add zipNameRoute        
+        Key: string
+      Handler: index.handler
+      Description: Lambda Function to run playwright test
+#add name of the text
+      FunctionName: string
+      MemorySize: 512
+      Timeout: 60
+      Events:
+        CronEvent:
+          Type: Schedule
+          Properties:
+#add timeout
+            Schedule: rate(1 minute)
+            Name: RateSchedule
+            Description: Trigger Lambda once in a minute
+      Environment:
+        Variables:
+          LISTENER_URL: string
+          TOKEN: string
+          NAME_FUNCTION: string 

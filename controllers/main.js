@@ -1,3 +1,5 @@
+const path = require('path');
+
 exports.homepage = async (req, res) => {
-    res.render('index.html');
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
 };

@@ -3,12 +3,22 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "author": "Anton Kolomiiets <anton.kolomiiets@logz.io>",
+    "contributors": [
+        {
+            "name": "Anton Kolomiiets",
+            "email": "resdenia@gmail.com"
+        }
+    ],
     "scripts": {
         "test": "jest",
         "dev": "nodemon index.js",
-        "start": "node index.js"
+        "server": "node index.js",
+        "client": "npm run start --prefix client",
+        "start": "concurrently \"npm run server\" \"npm run client\"",
+        "build": "npm run build --prefix client",
+        "container": "node index.js"
     },
-    "author": "",
     "license": "ISC",
     "dependencies": {
         "@aws-sdk/client-cloudformation": "^3.142.0",
@@ -18,6 +28,7 @@
         "@menadevs/objectron": "^0.1.14",
         "archiver": "^5.3.1",
         "aws-sdk": "^2.1185.0",
+        "concurrently": "^7.4.0",
         "crypto": "^1.0.1",
         "dotenv": "^16.0.1",
         "ejs": "^3.1.8",

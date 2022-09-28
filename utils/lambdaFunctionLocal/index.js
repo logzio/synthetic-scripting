@@ -1,22 +1,19 @@
 const playwright = require('playwright-aws-lambda');
+	const errorStatusHandler = require('./statusError');
+	
+	const handlerLocally = async () => {
+		let context = null;
+		let err = null;
+		let page = null;
+		try {
+			browser = await playwright.launchChromium(false);
+			context = await browser.newContext();
+			page = await context.newPage();
+	
 
-const readSendData = require('./rsData');
-
-const handler = async () => {
-    let context = null;
-    let err = null;
-    let page = null;
-    try {
-        browser = await playwright.launchChromium(false);
-        context = await browser.newContext({
-            recordHar: {
-                path: './capture-hars/example.har',
-                mode: 'full',
-                content: 'omit',
-            },
-        });
-        page = await context.newPage();
-    } catch (error) {
+					console.log('sdd')	
+		
+       } catch (error) {
         err = error.message;
     } finally {
         if (browser) {
@@ -24,7 +21,9 @@ const handler = async () => {
             await browser.close();
         }
     }
-    readSendData(process.argv[2], err, process.argv[3], process.argv[4]);
-    return true;
+    let status = errorStatusHandler(err);
+    return status;
+
 };
-handler();
+handlerLocally()
+// module.exports = handlerLocally;

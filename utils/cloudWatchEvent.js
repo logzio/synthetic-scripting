@@ -69,7 +69,7 @@ exports.cloudWatchEvent = async (
             Name: `${rangeTime}-${PUT_RULE_ROLE_NAME}`,
             RoleArn: iamRole.arn,
             ScheduleExpression: `rate(${rangeTime} minute${
-                parseInt(rangeTime, 10) === 1 ? '' : 's'
+                parseInt(rangeTime) === 1 ? '' : 's'
             })`,
             State: 'ENABLED',
         };

@@ -138,17 +138,30 @@ exports.addEventBridge = async (req, res) => {
 };
 
 exports.modifyFileLocally = async (req, res) => {
-    const { code, token, name, listenerUrl } = req.body;
+    const { code } = req.body;
 
     try {
         const resp = await updateFileLocal(code);
+        console.log(resp);
         if (resp) {
+            let statusTest;
             shell.exec(
-                `node ./utils/lambdaFunctionLocal/index.js ${token} ${name} ${listenerUrl}`,
+                `node ./utils/lambdaFunctionLocal/index.js`,
+                function (_, stdout) {
+                    stdout.split('\n').forEach((line) => {
+                        const arrayWords = line.split(' ');
+                        if (
+                            arrayWords.length > 1 &&
+                            arrayWords[0] === 'ToDisplay'
+                        ) {
+                            arrayWords.shift();
+                            statusTest = arrayWords.join(' ');
+                        }
+                    });
+                    res.statusCode = 201;
+                    res.send({ error: false, message: statusTest });
+                },
             );
-
-            res.statusCode = 201;
-            res.send({ error: false, message: 'File was created' });
         }
     } catch (err) {
         logger(err);
@@ -157,11 +170,20 @@ exports.modifyFileLocally = async (req, res) => {
 };
 
 exports.createZipCF = async (req, res) => {
-    const { envList } = req.body;
+    const { envList, name, description, token, bucket, listener, rangeTime } =
+        req.body;
 
     try {
-        await setupCFTemplate(envList);
-        await fileToZipCF();
+        await setupCFTemplate(
+            envList,
+            name,
+            description,
+            token,
+            bucket,
+            listener,
+            rangeTime,
+        );
+        await fileToZipCF(name);
 
         const filetext = fs.readFileSync(
             path.join(__dirname, '..', 'cloudFormation.zip'),

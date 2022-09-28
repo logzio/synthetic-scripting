@@ -1,6 +1,6 @@
-# synthetic-scripting
+# Synthetic scripting
 
-Synthetic-scripting mini app to emulate and monitor a custom user experience by scripting browsers that navigate your website, take specific actions, and ensure specific elements are present. Synthetic-scripting app help to define tests( with playwright) to test custom user experience.
+This Synthetic scripting mini app emulates and monitors your custom user experience by scripting browsers that navigate to your website, take specific actions, and ensure specific elements are present. The Synthetic scripting app helps to define tests (using frameworks, such as [playwright](https://playwright.dev/)) for your custom user experience.
 
 ## Run Application
 
@@ -12,51 +12,56 @@ Synthetic-scripting mini app to emulate and monitor a custom user experience by 
 
 `docker run -p 8080:8080 -d --name synthetic-script logzio/synthetic-script:latest`
 
-Docker image will run a Node.js mini app. Open http://localhost:8080 in your Browser to access the UI that helps you establish connection between your app and Logz.io.
+The Docker image will run a Node.js mini app. Navigate to http://localhost:8080 in your browser to access the UI that helps you establish connection between your app and Logz.io.
 
 ## Define a script for running the test
 
-1. In tab `General Settings`, fill in all the required fields.
+![UI first screen](assets/screen-edit.png)
 
-To test Locally please provide all required fields and add test to `Code Editor` section.
+1. Select the required framework for your test code from the Framework selector dropdown.
+   ![UI dropdown](assets/dropdown-framework.png)
 
-![UI first screen](assets/first-screen.png)
 
-| Field                                           | Description                                                                                                                 |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Name of the Lambda (Required)                   | Lambda function name what will be created. This name will also be used to identify the Lambda function in Logz.io Dashboard |
-| Description (Optional)                          | Lambda function description                                                                                                 |
-| Logz.io shipping Token (Required)               | Your Logz.io logs shipping token.                                                                                           |
-| Time range for sending logs (Default: 1 minute) | Define the range in a minutes to run a Lambda function (using cloudBridge event)                                            |
-
-2. On a Second tab `Aws Settings` you will see. Please fill all reqiured fields.
-
-![UI second screen](assets/second-screen.png)
-
-| Field                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Aws Access Key (Required) | Your AWS access key ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| Aws Secret Key (Required) | Your AWS secret key ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| Bucket Name (Required)    | The bucket name to which the PUT action is initiated. When using this action with an access point, you must direct requests to the access point hostname. The access point hostname takes the form AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com. When using this action with an access point through the Amazon Web Services SDKs, you need to provide the access point ARN instead of the bucket name. For more information about access point ARNs, see Using access points in the Amazon S3 User Guide. |
-| Aws Region (Required)     | Your AWS region to send service requests to.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-
-2. On a Third tab `Enviroment Variables` you will see.
-
-![UI third screen](assets/third-screen.png)
-
-Here you can define the environment variable that can be attached to your Lambda function. You can use it in the Code Editor as `process.env.KEY`. You can define the KEY parameter, which will be present in the Lambda function
-
-3. On A Fourth tab `Code Editor` you will see.
-
-![UI four screen](assets/four-screen.png)
+2. Enter your code into the Code editor.
+   ![UI code editor](assets/code-editor.png)
 
 Here you can define the code for your test using [playwright.dev](https://playwright.dev). Put your code between the comments.
 
-4. After setting all the values and defining the test code,
-   click `Test locally` to check if everything works ad the logs are generated.
-   To deploy the Lambda function, click `Deploy to the cloud`. You will see status of all the steps running in the background. The following message appears when the checks are completed:
+Click the **Test Script** button to check if the code runs correctly.
 
-![UI final screen](assets/final.png)
+3. Define environment variables in the Environment Variables manager.
+   ![UI env-variable](assets/env-variable.png)
+
+In the Environment Variables manager you can define environment variables that can be attached to your Lambda function. You can use them in the Code editor as `process.env.KEY` and define the `KEY` parameter, which will be present in the Lambda function.
+
+**NOTE:** Prior to testing the code locally, fill in the KEY-VALUE fields for all environment variables used.
+
+4. Download the code as a template or deploy it directly to your cloud provider, using the `Explore/deploy` tab.
+
+## Download as a template
+
+Open the tab to download the code as a template and fill in the parameters as per the parameters table.
+![UI env-variable](assets/screen-fill-locally.png)
+
+## Deploy directly to the cloud
+
+Open the tab to deploy the code directly to the cloud and fill in the parameters as per the parameters table.
+![UI env-variable](assets/screen-fill-cloud.png)
+
+| Parameter                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name of the Lambda (Required)     | Name of the Lambda function that will be created. This name will also be used to identify the Lambda function in the Logz.io dashboard.                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Description (Optional)            | Lambda function description.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Logz.io shipping Token (Required) | Your Logz.io logs shipping token.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Schedule Rate (Default: 1 minute) | Range in a minutes to run a Lambda function (using cloudBridge event).                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Aws Access Key (Required)         | Your AWS access key ID. \*`Requires for Deploy to Cloud option for platform`.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Aws Secret Key (Required)         | Your AWS secret key ID.\*`Requires for Deploy to Cloud option for platform`.                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Bucket Name (Required)            | The bucket name to which the PUT action will be initiated. When using this action with an access point, you must direct requests to the access point hostname. The access point hostname takes the form AccessPointName-AccountId.s3-accesspoint.Region.amazonaws.com. When using this action with an access point through the Amazon Web Services SDKs, you need to provide the access point ARN instead of the bucket name. For more information about access point ARNs, see **Using access points** in the Amazon S3 User Guide. |
+| Aws Region (Required)             | Your AWS region to send service requests to.     |
+
+After deploying to the Cloud you will see that screen
+
+![UI first screen](assets/finish.png)
 
 ## Check Logz.io for your metrics
 
@@ -64,6 +69,11 @@ Give your metrics a few minutes to get from your system to ours,
 and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
+
+1.1.0:
+
+-   Update UI
+-   Initial Release
 
 1.0.0:
 

@@ -5,4 +5,5 @@ module.exports = {
     SUCCESS_MESSAGE: 'Test finished successfuly',
     BASIC_EXECUTION_ROLE_NAME: 'basic-execution-role',
     PUT_RULE_ROLE_NAME: 'put-rule-role',
+    SEPARATOR: 'ToDisplay',
 };

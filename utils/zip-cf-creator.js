@@ -6,8 +6,10 @@ const { logger } = require('./logger');
 const sourceDir = path.join(__dirname, '..', 'service', 'lambdaFunction');
 const sourceDirCF = path.join(__dirname, '..', 'output');
 
-const compressLambdaFunction = async () => {
-    const outPath = path.join(__dirname, '..', 'output', 'lambdaFunction.zip');
+const compressLambdaFunction = async (name) => {
+    const zipNameString = `${name.replace(/[^a-zA-Z0-9 ]/g, '')}.zip`;
+
+    const outPath = path.join(__dirname, '..', 'output', zipNameString);
 
     const archive = archiver('zip', { zlib: { level: 9 } });
     const stream = fs.createWriteStream(outPath);
@@ -39,14 +41,14 @@ const compressLambdaFunction = async () => {
     });
 };
 
-exports.fileToZipCF = async () => {
+exports.fileToZipCF = async (name) => {
     const outPathCF = path.join(__dirname, '..', `cloudFormation.zip`);
 
     try {
         const archive = archiver('zip', { zlib: { level: 9 } });
         const streamCF = fs.createWriteStream(outPathCF);
 
-        const lambdaZip = await compressLambdaFunction();
+        const lambdaZip = await compressLambdaFunction(name);
 
         if (lambdaZip.message != 'Zip Created') {
             throw lambdaZip.err;
