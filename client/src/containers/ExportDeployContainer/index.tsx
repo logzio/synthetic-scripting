@@ -105,6 +105,8 @@ const ExportDeploy: FunctionComponent<Props> = ({
     onChangeCloudProvider,
     updateMeta,
 }) => {
+    const [toggleStatus, setToggleStatus] = useState('');
+
     const onToggleHandler = (option: string) => {
         onChangeMethodTest(option);
     };
@@ -121,10 +123,19 @@ const ExportDeploy: FunctionComponent<Props> = ({
                     activeToggle={methodTest}
                 />
                 <TopWrapper>
-                    <Text tag='p'>
-                        Use this feature to locally generate and download a
-                        template that you can upload to your cloud environment.
-                    </Text>
+                    {methodTest === 'Cloud' ? (
+                        <Text tag='p'>
+                            Use this feature to directly deploy your test script
+                            to the cloud environment.
+                        </Text>
+                    ) : (
+                        <Text tag='p'>
+                            Use this feature to locally generate and download a
+                            template that you can upload to your cloud
+                            environment.
+                        </Text>
+                    )}
+
                     <SelectWrapper>
                         <Select
                             options={availableCloudProviders}
