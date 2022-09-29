@@ -177,8 +177,6 @@ const Home: FunctionComponent = () => {
             );
         }
         if (activeStep === 'cloud') {
-            setStageDisplay(true);
-            onCloseHandler();
             const validation = validateMetaDeploy(
                 configs.name.value,
                 configs.token.value,
@@ -188,14 +186,16 @@ const Home: FunctionComponent = () => {
                 configs.accessKey.value,
                 configs.secretKey.value,
             );
-
             if (!validation.status) {
+                setActiveStep('deploy');
                 displayErrorMessage(
                     validation.errorTitle,
                     validation.errorMessage,
                 );
                 return;
             }
+            setStageDisplay(true);
+            onCloseHandler();
             response = await api.initPage(
                 rangeTimeVariable[
                     activeRangeTime.split(' ').reverse().join('_')
@@ -218,11 +218,6 @@ const Home: FunctionComponent = () => {
 
         if (activeStep === 'cloud' || activeStep === 'download') {
             if (response!.error) {
-                // setStageDeploy({
-                //     message: 'Failed',
-                //     isSuccessful: false,
-                //     isEnd: false,
-                // });
                 displayErrorMessage(
                     response.errorTitle,
                     response.errorData.err.message,
@@ -288,40 +283,45 @@ const Home: FunctionComponent = () => {
 
     return (
         <Layout activeStep={activeStep}>
-            {activeStep === 'edit_code' ? (
-                <EditCodeContainer
-                    uniqueKey={uniqueEnvVariableHandler}
-                    codeSnippet={codeSnippet}
-                    setCodeSnippet={onSetCodeSnippetHandler}
-                    setEnvVariable={onSetEnvVariableHandler}
-                />
-            ) : (
-                <ExportDeploy
-                    stageDisplay={stageDisplay}
-                    stageDeploy={stageDeploy}
+            <>
+                {activeStep === 'edit_code' ? (
+                    <EditCodeContainer
+                        uniqueKey={uniqueEnvVariableHandler}
+                        codeSnippet={codeSnippet}
+                        setCodeSnippet={onSetCodeSnippetHandler}
+                        setEnvVariable={onSetEnvVariableHandler}
+                    />
+                ) : (
+                    <ExportDeploy
+                        stageDisplay={stageDisplay}
+                        stageDeploy={stageDeploy}
+                        methodTest={methodTest}
+                        activeRangeTime={activeRangeTime}
+                        activeCloudProvider={activeCloudProvider}
+                        statusGoBackHandler={statusGoBackHandler}
+                        onChangeMethodTest={onChangeMethodTestHandler}
+                        onChangeRangeTime={updateRangeTimeHandler}
+                        onChangeCloudProvider={onChangeCloudProviderHandler}
+                        updateMeta={updateMetaHandler}
+                    />
+                )}
+                <ButtonContainer
+                    isDownload={isDownload}
                     methodTest={methodTest}
-                    activeRangeTime={activeRangeTime}
-                    activeCloudProvider={activeCloudProvider}
-                    statusGoBackHandler={statusGoBackHandler}
-                    onChangeMethodTest={onChangeMethodTestHandler}
-                    onChangeRangeTime={updateRangeTimeHandler}
-                    onChangeCloudProvider={onChangeCloudProviderHandler}
-                    updateMeta={updateMetaHandler}
+                    activeStep={activeStep}
+                    onChangeStep={onChangeStepHandler}
                 />
-            )}
-            <ButtonContainer
-                isDownload={isDownload}
-                methodTest={methodTest}
-                activeStep={activeStep}
-                onChangeStep={onChangeStepHandler}
-            />
-            {isError ? (
-                <Error title={errorData.errorTitle} onClose={onCloseHandler}>
-                    {errorData.errorMessage}
-                </Error>
-            ) : (
-                ''
-            )}
+                {isError ? (
+                    <Error
+                        title={errorData.errorTitle}
+                        onClose={onCloseHandler}
+                    >
+                        {errorData.errorMessage}
+                    </Error>
+                ) : (
+                    ''
+                )}
+            </>
         </Layout>
     );
 };

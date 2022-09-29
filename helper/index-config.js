@@ -3,14 +3,13 @@ module.exports = {
 	const path = require('path');
 	const readSendData = require('./rsData');
 
-	function sleep(ms) {
-		return new Promise((resolve) => setTimeout(resolve, ms));
-	}
+
 	exports.handler = async (event) => {
 		let context = null;
 		let err = null;
 		let page = null;
 		try {
+			
 			browser = await playwright.launchChromium(false);
 			context = await browser.newContext({
 				recordHar: {
@@ -19,6 +18,8 @@ module.exports = {
 					content: 'omit',
 				},
 			});
+			await context.tracing.start({ screenshots: false, snapshots: false });
+
 			page = await context.newPage();
 			
 	`,
@@ -28,12 +29,14 @@ module.exports = {
 	err = error.message;
 	} finally {
 		if (browser) {
+			await context.tracing.stop({
+				path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
+			});
 			await context.close();
 			await browser.close();
 		}
 	}
-	readSendData(err);
-    await sleep(4000);
+	await readSendData(err);
     return true;
 };`,
     startFileLocally: `const playwright = require('playwright-aws-lambda');

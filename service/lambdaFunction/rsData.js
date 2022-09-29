@@ -1,13 +1,17 @@
 const fs = require('fs');
 const convertHarToJSON = require('./convertHarToJSON');
 const convertToNumber = require('./convertToNumber');
-
+const readSendTraceData = require('./rsTraceData');
 const loggerGenerator = require('./logger');
 const errorStatusHandler = require('./statusError');
 const createSessionId = require('./sessionId');
 const createResponseStatusClass = require('./responseStatusClass');
 
-const readSendData = (error = '') => {
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const readSendData = async (error = '') => {
     const logger = loggerGenerator();
     const sessionId = createSessionId();
     const status = errorStatusHandler(error);
@@ -43,6 +47,8 @@ const readSendData = (error = '') => {
                 });
             }
         });
+        await readSendTraceData(process.env.NAME_FUNCTION, sessionId, logger);
+        await sleep(4000);
         logger.sendAndClose();
     } catch (err) {
         console.log(err);
