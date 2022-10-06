@@ -30,8 +30,8 @@ const readSendData = async (error = '') => {
 
                     logger.log({
                         ...convertedLog,
-                        statusTest: status,
-                        statusResult: error ? 0 : 1,
+                        // statusTest: status,
+                        // statusResult: error ? 0 : 1,
                         sessionId,
                         firstEnterence,
                         nameTest: process.env.NAME_FUNCTION,
@@ -46,6 +46,13 @@ const readSendData = async (error = '') => {
                     });
                 });
             }
+        });
+
+        logger.log({
+            statusTest: status,
+            statusResult: error ? 0 : 1,
+            sessionId,
+            nameTest: process.env.NAME_FUNCTION,
         });
         await readSendTraceData(process.env.NAME_FUNCTION, sessionId, logger);
         await sleep(4000);

@@ -28,7 +28,9 @@ const readSendTraceData = async (name, sessionId, logger) => {
                             parserLog,
                             name,
                             sessionId,
+                            arrNew[0].metadata.wallTime,
                         );
+                        parsedData['actionCount'] = arrNew.length - 1;
                         logger.log(parsedData);
                     }
                 }
