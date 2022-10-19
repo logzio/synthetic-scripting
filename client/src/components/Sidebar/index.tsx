@@ -26,7 +26,7 @@ const ListWrapper = styled.ul`
 `;
 
 type liProp = {
-    step: boolean;
+    step: number | undefined;
 };
 const ListElement = styled.li<liProp>`
     margin-bottom: 8px;
@@ -71,14 +71,14 @@ const Sidebar: FunctionComponent<Props> = ({ activeStep }) => {
             <SidebarContainer>
                 <ListWrapper>
                     <ListElement
-                        step={activeStep === 'edit_code' ? true : false}
+                        step={activeStep === 'edit_code' ? 1 : undefined}
                     >
                         <IconNumberWrapper>
                             <span>1</span>
                         </IconNumberWrapper>
                         <TextElement>Edit your code</TextElement>
                     </ListElement>
-                    <ListElement step={activeStep === 'deploy' ? true : false}>
+                    <ListElement step={activeStep === 'deploy' ? 1 : undefined}>
                         <IconNumberWrapper>
                             <span>2</span>
                         </IconNumberWrapper>

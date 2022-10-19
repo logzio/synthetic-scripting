@@ -11,7 +11,33 @@ const playwright = require('playwright-aws-lambda');
 			page = await context.newPage();
 	
 
-					console.log('sdd')	
+			  const navigationPromise = page.waitForNavigation();
+    await page.goto('https://logz.io/');
+page.setDefaultTimeout(4000);
+
+
+    await page.waitForSelector('.home > .body_wrapper > .cta_bottom_section');
+    await page.click('.home > .body_wrapper > .cta_bottom_section');
+
+    await page.waitForSelector(
+        '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(2) > .navigation-link',
+    );
+    await page.click(
+        '.navigation-body > .navigation-body-section_ > .navigation-menu > .navigation-item:nth-child(2) > .navigation-link',
+    );
+
+    await navigationPromise;
+
+
+
+
+    await navigationPromise;		
+	    await page.waitForSelector('.home > .body_wrapper > .cta_bottom_section',{
+			timeout:4000,
+		}).then((res)=>{
+			console.log(res);
+		}).catch(err=> {throw Error('element not render')});
+	
 		
        } catch (error) {
         err = error.message;
