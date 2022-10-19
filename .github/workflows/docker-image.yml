@@ -55,36 +55,3 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: logzio/synthetic-script:latest-amd
           labels: ${{ steps.dockersynthetics.outputs.labels }}
-
-      - name: Build and push arm64 latest
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile.arm
-          platforms: linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: logzio/synthetic-script:latest-arm
-          labels: ${{ steps.dockersynthetics.outputs.labels }}
-
-      - name: Build and push arm64
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile.arm
-          platforms: linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.dockersynthetics.outputs.tags }}-arm
-          labels: ${{ steps.dockersynthetics.outputs.labels }}
-
-      - name: Create manifest version
-        run: |
-          docker manifest create ${{ steps.dockersynthetics.outputs.tags }} --amend ${{ steps.dockersynthetics.outputs.tags }}-arm --amend ${{ steps.dockersynthetics.outputs.tags }}-amd
-      - name: Create manifest latest
-        run: |
-          docker manifest create logzio/synthetic-script:latest --amend logzio/synthetic-script:latest-arm --amend logzio/synthetic-script:latest-amd
-      - name: Push manifest latest
-        run: |
-          docker manifest push logzio/synthetic-script:latest
-      - name: Push manifest version
-        run: |
-          docker manifest push ${{ steps.dockersynthetics.outputs.tags }}
