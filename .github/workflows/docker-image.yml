@@ -1,0 +1,90 @@
+name: Docker Image CI
+
+on:
+  push:
+    tags:
+      - '*'
+ 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+       # Get the repository's code
+      - name: Checkout
+        uses: actions/checkout@v3
+      # https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Docker meta
+        id: dockersynthetics # you'll use this in the next step
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            logzio/synthetic-script
+          flavor: |
+            latest=false
+          # Docker tags based on the following events/attributes
+          
+      - name: Build and push amd64
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.dockersynthetics.outputs.tags }}-amd
+          labels: ${{ steps.dockersynthetics.outputs.labels }}
+
+
+      - name: Build and push amd64 latest
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: logzio/synthetic-script:latest-amd
+          labels: ${{ steps.dockersynthetics.outputs.labels }}
+
+      - name: Build and push arm64 latest
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.arm
+          platforms: linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: logzio/synthetic-script:latest-arm
+          labels: ${{ steps.dockersynthetics.outputs.labels }}
+
+      - name: Build and push arm64
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.arm
+          platforms: linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.dockersynthetics.outputs.tags }}-arm
+          labels: ${{ steps.dockersynthetics.outputs.labels }}
+
+      - name: Create manifest version
+        run: |
+          docker manifest create ${{ steps.dockersynthetics.outputs.tags }} --amend ${{ steps.dockersynthetics.outputs.tags }}-arm --amend ${{ steps.dockersynthetics.outputs.tags }}-amd
+      - name: Create manifest latest
+        run: |
+          docker manifest create logzio/synthetic-script:latest --amend logzio/synthetic-script:latest-arm --amend logzio/synthetic-script:latest-amd
+      - name: Push manifest latest
+        run: |
+          docker manifest push logzio/synthetic-script:latest
+      - name: Push manifest version
+        run: |
+          docker manifest push ${{ steps.dockersynthetics.outputs.tags }}
