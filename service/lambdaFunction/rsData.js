@@ -27,11 +27,8 @@ const readSendData = async (error = '') => {
                 const parsedData = convertHarToJSON(json);
                 parsedData.result.forEach((log) => {
                     const convertedLog = convertToNumber(log);
-
                     logger.log({
                         ...convertedLog,
-                        // statusTest: status,
-                        // statusResult: error ? 0 : 1,
                         sessionId,
                         firstEnterence,
                         nameTest: process.env.NAME_FUNCTION,
@@ -48,13 +45,18 @@ const readSendData = async (error = '') => {
             }
         });
 
+        const totalDuration = await readSendTraceData(
+            process.env.NAME_FUNCTION,
+            sessionId,
+            logger,
+        );
         logger.log({
+            totalDuration: totalDuration,
             statusTest: status,
             statusResult: error ? 0 : 1,
             sessionId,
             nameTest: process.env.NAME_FUNCTION,
         });
-        await readSendTraceData(process.env.NAME_FUNCTION, sessionId, logger);
         await sleep(4000);
         logger.sendAndClose();
     } catch (err) {
