@@ -74,13 +74,13 @@ type Option = {
     default: boolean;
     isDisabled: boolean;
 };
-type Props = {
+interface IProps {
     options: Option[];
     onChangeSelect: (option: string) => void;
     currentValue: string;
-};
+}
 
-const Select: FunctionComponent<Props> = ({
+const Select: FunctionComponent<IProps> = ({
     options,
     onChangeSelect,
     currentValue,

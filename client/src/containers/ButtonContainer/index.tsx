@@ -19,12 +19,12 @@ const ButtonRow = styled.div`
     height: 30px;
     display: flex;
 `;
-type Props = {
+interface IProps {
     isDownload: boolean;
     methodTest: string;
     onChangeStep: (name: string) => void;
     activeStep: string;
-};
+}
 
 const renderButtons = (
     activeStep: string,
@@ -138,7 +138,7 @@ const renderButtons = (
     }
 };
 
-const ButtonContainer: FunctionComponent<Props> = ({
+const ButtonContainer: FunctionComponent<IProps> = ({
     isDownload,
     methodTest,
     onChangeStep,

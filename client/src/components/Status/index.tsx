@@ -87,12 +87,12 @@ type StatusProps = {
     isEnd: boolean;
 };
 
-type Props = {
+interface IProps {
     stage: StatusProps;
     goBackHandler: (step: string) => void;
-};
+}
 
-const Status: FunctionComponent<Props> = ({ stage, goBackHandler }) => {
+const Status: FunctionComponent<IProps> = ({ stage, goBackHandler }) => {
     const [isSuccessful, setIsSuccessful] = useState<boolean>(true);
     const [message, setMessage] = useState<string>('Function Creating...');
     const [isEnd, setIsEnd] = useState<boolean>(false);

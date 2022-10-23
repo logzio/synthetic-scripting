@@ -26,13 +26,13 @@ const Loading = styled.div`
 	align-items: center;
 `;
 
-type Props = {
+interface IProps {
     isValid: (isValidResult: boolean) => void;
     codeSnippet: string;
     setCodeSnippet: (val: string) => void;
     loading: boolean;
-};
-const CodeEditor: FunctionComponent<Props> = ({
+}
+const CodeEditor: FunctionComponent<IProps> = ({
     isValid,
     setCodeSnippet,
     codeSnippet,

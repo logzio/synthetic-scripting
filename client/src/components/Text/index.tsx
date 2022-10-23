@@ -16,9 +16,12 @@ const ParagraphSection = styled.p`
     line-height: 130%;
     color: #707070;
 `;
-type Props = { children: React.ReactNode; tag: string };
+interface IProps {
+    children: React.ReactNode;
+    tag: string;
+}
 
-const Text: FunctionComponent<Props> = ({ children, tag }) => {
+const Text: FunctionComponent<IProps> = ({ children, tag }) => {
     switch (tag) {
         case 'h2':
             return <H2Section>{children}</H2Section>;

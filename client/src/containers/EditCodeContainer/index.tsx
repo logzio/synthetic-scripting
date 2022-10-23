@@ -73,14 +73,14 @@ const IconCheck = styled.svg`
 type EnvVariable = {
     [key: string]: string;
 };
-type Props = {
+interface IProps {
     uniqueKey: (isUnique: boolean) => void;
     codeSnippet: string;
     setCodeSnippet: (val: string) => void;
     setEnvVariable: (envVariable: EnvVariable[]) => void;
-};
+}
 
-const EditCodeContainer: FunctionComponent<Props> = ({
+const EditCodeContainer: FunctionComponent<IProps> = ({
     uniqueKey,
     codeSnippet,
     setCodeSnippet,

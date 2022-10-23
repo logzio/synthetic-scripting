@@ -38,9 +38,13 @@ const ErrorBody = styled.div`
     display: flex;
     flex-direction: column;
 `;
-type Props = { title: string; children: React.ReactNode; onClose: () => void };
+interface IProps {
+    title: string;
+    children: React.ReactNode;
+    onClose: () => void;
+}
 
-const Error: FunctionComponent<Props> = ({ title, children, onClose }) => {
+const Error: FunctionComponent<IProps> = ({ title, children, onClose }) => {
     const onCloseHandler = () => {
         onClose();
     };

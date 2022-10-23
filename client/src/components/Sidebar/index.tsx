@@ -64,8 +64,10 @@ const TextElement = styled.p`
     color: #6585b6;
 `;
 
-type Props = { activeStep: string };
-const Sidebar: FunctionComponent<Props> = ({ activeStep }) => {
+interface IProps {
+    activeStep: string;
+}
+const Sidebar: FunctionComponent<IProps> = ({ activeStep }) => {
     return (
         <SidebarWrapper>
             <SidebarContainer>
