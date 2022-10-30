@@ -76,7 +76,7 @@ type StatusProps = {
     isEnd: boolean;
 };
 
-type Props = {
+interface IProps {
     stageDisplay: boolean;
     stageDeploy: StatusProps;
     methodTest: string;
@@ -87,13 +87,13 @@ type Props = {
     onChangeRangeTime: (option: string) => void;
     onChangeCloudProvider: (option: string) => void;
     updateMeta: (data: Meta) => void;
-};
+}
 type Meta = {
     field: string;
     value: string;
 };
 
-const ExportDeploy: FunctionComponent<Props> = ({
+const ExportDeploy: FunctionComponent<IProps> = ({
     stageDisplay,
     stageDeploy,
     methodTest,

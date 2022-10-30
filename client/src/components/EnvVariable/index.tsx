@@ -42,13 +42,13 @@ const IconClose = styled.div`
 type EnvVariable = {
     [key: string]: string;
 };
-type Props = {
+interface IProps {
     keyEnvVariable: string;
     counterEnvVariable: number;
     envVariable: EnvVariable;
     onDeleteEnvVariable: (env: EnvVariable) => void;
-};
-const EnvVariableElement: FunctionComponent<Props> = ({
+}
+const EnvVariableElement: FunctionComponent<IProps> = ({
     envVariable,
     keyEnvVariable,
     counterEnvVariable,

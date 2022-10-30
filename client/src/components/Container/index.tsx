@@ -12,9 +12,11 @@ const ContainerDiv = styled.div`
     padding-bottom: 24px;
 `;
 
-type Props = { children: React.ReactNode };
+interface IProps {
+    children: React.ReactNode;
+}
 
-const Container: FunctionComponent<Props> = ({ children }) => {
+const Container: FunctionComponent<IProps> = ({ children }) => {
     return <ContainerDiv>{children}</ContainerDiv>;
 };
 

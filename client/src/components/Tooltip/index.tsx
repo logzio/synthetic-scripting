@@ -48,9 +48,11 @@ const TooltipText = styled.div`
     }
 `;
 
-type Props = { children: React.ReactNode };
+interface IProps {
+    children: React.ReactNode;
+}
 
-const Tooltip: FunctionComponent<Props> = ({ children }) => {
+const Tooltip: FunctionComponent<IProps> = ({ children }) => {
     const [hovered, setHovered] = useState(false);
     const toggleHover = () => setHovered(!hovered);
 

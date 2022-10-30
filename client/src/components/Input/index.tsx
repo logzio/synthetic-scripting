@@ -14,16 +14,16 @@ const InputWrapper = styled.input`
     color: #002e42;
 `;
 
-type Props = {
+interface IProps {
     name: string;
     type: string;
     placeholder: string;
     value?: string;
     defaultValue?: string;
     onChange: (e: React.FormEvent<HTMLInputElement>) => void;
-};
+}
 
-const Input: FunctionComponent<Props> = (props) => {
+const Input: FunctionComponent<IProps> = (props) => {
     return <InputWrapper {...props} />;
 };
 

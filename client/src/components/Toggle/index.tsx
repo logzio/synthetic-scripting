@@ -5,11 +5,11 @@ type Option = {
     name: string;
 };
 
-type Props = {
+interface IProps {
     options: Option[];
     onToggle: (option: string) => void;
     activeToggle: string;
-};
+}
 
 const ToggleWrapper = styled.div``;
 const ToggleList = styled.ul`
@@ -47,7 +47,7 @@ const ToggleElement = styled.li`
 const IconCheck = styled.svg`
     display: none;
 `;
-const Toggle: FunctionComponent<Props> = ({
+const Toggle: FunctionComponent<IProps> = ({
     options,
     onToggle,
     activeToggle,

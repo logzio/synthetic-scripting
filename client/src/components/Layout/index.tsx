@@ -4,14 +4,17 @@ import Sidebar from '../Sidebar';
 
 import styled from 'styled-components';
 
-type Props = { children: React.ReactNode; activeStep: string };
+interface IProps {
+    children: React.ReactNode;
+    activeStep: string;
+}
 
 const LayoutWrapper = styled.div`
     height: 100%;
     padding-top: 74px;
 `;
 
-const Layout: FunctionComponent<Props> = ({ children, activeStep }) => {
+const Layout: FunctionComponent<IProps> = ({ children, activeStep }) => {
     return (
         <LayoutWrapper>
             <Header />

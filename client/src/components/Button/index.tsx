@@ -35,9 +35,13 @@ const ButtonTransparent = styled.button`
     cursor: pointer;
 `;
 
-type Props = { children: React.ReactNode; type: string; onClick: () => void };
+interface IProps {
+    children: React.ReactNode;
+    type: string;
+    onClick: () => void;
+}
 
-const Button: FunctionComponent<Props> = ({ children, type, onClick }) => {
+const Button: FunctionComponent<IProps> = ({ children, type, onClick }) => {
     switch (type) {
         case 'yellow':
             return <ButtonYellow onClick={onClick}>{children}</ButtonYellow>;

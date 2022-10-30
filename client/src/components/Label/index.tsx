@@ -11,9 +11,11 @@ const LabelWrapper = styled.label`
     display: flex;
 `;
 
-type Props = { children: React.ReactNode };
+interface IProps {
+    children: React.ReactNode;
+}
 
-const Label: FunctionComponent<Props> = ({ children }) => {
+const Label: FunctionComponent<IProps> = ({ children }) => {
     return <LabelWrapper>{children}</LabelWrapper>;
 };
 

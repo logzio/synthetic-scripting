@@ -35,12 +35,12 @@ type EnvVariable = {
     [key: string]: string;
 };
 
-type Props = {
+interface IProps {
     uniqueKey: (isUnique: boolean) => void;
     onSetListEnvVariable: (envVariable: EnvVariable[]) => void;
-};
+}
 
-const EnvVariableContainer: FunctionComponent<Props> = ({
+const EnvVariableContainer: FunctionComponent<IProps> = ({
     uniqueKey,
     onSetListEnvVariable,
 }) => {
