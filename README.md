@@ -6,11 +6,15 @@ This Synthetic scripting mini app emulates and monitors your custom user experie
 
 1. Pull the Docker image.
 
-`docker pull logzio/synthetic-script:latest`
+```sh
+docker pull logzio/synthetic-script:latest
+```
 
 2. Run the Docker container.
 
-`docker run -p 8080:8080 -d --name synthetic-script logzio/synthetic-script:latest`
+```sh
+docker run -p 8080:8080 -d --name synthetic-script logzio/synthetic-script:latest
+```
 
 The Docker image will run a Node.js mini app. Navigate to http://localhost:8080 in your browser to access the UI that helps you establish connection between your app and Logz.io.
 
