@@ -5,6 +5,7 @@ const handlerLocally = async () => {
     let context = null;
     let err = null;
     let page = null;
+    let browser = null;
     try {
         browser = await playwright.launchChromium(false);
         context = await browser.newContext();

@@ -61,7 +61,7 @@ const StatusTest = styled.div`
     line-height: 130%;
     color: #002e42;
     display: flex;
-
+    overflow-wrap: anywhere;
     align-items: center;
 `;
 

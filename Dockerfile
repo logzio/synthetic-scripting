@@ -1,5 +1,5 @@
 #Specify a base image
-FROM node:alpine
+FROM mcr.microsoft.com/playwright:v1.16.2-focal
 
 
 WORKDIR /usr/app
@@ -20,9 +20,11 @@ RUN npm install
 
 RUN npm run build
 
+RUN npx playwright install chromium
+
 WORKDIR /usr/app
 
 #Default command
 EXPOSE 8080
 
-CMD ["npm", "container"]
+CMD ["npm","run", "container"]
