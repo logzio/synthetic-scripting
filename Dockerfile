@@ -1,6 +1,7 @@
 #Specify a base image
-FROM mcr.microsoft.com/playwright:v1.16.2-focal
+FROM node:alpine
 
+FROM mcr.microsoft.com/playwright:v1.29.0
 
 WORKDIR /usr/app
 

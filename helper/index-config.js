@@ -40,6 +40,7 @@ module.exports = {
     return true;
 };`,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
+	const { chromium } = require('playwright-core');
 
 	const errorStatusHandler = require('./statusError');
 	
@@ -48,8 +49,8 @@ module.exports = {
 		let err = null;
 		let page = null;
 		let browser = null;
-		try {
-			browser = await playwright.launchChromium(false);
+		try {	
+			browser = await chromium.launch({});
 			context = await browser.newContext();
 			page = await context.newPage();
 	`,
