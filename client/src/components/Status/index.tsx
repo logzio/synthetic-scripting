@@ -102,12 +102,15 @@ const Status: FunctionComponent<IProps> = ({ stage, goBackHandler }) => {
     };
     useEffect(() => {
         setIsLoading(true);
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             setIsLoading(false);
             setMessage(stage.message);
             setIsSuccessful(stage.isSuccessful);
             setIsEnd(stage.isEnd);
         }, 600);
+        return () => {
+            clearTimeout(timer);
+        };
     }, [stage]);
 
     return (
