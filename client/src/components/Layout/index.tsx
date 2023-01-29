@@ -10,6 +10,7 @@ interface IProps {
 }
 
 const LayoutWrapper = styled.div`
+    height: 100%;
     padding-top: 74px;
 `;
 

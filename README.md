@@ -73,15 +73,22 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.1.2:
+
+-   Update docker image, to upload playwright to the Docker.
+-   CSS fix, update test status box.
+-   Add cleanup for useEffect
+
 1.1.1:
+Refactor Components:
 
--   Refactor Components:
 -   Move from type to interfaces.
--   Add to summaryLog:
 
-    -   totalDuration
+Add to summaryLog:
 
-    1.1.0:
+-   totalDuration
+
+1.1.0:
 
 -   Update UI
 -   Initial Release
