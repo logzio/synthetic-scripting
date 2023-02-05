@@ -142,7 +142,6 @@ exports.modifyFileLocally = async (req, res) => {
 
     try {
         const resp = await updateFileLocal(code);
-        console.log(resp);
         if (resp) {
             let statusTest;
             shell.exec(

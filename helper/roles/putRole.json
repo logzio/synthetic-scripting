@@ -4,7 +4,11 @@
         {
             "Effect": "Allow",
             "Principal": {
-                "Service": "events.amazonaws.com"
+                "Service": [
+                    "lambda.amazonaws.com",
+                    "apigateway.amazonaws.com",
+                    "events.amazonaws.com"
+                ]
             },
             "Action": "sts:AssumeRole"
         }

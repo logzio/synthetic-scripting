@@ -10,7 +10,7 @@ const CodeEditorWrapper = styled.div`
     border-radius: 4px;
     position: relative;
     width: 70%;
-    height: 100%;
+    height: 500px;
     overflow: hidden;
 `;
 
