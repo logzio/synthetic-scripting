@@ -1,8 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 
-import Container from '../../components/Container';
-
 import CodeEditor from '../../components/CodeEditor';
 import EnvVariableWrapper from '../EnvVariableContainer';
 import Text from '../../components/Text';
@@ -12,6 +10,15 @@ import { availableCodeLanguages } from '../../utils/selectOptions';
 import Button from '../../components/Button';
 
 import api from '../../utils/api';
+
+const ContainerDiv = styled.div`
+    position: relative;
+    margin-left: 284px;
+    margin-right: auto;
+    width: calc(100% - 284px);
+    max-width: 1280px;
+    padding-bottom: 24px;
+`;
 
 const TopWrapper = styled.div`
     margin-bottom: 24px;
@@ -32,6 +39,7 @@ const ContainerSteps = styled.div`
     margin-right: 15px;
     margin-left: 15px;
     height: 100%;
+    min-height: 700px;
 `;
 const SelectWrapper = styled.div`
     position: relative;
@@ -122,7 +130,7 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
     };
 
     return (
-        <Container>
+        <ContainerDiv>
             <ContainerSteps>
                 <TopWrapper>
                     <TextWrapper>
@@ -183,7 +191,7 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
                     </StatusTest>
                 </BottomWrapper>
             </ContainerSteps>
-        </Container>
+        </ContainerDiv>
     );
 };
 
