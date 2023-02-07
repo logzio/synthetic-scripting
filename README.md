@@ -73,6 +73,10 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.1.3:
+
+-   Update UI
+
 1.1.2:
 
 -   Update docker image, to upload playwright to the Docker.
