@@ -46,7 +46,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: !Ref Timeout
-            Name: RateSchedule
+            Name: !Join [ '_', [ !Ref AWS::StackName, 'rateschudule' ] ]
             Description: Trigger Lambda once in a minute
       Environment:
         Variables:

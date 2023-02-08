@@ -6,5 +6,4 @@ module.exports = {
     BASIC_EXECUTION_ROLE_NAME: 'basic-execution-role',
     PUT_RULE_ROLE_NAME: 'put-rule-role',
     SEPARATOR: 'ToDisplay',
-    SUFIX_NAME: Math.floor(Math.random() * 90000) + 10000,
 };
