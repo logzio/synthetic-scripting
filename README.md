@@ -73,6 +73,16 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.1.5:
+
+-   Update sheduler name from static to dynamic
+
+1.1.4:
+
+-   Update the playwright from 1.24.0 to 1.30.0
+
+-   Add dropdown UI for regions select
+
 1.1.3:
 
 -   Update UI
