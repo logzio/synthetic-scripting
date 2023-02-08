@@ -39,6 +39,8 @@ const DropdownList = styled.ul`
 
     &.open {
         display: flex;
+        max-height: 345px;
+        overflow: scroll;
     }
 `;
 
