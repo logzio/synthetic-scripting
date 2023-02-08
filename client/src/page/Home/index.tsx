@@ -51,10 +51,6 @@ type MetaConfig = {
         value: string;
         isValid: boolean;
     };
-    // region: {
-    //     value: string;
-    //     isValid: boolean;
-    // };
     listEnvVariables: EnvVariable[];
     description?:
         | {

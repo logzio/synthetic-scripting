@@ -277,19 +277,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                                 to.
                             </Tooltip>
                         </Label>
-                        {/* <Input
-                            name='region'
-                            type='text'
-                            placeholder='Region'
-                            onChange={(
-                                e: React.FormEvent<HTMLInputElement>,
-                            ) => {
-                                updateMeta({
-                                    field: 'region',
-                                    value: e.currentTarget.value,
-                                });
-                            }}
-                        /> */}
+
                         <SelectWrapper full={true}>
                             <Select
                                 options={awsRegions}
