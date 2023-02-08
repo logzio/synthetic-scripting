@@ -51,10 +51,6 @@ type MetaConfig = {
         value: string;
         isValid: boolean;
     };
-    region: {
-        value: string;
-        isValid: boolean;
-    };
     listEnvVariables: EnvVariable[];
     description?:
         | {
@@ -75,6 +71,7 @@ type ErrorObject = {
 
 const Home: FunctionComponent = () => {
     const [activeRangeTime, setActiveRangeTime] = useState<string>('1 minute');
+    const [region, setRegion] = useState<string>('us-east-2');
     const [methodTest, setMethodTest] = useState<string>('Cloud');
     const [isError, setIsError] = useState<boolean>(false);
     const [errorData, setErrorMessage] = useState<ErrorObject>({
@@ -120,10 +117,7 @@ const Home: FunctionComponent = () => {
             value: '',
             isValid: true,
         },
-        region: {
-            value: '',
-            isValid: true,
-        },
+
         listEnvVariables: [],
         description: {
             value: '',
@@ -149,7 +143,7 @@ const Home: FunctionComponent = () => {
                 configs.name.value,
                 configs.token.value,
                 configs.listener.value,
-                configs.region.value,
+                region,
                 configs.bucketName.value,
             );
             if (!validation.status) {
@@ -181,7 +175,7 @@ const Home: FunctionComponent = () => {
                 configs.name.value,
                 configs.token.value,
                 configs.listener.value,
-                configs.region.value,
+                region,
                 configs.bucketName.value,
                 configs.accessKey.value,
                 configs.secretKey.value,
@@ -207,7 +201,7 @@ const Home: FunctionComponent = () => {
                 configs.bucketName.value,
                 configs.token.value,
                 configs.listener.value,
-                configs.region.value,
+                region,
                 envList,
                 (stage: StatusProps) => {
                     onStage(stage);
@@ -250,6 +244,9 @@ const Home: FunctionComponent = () => {
 
     const updateRangeTimeHandler = (option: string) => {
         setActiveRangeTime(option);
+    };
+    const onChangeRegion = (option: string) => {
+        setRegion(option);
     };
 
     const onChangeMethodTestHandler = (option: string) => {
@@ -298,6 +295,8 @@ const Home: FunctionComponent = () => {
                         methodTest={methodTest}
                         activeRangeTime={activeRangeTime}
                         activeCloudProvider={activeCloudProvider}
+                        activeRegion={region}
+                        onChangeRegion={onChangeRegion}
                         statusGoBackHandler={statusGoBackHandler}
                         onChangeMethodTest={onChangeMethodTestHandler}
                         onChangeRangeTime={updateRangeTimeHandler}

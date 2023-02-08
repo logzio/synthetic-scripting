@@ -6,6 +6,7 @@ import {
     availableCloudProviders,
     availableMethod,
     availableTimeRange,
+    awsRegions,
 } from '../../utils/selectOptions';
 import styled from 'styled-components';
 import Toggle from '../../components/Toggle';
@@ -34,10 +35,10 @@ const TopWrapper = styled.div`
     justify-content: space-between;
     align-items: center;
 `;
-
-const SelectWrapper = styled.div`
+const WrapperWithProps = styled.div``;
+const SelectWrapper = styled(WrapperWithProps)<{ full?: boolean }>`
     position: relative;
-    max-width: 215px;
+    max-width: ${(props) => (props.full ? '100%;' : '215px;')}
     width: 100%;
 `;
 
@@ -80,10 +81,12 @@ interface IProps {
     stageDisplay: boolean;
     stageDeploy: StatusProps;
     methodTest: string;
+    activeRegion: string;
     activeRangeTime: string;
     activeCloudProvider: string;
     statusGoBackHandler: (option: string) => void;
     onChangeMethodTest: (option: string) => void;
+    onChangeRegion: (option: string) => void;
     onChangeRangeTime: (option: string) => void;
     onChangeCloudProvider: (option: string) => void;
     updateMeta: (data: Meta) => void;
@@ -96,12 +99,14 @@ type Meta = {
 const ExportDeploy: FunctionComponent<IProps> = ({
     stageDisplay,
     stageDeploy,
+    activeRegion,
     methodTest,
     activeRangeTime,
     activeCloudProvider,
     statusGoBackHandler,
     onChangeMethodTest,
     onChangeRangeTime,
+    onChangeRegion,
     onChangeCloudProvider,
     updateMeta,
 }) => {
@@ -136,7 +141,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                         </Text>
                     )}
 
-                    <SelectWrapper>
+                    <SelectWrapper full={false}>
                         <Select
                             options={availableCloudProviders}
                             onChangeSelect={onChangeCloudProvider}
@@ -272,19 +277,14 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                                 to.
                             </Tooltip>
                         </Label>
-                        <Input
-                            name='region'
-                            type='text'
-                            placeholder='Region'
-                            onChange={(
-                                e: React.FormEvent<HTMLInputElement>,
-                            ) => {
-                                updateMeta({
-                                    field: 'region',
-                                    value: e.currentTarget.value,
-                                });
-                            }}
-                        />
+
+                        <SelectWrapper full={true}>
+                            <Select
+                                options={awsRegions}
+                                onChangeSelect={onChangeRegion}
+                                currentValue={activeRegion}
+                            />
+                        </SelectWrapper>
                     </FormControl>
                 </TwoColumns>
                 {methodTest === 'Cloud' ? (
