@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { logger } = require('./logger');
 const dirOutput = path.join(__dirname, '..', 'output');
+const { SUFIX_NAME } = require('./constants');
 
 /**
  * Function to create new Cloud Formation  template for customer
@@ -117,6 +118,11 @@ const updateTemplate = (
     })`;
     newYaml.Resources.ScheduledLambda.Properties.Events.CronEvent.Properties.Schedule =
         timeOut;
+
+    // name Scheduler
+    const RateScheduleName = `RateSchedule_${SUFIX_NAME}`;
+    newYaml.Resources.ScheduledLambda.Properties.Events.CronEvent.Properties.Name =
+        RateScheduleName;
 
     // listener
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.LISTENER_URL =
