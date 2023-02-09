@@ -54,7 +54,7 @@ exports.setupCFTemplate = async (
         if (listEnvVariables.length > 0) {
             updatedSam = addEnvVariableToTemplate(listEnvVariables, updatedSam);
         }
-        const result = await new Promise((resolve, reject) => {
+        const updateParams = await new Promise((resolve, reject) => {
             fs.writeFile(
                 path.join(__dirname, '..', 'output', 'sam-template.yml'),
                 yaml.dump(updatedSam),
@@ -64,10 +64,41 @@ exports.setupCFTemplate = async (
                 },
             );
         });
+        if (updateParams.err) {
+            throw updateParams.err;
+        }
+        const result = await new Promise((resolve, reject) => {
+            const ymlData = fs.readFileSync(
+                path.join(__dirname, '..', 'output', 'sam-template.yml'),
+                'utf8',
+            );
+            const ymlArray = ymlData.split('\n');
+            const idxRole = ymlArray.indexOf('      Role: dump');
+            ymlArray[idxRole] =
+                '      Role: !GetAtt syntheticQueryS3Bucket.Arn';
+
+            const idxRoleName = ymlArray.indexOf('      RoleName: dump');
+            ymlArray[idxRoleName] =
+                "      RoleName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaRole', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]";
+
+            const idxPolicyName = ymlArray.indexOf(
+                '        - PolicyName: dump',
+            );
+            ymlArray[idxPolicyName] =
+                "        - PolicyName:  !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaPolicy', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]";
+            const updYaml = ymlArray.join('\n');
+            fs.writeFile(
+                path.join(__dirname, '..', 'output', 'sam-template.yml'),
+                updYaml,
+                (err) => {
+                    if (err) reject(err);
+                    resolve({ error: false, message: 'Sam Template Created' });
+                },
+            );
+        });
         if (result.err) {
             throw result.err;
         }
-
         return result;
     } catch (err) {
         logger(err);
@@ -119,6 +150,7 @@ const updateTemplate = (
         timeOut;
 
     // name Scheduler
+    newYaml.Resources.syntheticQueryS3Bucket.Properties.Policies[0].PolicyDocument.Statement[0].Resource = `arn::aws:s3:::${bucket}/*`;
 
     // listener
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.LISTENER_URL =

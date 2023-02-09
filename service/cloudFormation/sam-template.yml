@@ -39,6 +39,7 @@ Resources:
       Handler: index.handler
       Description: Lambda Function to run playwright test
       FunctionName: !Ref LambdaTestName
+      Role: !GetAtt syntheticQueryS3Bucket.Arn
       MemorySize: 512
       Timeout: 60
       Events:
@@ -53,3 +54,26 @@ Resources:
           LISTENER_URL: !Ref LogzioListenerUrl
           TOKEN: !Ref LogzioToken
           NAME_FUNCTION: !Ref LambdaTestName
+  syntheticQueryS3Bucket:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaRole', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - s3.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaPolicy', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                Resource: 'arn::aws:s3:::'
