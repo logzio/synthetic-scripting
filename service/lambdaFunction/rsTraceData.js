@@ -24,12 +24,15 @@ const readSendTraceData = async (name, sessionId, logger) => {
             arrNew.forEach((line, idx) => {
                 if (line.includes('"type":"action"')) {
                     const parserLog = JSON.parse(line);
-                    if (parserLog.metadata.endTime) {
+                    if (
+                        parserLog.metadata.endTime &&
+                        parserLog.metadata.method != 'newPage'
+                    ) {
                         const parsedData = parsingLogSynthetic(
                             parserLog,
                             name,
                             sessionId,
-                            arrNew[0].wallTime,
+                            JSON.parse(arrNew[0]).wallTime,
                         );
                         parsedData['actionCount'] = arrNew.length - 1;
 
