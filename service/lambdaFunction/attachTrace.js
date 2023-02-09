@@ -18,11 +18,8 @@ const parsingLogSynthetic = (trace, name, sessionId, startTime) => {
             1000
         ).toFixed(2),
         actionStartTime: moment
-            .unix(startTime / 1000)
-            .format('MM/DD/YYYY  hh:mm:ss'),
-        actionEndTime: moment
-            .unix(trace.metadata.wallTilme / 1000)
-            .format('MM/DD/YYYY  hh:mm:ss'),
+            .unix(trace.metadata.wallTime / 1000)
+            .toISOString(),
         ...(trace.metadata.params
             ? {
                   actionParamatersCount: parseInt(
