@@ -76,6 +76,7 @@ exports.createLambda = async (
                     ...variables,
                     TOKEN: token,
                     LISTENER_URL: listenerUrl,
+                    REGION: region,
                     NAME_FUNCTION: functionName,
                 },
             },

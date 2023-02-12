@@ -37,20 +37,18 @@ Resources:
     Type: 'AWS::IAM::Role'
     Properties:
       RoleName: 'dump'
-      # RoleName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaRole', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Principal:
               Service:
-                - s3.amazonaws.com
+                - lambda.amazonaws.com
             Action:
               - 'sts:AssumeRole'
       Path: /
       Policies:
         - PolicyName: 'dump'
-        # - PolicyName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaPolicy', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -58,4 +56,4 @@ Resources:
                 Action:
                   - 's3:GetObject'
                   - 'lambda:GetFunction'
-                Resource: 'arn::aws:s3:::'
+                Resource: '*'

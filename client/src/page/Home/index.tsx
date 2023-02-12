@@ -163,6 +163,7 @@ const Home: FunctionComponent = () => {
                 ],
                 configs.bucketName.value,
                 configs.token.value,
+                region,
                 configs.listener.value,
                 (step: boolean) => {
                     onDownload(step);

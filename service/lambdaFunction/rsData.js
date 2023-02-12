@@ -3,6 +3,7 @@ const convertHarToJSON = require('./convertHarToJSON');
 const convertToNumber = require('./convertToNumber');
 const readSendTraceData = require('./rsTraceData');
 const loggerGenerator = require('./logger');
+const { regionData } = require('./geolocation');
 const errorStatusHandler = require('./statusError');
 const createSessionId = require('./sessionId');
 const createResponseStatusClass = require('./responseStatusClass');
@@ -12,7 +13,7 @@ function sleep(ms) {
 }
 
 const readSendData = async (error = '') => {
-    const logger = loggerGenerator();
+    const logger = loggerGenerator(regionData[process.env.REGION]);
     const sessionId = createSessionId();
     const status = errorStatusHandler(error);
     const harsInDir = fs.readdirSync('/tmp');
@@ -22,6 +23,9 @@ const readSendData = async (error = '') => {
             if (file.split('.').length > 1 && file.split('.')[1] === 'har') {
                 const fileData = fs.readFileSync(`/tmp/${file}`);
                 const json = JSON.parse(fileData.toString());
+                if (!json.log.entries[0].request) {
+                    throw new Error("First entry doesn't exist.");
+                }
                 const firstEnterence = json.log.entries[0].request.url;
 
                 const parsedData = convertHarToJSON(json);

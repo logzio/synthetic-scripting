@@ -13,6 +13,7 @@ const dirOutput = path.join(__dirname, '..', 'output');
  * @param  {string} token - Shipping token from logzio
  * @param  {string} bucket - Bucket name
  * @param  {string} listener - Logzio listener url to send metrics/logs
+ * @param  {string} region - AWS Region name
  * @param  {string} rangeTime - set interval for run Lambda function( in minutes)
  */
 exports.setupCFTemplate = async (
@@ -22,6 +23,7 @@ exports.setupCFTemplate = async (
     token,
     bucket,
     listener,
+    region,
     rangeTime,
 ) => {
     try {
@@ -48,6 +50,7 @@ exports.setupCFTemplate = async (
             token,
             bucket,
             listener,
+            region,
             rangeTime,
         );
 
@@ -86,6 +89,13 @@ exports.setupCFTemplate = async (
             );
             ymlArray[idxPolicyName] =
                 "        - PolicyName:  !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaPolicy', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]";
+
+            const idxEventName = ymlArray.indexOf(
+                '            Name: RateSchedule',
+            );
+            ymlArray[idxEventName] =
+                "            Name: !Join [ '_', [ !Ref AWS::StackName, 'rateschudule' ] ]";
+
             const updYaml = ymlArray.join('\n');
             fs.writeFile(
                 path.join(__dirname, '..', 'output', 'sam-template.yml'),
@@ -117,6 +127,7 @@ exports.setupCFTemplate = async (
  * @param  {string} token - Shipping token from logzio
  * @param  {string} bucket - Bucket name
  * @param  {string} listener - Logzio listener url to send metrics/logs
+ * @param  {string} region - AWS Region name
  * @param  {string} rangeTime - set interval for run Lambda function( in minutes)
  */
 const updateTemplate = (
@@ -126,6 +137,7 @@ const updateTemplate = (
     token,
     bucket,
     listener,
+    region,
     rangeTime,
 ) => {
     const newYaml = { ...template };
@@ -149,12 +161,13 @@ const updateTemplate = (
     newYaml.Resources.ScheduledLambda.Properties.Events.CronEvent.Properties.Schedule =
         timeOut;
 
-    // name Scheduler
-    newYaml.Resources.syntheticQueryS3Bucket.Properties.Policies[0].PolicyDocument.Statement[0].Resource = `arn::aws:s3:::${bucket}/*`;
-
     // listener
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.LISTENER_URL =
         listener;
+
+    // listener
+    newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.REGION =
+        region;
 
     // token
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.TOKEN =

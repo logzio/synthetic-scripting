@@ -15,6 +15,10 @@ Parameters:
     Type: "String"
     Description: "AWS bucket where was uploaded lambdaFunction"
 
+  AWSRegion:
+    Type: "String"
+    Description: "AWS Region where was uploaded lambdaFunction"
+
   ZipNameRoute:
     Type: "String"
     Description: "Zip route in AWS Bucket what was uploaded before"
@@ -54,6 +58,7 @@ Resources:
           LISTENER_URL: !Ref LogzioListenerUrl
           TOKEN: !Ref LogzioToken
           NAME_FUNCTION: !Ref LambdaTestName
+          REGION: !Ref AWSRegion
   syntheticQueryS3Bucket:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -69,11 +74,11 @@ Resources:
               - 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaPolicy', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]
+      - PolicyName: !Join [ '-', [ 'LogzioSyntheticMonitoringLambdaPolicy', !Select [ 4, !Split [ '-', !Select [ 2, !Split [ '/', !Ref AWS::StackId ] ] ] ] ] ]
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
                   - 's3:GetObject'
-                Resource: 'arn::aws:s3:::'
+                Resource: '*'
