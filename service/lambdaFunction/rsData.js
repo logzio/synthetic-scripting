@@ -23,6 +23,10 @@ const readSendData = async (error = '') => {
             if (file.split('.').length > 1 && file.split('.')[1] === 'har') {
                 const fileData = fs.readFileSync(`/tmp/${file}`);
                 const json = JSON.parse(fileData.toString());
+                /*
+                 * Log entries collect data for each test url,
+                 * To prevent error for submitting test without url(first entry)
+                 */
                 if (!json.log.entries[0].request) {
                     throw new Error("First entry doesn't exist.");
                 }

@@ -165,7 +165,7 @@ const updateTemplate = (
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.LISTENER_URL =
         listener;
 
-    // listener
+    // region
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.REGION =
         region;
 
