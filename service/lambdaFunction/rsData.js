@@ -28,7 +28,9 @@ const readSendData = async (error = '') => {
                  * To prevent error for submitting test without url(first entry)
                  */
                 if (!json.log.entries[0].request) {
-                    throw new Error("First entry doesn't exist.");
+                    throw new Error(
+                        "The initial entry is missing. Please verify your test code and ensure that the first entry point (URL) is correctly specified. This is where you should start your end-to-end testing. For example: await page.goto('https://example.com')",
+                    );
                 }
                 const firstEnterence = json.log.entries[0].request.url;
 
