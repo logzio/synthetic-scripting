@@ -169,8 +169,16 @@ exports.modifyFileLocally = async (req, res) => {
 };
 
 exports.createZipCF = async (req, res) => {
-    const { envList, name, description, token, bucket, listener, rangeTime } =
-        req.body;
+    const {
+        envList,
+        name,
+        description,
+        token,
+        bucket,
+        listener,
+        region,
+        rangeTime,
+    } = req.body;
 
     try {
         await setupCFTemplate(
@@ -180,6 +188,7 @@ exports.createZipCF = async (req, res) => {
             token,
             bucket,
             listener,
+            region,
             rangeTime,
         );
         await fileToZipCF(name);

@@ -3,6 +3,7 @@ const convertHarToJSON = require('./convertHarToJSON');
 const convertToNumber = require('./convertToNumber');
 const readSendTraceData = require('./rsTraceData');
 const loggerGenerator = require('./logger');
+const { regionData } = require('./geolocation');
 const errorStatusHandler = require('./statusError');
 const createSessionId = require('./sessionId');
 const createResponseStatusClass = require('./responseStatusClass');
@@ -12,7 +13,7 @@ function sleep(ms) {
 }
 
 const readSendData = async (error = '') => {
-    const logger = loggerGenerator();
+    const logger = loggerGenerator(regionData[process.env.REGION]);
     const sessionId = createSessionId();
     const status = errorStatusHandler(error);
     const harsInDir = fs.readdirSync('/tmp');
@@ -22,6 +23,15 @@ const readSendData = async (error = '') => {
             if (file.split('.').length > 1 && file.split('.')[1] === 'har') {
                 const fileData = fs.readFileSync(`/tmp/${file}`);
                 const json = JSON.parse(fileData.toString());
+                /*
+                 * Log entries collect data for each test url,
+                 * To prevent error for submitting test without url(first entry)
+                 */
+                if (!json.log.entries[0].request) {
+                    throw new Error(
+                        "The initial entry is missing. Please verify your test code and ensure that the first entry point (URL) is correctly specified. This is where you should start your end-to-end testing. For example: await page.goto('https://example.com')",
+                    );
+                }
                 const firstEnterence = json.log.entries[0].request.url;
 
                 const parsedData = convertHarToJSON(json);
