@@ -18,6 +18,8 @@
     "homepage": "https://github.com/resdenia/syntetic-scripting#readme",
     "dependencies": {
         "@menadevs/objectron": "^0.1.14",
+        "aws-sdk": "^2.1314.0",
+        "cfn-response-async": "^1.0.0",
         "crypto": "^1.0.1",
         "dotenv": "^16.0.1",
         "jszip": "^3.10.1",
