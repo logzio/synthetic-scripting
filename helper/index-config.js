@@ -2,14 +2,25 @@ module.exports = {
     startFile: `const playwright = require('playwright-aws-lambda');
 	const path = require('path');
 	const readSendData = require('./rsData');
-
-
-	exports.handler = async (event) => {
+	const cfnResponse = require('cfn-response-async');
+	
+	const firstRun = async (event, context) => {
+		await regularRun();
+	
+		return await cfnResponse.send(
+			event,
+			context,
+			'SUCCESS',
+			{},
+			'first-invoke-id',
+		);
+	};
+	
+	const regularRun = async () => {
 		let context = null;
 		let err = null;
 		let page = null;
 		try {
-			
 			browser = await playwright.launchChromium(false);
 			context = await browser.newContext({
 				recordHar: {
@@ -19,25 +30,33 @@ module.exports = {
 				},
 			});
 			await context.tracing.start({ screenshots: false, snapshots: false });
-
+	
 			page = await context.newPage();
-			
 	`,
     endFile: `
 
+
 } catch (error) {
 	err = error.message;
-	} finally {
-		if (browser) {
-			await context.tracing.stop({
-				path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
-			});
-			await context.close();
-			await browser.close();
-		}
+} finally {
+	if (browser) {
+		await context.tracing.stop({
+			path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
+		});
+		await context.close();
+		await browser.close();
 	}
-	await readSendData(err);
-    return true;
+}
+await readSendData(err);
+return true;
+};
+
+exports.handler = async (event, context) => {
+if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
+	return await firstRun(event, context);
+} else {
+	return await regularRun();
+}
 };`,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
 	const { chromium } = require('playwright-core');
