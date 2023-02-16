@@ -226,11 +226,11 @@ class Api {
 			return cloudBridgeEventResp;
 		}
 	};
-	downloadCFTemplate = async (codeSnippet: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, region: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
+	downloadCFTemplate = async (codeSnippet: string, testDevice: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, region: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
 		onDownload(true)
 
 		const responseModify = await this.customFetch(
-			{ code: codeSnippet },
+			{ code: codeSnippet, testDevice },
 			settings.endPointUrls.modifyFileUrl,
 		);
 		if (!responseModify.error) {

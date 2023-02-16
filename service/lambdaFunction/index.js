@@ -1,10 +1,24 @@
 const playwright = require('playwright-aws-lambda');
-const { webkit, devices } = require('playwright');
+const { devices } = require('playwright');
 const path = require('path');
 const readSendData = require('./rsData');
+const cfnResponse = require('cfn-response-async');
 
-exports.handler = async (event) => {
-    const mobileDevice = devices['Galaxy Note 3'];
+const firstRun = async (event, context) => {
+    await regularRun();
+
+    return await cfnResponse.send(
+        event,
+        context,
+        'SUCCESS',
+        {},
+        'first-invoke-id',
+    );
+};
+
+const regularRun = async () => {
+    const mobileDevice = devices['Galaxy S III'];
+
     let context = null;
     let err = null;
     let page = null;
@@ -36,4 +50,12 @@ exports.handler = async (event) => {
     }
     await readSendData(err);
     return true;
+};
+
+exports.handler = async (event, context) => {
+    if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
+        return await firstRun(event, context);
+    } else {
+        return await regularRun();
+    }
 };

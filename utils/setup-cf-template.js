@@ -96,6 +96,12 @@ exports.setupCFTemplate = async (
             ymlArray[idxEventName] =
                 "            Name: !Join [ '_', [ !Ref AWS::StackName, 'rateschudule' ] ]";
 
+            const idxServiceToken = ymlArray.indexOf(
+                '      ServiceToken: dump',
+            );
+            ymlArray[idxServiceToken] =
+                '      ServiceToken: !GetAtt ScheduledLambda.Arn';
+
             const updYaml = ymlArray.join('\n');
             fs.writeFile(
                 path.join(__dirname, '..', 'output', 'sam-template.yml'),

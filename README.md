@@ -73,6 +73,18 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.1.7:
+
+-   Add first invocation after cloud function was uploaded
+
+1.1.6:
+
+-   fix typo in `log type`
+
+-   update yml file to add policy for use S3
+
+-   add region and geolocation to logs
+
 1.1.5:
 
 -   Update sheduler name from static to dynamic

@@ -158,6 +158,7 @@ const Home: FunctionComponent = () => {
 
             response = await api.downloadCFTemplate(
                 codeSnippet,
+                testDevice,
                 envList,
                 configs.name.value,
                 rangeTimeVariable[

@@ -3,17 +3,29 @@ module.exports = {
 	const {  devices } = require('playwright');
 	const path = require('path');
 	const readSendData = require('./rsData');
+	const cfnResponse = require('cfn-response-async');
 
+	const firstRun = async (event, context) => {
+		await regularRun();
+	
+		return await cfnResponse.send(
+			event,
+			context,
+			'SUCCESS',
+			{},
+			'first-invoke-id',
+		);
+	};
 
-	exports.handler = async (event) => {
+	const regularRun = async () => {
 		const mobileDevice = devices['NAME_OF_DEVICE'];
+
 		let context = null;
 		let err = null;
 		let page = null;
 		let browser = null;
 
 		try {
-			
 			browser = await playwright.launchChromium(false);
 			context = await browser.newContext({
 				recordHar: {
@@ -22,23 +34,34 @@ module.exports = {
 					content: 'omit',
 				},
 				...mobileDevice
+
 			});
 			await context.tracing.start({ screenshots: false, snapshots: false });
-
-			page = await context.newPage();
-			
+	
+			page = await context.newPage();	
 	`,
     startFile: `const playwright = require('playwright-aws-lambda');
 	const path = require('path');
 	const readSendData = require('./rsData');
-
-
-	exports.handler = async (event) => {
+	const cfnResponse = require('cfn-response-async');
+	
+	const firstRun = async (event, context) => {
+		await regularRun();
+	
+		return await cfnResponse.send(
+			event,
+			context,
+			'SUCCESS',
+			{},
+			'first-invoke-id',
+		);
+	};
+	
+	const regularRun = async () => {
 		let context = null;
 		let err = null;
 		let page = null;
 		try {
-			
 			browser = await playwright.launchChromium(false);
 			context = await browser.newContext({
 				recordHar: {
@@ -48,25 +71,33 @@ module.exports = {
 				},
 			});
 			await context.tracing.start({ screenshots: false, snapshots: false });
-
+	
 			page = await context.newPage();
-			
 	`,
     endFile: `
 
+
 } catch (error) {
 	err = error.message;
-	} finally {
-		if (browser) {
-			await context.tracing.stop({
-				path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
-			});
-			await context.close();
-			await browser.close();
-		}
+} finally {
+	if (browser) {
+		await context.tracing.stop({
+			path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
+		});
+		await context.close();
+		await browser.close();
 	}
-	await readSendData(err);
-    return true;
+}
+await readSendData(err);
+return true;
+};
+
+exports.handler = async (event, context) => {
+if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
+	return await firstRun(event, context);
+} else {
+	return await regularRun();
+}
 };`,
     startFileLocallyDeviceSelection: `const playwright = require('playwright-aws-lambda');
 const { webkit, devices } = require('playwright');
