@@ -1,20 +1,16 @@
 const playwright = require('playwright-aws-lambda');
-const { webkit, devices } = require('playwright');
+const { chromium } = require('playwright-core');
 
 const errorStatusHandler = require('./statusError');
 
 const handlerLocally = async () => {
-    const mobileDevice = devices['Galaxy Note 3'];
-
     let context = null;
     let err = null;
     let page = null;
     let browser = null;
     try {
-        browser = await webkit.launch({ headless: true });
-        context = await browser.newContext({
-            ...mobileDevice,
-        });
+        browser = await chromium.launch({});
+        context = await browser.newContext();
         page = await context.newPage();
     } catch (error) {
         err = error.message;
