@@ -60,7 +60,9 @@ const readSendData = async (error = '') => {
             sessionId,
             logger,
         );
+        console.log(process.env.NAME_FUNCTION);
         logger.log({
+            testDevice: process.env.TEST_DEVICE,
             totalDuration: totalDuration,
             statusTest: status,
             statusResult: error ? 0 : 1,

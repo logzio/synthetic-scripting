@@ -12,10 +12,10 @@ const { setupCFTemplate } = require('../utils/setup-cf-template');
 const { fileToZipCF } = require('../utils/zip-cf-creator');
 
 exports.modifyFile = async (req, res) => {
-    const { code } = req.body;
+    const { code, testDevice } = req.body;
 
     try {
-        const data = await updateFile(code);
+        const data = await updateFile(code, testDevice);
         if (data.error) {
             throw Error(data.err);
         }
@@ -81,6 +81,7 @@ exports.uploadZipToS3 = async (req, res) => {
 exports.createLambda = async (req, res) => {
     const {
         name,
+        testDevice,
         description,
         token,
         bucketName,
@@ -93,6 +94,7 @@ exports.createLambda = async (req, res) => {
     try {
         const lambdaResp = await createLambda(
             name,
+            testDevice,
             description,
             token,
             bucketName,
@@ -138,10 +140,10 @@ exports.addEventBridge = async (req, res) => {
 };
 
 exports.modifyFileLocally = async (req, res) => {
-    const { code } = req.body;
+    const { code, testDevice } = req.body;
 
     try {
-        const resp = await updateFileLocal(code);
+        const resp = await updateFileLocal(code, testDevice);
         if (resp) {
             let statusTest;
             shell.exec(

@@ -11,7 +11,7 @@ import { containsKeys } from '../../utils/validate';
 import { findObjectInArray } from '../../utils/helper';
 
 const EnvVariableWrapper = styled.div`
-    width: 27%;
+    width: 100%;
     margin-right: 0;
 `;
 

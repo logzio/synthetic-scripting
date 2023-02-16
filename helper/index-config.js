@@ -1,4 +1,33 @@
 module.exports = {
+    startFileDeviceSelection: `const playwright = require('playwright-aws-lambda');
+	const {  devices } = require('playwright');
+	const path = require('path');
+	const readSendData = require('./rsData');
+
+
+	exports.handler = async (event) => {
+		const mobileDevice = devices['NAME_OF_DEVICE'];
+		let context = null;
+		let err = null;
+		let page = null;
+		let browser = null;
+
+		try {
+			
+			browser = await playwright.launchChromium(false);
+			context = await browser.newContext({
+				recordHar: {
+					path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
+					mode: 'full',
+					content: 'omit',
+				},
+				...mobileDevice
+			});
+			await context.tracing.start({ screenshots: false, snapshots: false });
+
+			page = await context.newPage();
+			
+	`,
     startFile: `const playwright = require('playwright-aws-lambda');
 	const path = require('path');
 	const readSendData = require('./rsData');
@@ -39,6 +68,25 @@ module.exports = {
 	await readSendData(err);
     return true;
 };`,
+    startFileLocallyDeviceSelection: `const playwright = require('playwright-aws-lambda');
+const { webkit, devices } = require('playwright');
+
+const errorStatusHandler = require('./statusError');
+
+const handlerLocally = async () => {
+	const mobileDevice = devices['NAME_OF_DEVICE'];
+
+	let context = null;
+	let err = null;
+	let page = null;
+	let browser = null;
+	try {	
+		browser = await webkit.launch({headless:true});
+		context = await browser.newContext({
+			...mobileDevice
+		});
+		page = await context.newPage();
+`,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
 	const { chromium } = require('playwright-core');
 
