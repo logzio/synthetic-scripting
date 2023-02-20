@@ -17,8 +17,6 @@ const firstRun = async (event, context) => {
 };
 
 const regularRun = async () => {
-    const mobileDevice = devices['Galaxy S III'];
-
     let context = null;
     let err = null;
     let page = null;
@@ -32,12 +30,12 @@ const regularRun = async () => {
                 mode: 'full',
                 content: 'omit',
             },
-            ...mobileDevice,
         });
         await context.tracing.start({ screenshots: false, snapshots: false });
 
         page = await context.newPage();
     } catch (error) {
+        console.log(error);
         err = error.message;
     } finally {
         if (browser) {
@@ -52,10 +50,12 @@ const regularRun = async () => {
     return true;
 };
 
-exports.handler = async (event, context) => {
+const handler = async (event, context) => {
     if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
         return await firstRun(event, context);
     } else {
         return await regularRun();
     }
 };
+
+regularRun();
