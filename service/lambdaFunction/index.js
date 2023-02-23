@@ -1,8 +1,8 @@
 const playwright = require('playwright-aws-lambda');
-const { devices } = require('playwright');
 const path = require('path');
 const readSendData = require('./rsData');
 const cfnResponse = require('cfn-response-async');
+const pageHandler = require('./handlerHar');
 
 const firstRun = async (event, context) => {
     await regularRun();
@@ -20,8 +20,7 @@ const regularRun = async () => {
     let context = null;
     let err = null;
     let page = null;
-    let browser = null;
-
+    let browser;
     try {
         browser = await playwright.launchChromium(false);
         context = await browser.newContext({
@@ -50,12 +49,10 @@ const regularRun = async () => {
     return true;
 };
 
-const handler = async (event, context) => {
+exports.handler = async (event, context) => {
     if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
         return await firstRun(event, context);
     } else {
         return await regularRun();
     }
 };
-
-regularRun();
