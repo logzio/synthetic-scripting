@@ -5,7 +5,9 @@ const readSendTraceData = require('./rsTraceData');
 const loggerGenerator = require('./logger');
 const { regionData } = require('./geolocation');
 const errorStatusHandler = require('./statusError');
+const uploadVideoToBucket = require('./uploadVideoToBucket');
 const createSessionId = require('./sessionId');
+
 const createResponseStatusClass = require('./responseStatusClass');
 
 function sleep(ms) {
@@ -67,6 +69,7 @@ const readSendData = async (error = '') => {
             sessionId,
             nameTest: process.env.NAME_FUNCTION,
         });
+        await uploadVideoToBucket(sessionId);
         await sleep(4000);
         logger.sendAndClose();
     } catch (err) {

@@ -3,7 +3,9 @@ module.exports = {
 	const path = require('path');
 	const readSendData = require('./rsData');
 	const cfnResponse = require('cfn-response-async');
-	
+	const pathToFfmpeg = require('ffmpeg-static');
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(pathToFfmpeg);
 	const firstRun = async (event, context) => {
 		await regularRun();
 	
@@ -20,14 +22,21 @@ module.exports = {
 		let context = null;
 		let err = null;
 		let page = null;
+		let browser;
 		try {
-			browser = await playwright.launchChromium(false);
+			browser = await playwright.launchChromium();
+			const size = { width: 1280, height: 600 };
+
 			context = await browser.newContext({
 				recordHar: {
 					path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
 					mode: 'full',
 					content: 'omit',
 				},
+				 recordVideo:{
+				 	dir:  path.join(__dirname,'..', '..', 'tmp' ),
+				 	size
+				 }
 			});
 			await context.tracing.start({ screenshots: false, snapshots: false });
 	
@@ -37,6 +46,7 @@ module.exports = {
 
 
 } catch (error) {
+	console.log(error);
 	err = error.message;
 } finally {
 	if (browser) {
@@ -60,6 +70,7 @@ if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
 };`,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
 	const { chromium } = require('playwright-core');
+	const path = require('path');
 
 	const errorStatusHandler = require('./statusError');
 	
@@ -68,7 +79,8 @@ if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
 		let err = null;
 		let page = null;
 		let browser = null;
-		try {	
+		try {
+			
 			browser = await chromium.launch({});
 			context = await browser.newContext();
 			page = await context.newPage();

@@ -1,5 +1,6 @@
 const playwright = require('playwright-aws-lambda');
 const { chromium } = require('playwright-core');
+const path = require('path');
 
 const errorStatusHandler = require('./statusError');
 

@@ -78,6 +78,7 @@ exports.createLambda = async (
                     LISTENER_URL: listenerUrl,
                     REGION: region,
                     NAME_FUNCTION: functionName,
+                    BUCKET_NAME: bucketName,
                 },
             },
         };
