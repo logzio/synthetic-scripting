@@ -73,6 +73,10 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.1.9:
+
+-   Add support to run a tests on different mobile devices
+
 1.1.8:
 
 -   Add Option to choose device where need to run user flow
