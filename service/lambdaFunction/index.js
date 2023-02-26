@@ -2,6 +2,7 @@ const playwright = require('playwright-aws-lambda');
 const path = require('path');
 const readSendData = require('./rsData');
 const cfnResponse = require('cfn-response-async');
+const pageHandler = require('./handlerHar');
 
 const firstRun = async (event, context) => {
     await regularRun();
@@ -19,11 +20,12 @@ const regularRun = async () => {
     let context = null;
     let err = null;
     let page = null;
+    let browser;
     try {
         browser = await playwright.launchChromium(false);
         context = await browser.newContext({
             recordHar: {
-                path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
+                path: path.join(__dirname, '..', '..', 'tmp', 'page.har'),
                 mode: 'full',
                 content: 'omit',
             },
@@ -32,6 +34,7 @@ const regularRun = async () => {
 
         page = await context.newPage();
     } catch (error) {
+        console.log(error);
         err = error.message;
     } finally {
         if (browser) {

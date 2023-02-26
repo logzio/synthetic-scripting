@@ -61,6 +61,7 @@ const readSendData = async (error = '') => {
             logger,
         );
         logger.log({
+            testDevice: process.env.TEST_DEVICE,
             totalDuration: totalDuration,
             statusTest: status,
             statusResult: error ? 0 : 1,

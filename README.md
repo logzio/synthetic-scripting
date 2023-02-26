@@ -73,6 +73,14 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.1.9:
+
+-   Add support to run a tests on different mobile devices
+
+1.1.8:
+
+-   Add Option to choose device where need to run user flow
+
 1.1.7:
 
 -   Add first invocation after cloud function was uploaded

@@ -79,6 +79,8 @@ const Home: FunctionComponent = () => {
         errorTitle: '',
     });
     const [codeSnippet, setCodeSnippet] = useState<string>(DEFAULT_CODE);
+    const [testDevice, setTestDevice] = useState<string>('Desktop Chrome');
+
     const [activeStep, setActiveStep] = useState<string>('edit_code');
     const [stageDeploy, setStageDeploy] = useState<StatusProps>({
         message: 'Function creating...',
@@ -156,6 +158,7 @@ const Home: FunctionComponent = () => {
 
             response = await api.downloadCFTemplate(
                 codeSnippet,
+                testDevice,
                 envList,
                 configs.name.value,
                 rangeTimeVariable[
@@ -195,6 +198,7 @@ const Home: FunctionComponent = () => {
                 rangeTimeVariable[
                     activeRangeTime.split(' ').reverse().join('_')
                 ],
+                testDevice,
                 codeSnippet,
                 configs.name.value,
                 configs.accessKey.value,
@@ -285,9 +289,11 @@ const Home: FunctionComponent = () => {
                 {activeStep === 'edit_code' ? (
                     <EditCodeContainer
                         uniqueKey={uniqueEnvVariableHandler}
+                        testDevice={testDevice}
                         codeSnippet={codeSnippet}
                         setCodeSnippet={onSetCodeSnippetHandler}
                         setEnvVariable={onSetEnvVariableHandler}
+                        setTestDevice={setTestDevice}
                     />
                 ) : (
                     <ExportDeploy

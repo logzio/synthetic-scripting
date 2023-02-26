@@ -8,7 +8,7 @@ export const DEFAULT_CODE = `const playwright = require('playwright-aws-lambda')
 		browser = await playwright.launchChromium(false);
 		context = await browser.newContext({
 			recordHar: {
-				path: './capture-hars/example.har',
+				path: './capture-hars/page.har',
 				mode: 'full',
 				content: 'omit',
 			},
