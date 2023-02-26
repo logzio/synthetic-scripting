@@ -1,7 +1,7 @@
 const match = require('@menadevs/objectron');
 
 const entryPattern = {
-    pageref: /(?<pageRef>.*)/,
+    // pageref: /(?<pageRef>.*)/,
     startedDateTime: /(?<startedDateTime>.*)/,
     request: {
         method: /(?<requestMethod>GET|POST)/,
@@ -55,6 +55,7 @@ const convertHarToJSON = (harFile) => {
             line.forEach((box, index) => {
                 obj[headers[index]] = box;
             });
+            obj.pageref = harFile.log.pages[0].title;
             result.push(obj);
         });
 

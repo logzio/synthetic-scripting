@@ -1,5 +1,4 @@
 export const DEFAULT_CODE = `const playwright = require('playwright-aws-lambda');
-	const readSendData = require('./rsData');
 	
 	const handler = async () => {
 		let context = null;
@@ -7,11 +6,6 @@ export const DEFAULT_CODE = `const playwright = require('playwright-aws-lambda')
 		try {
 		browser = await playwright.launchChromium(false);
 		context = await browser.newContext({
-			recordHar: {
-				path: './capture-hars/example.har',
-				mode: 'full',
-				content: 'omit',
-			},
 		});
 		const page = await context.newPage();
 		//////////////////////////////////
@@ -30,7 +24,5 @@ export const DEFAULT_CODE = `const playwright = require('playwright-aws-lambda')
 				await browser.close();
 			}
 		}
-		
-		readSendData();
 		return true;
 	};`

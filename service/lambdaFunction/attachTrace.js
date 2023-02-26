@@ -35,8 +35,9 @@ const parsingLogSynthetic = (trace, name, sessionId, startTime) => {
     if (trace.metadata.params) {
         Object.keys(trace.metadata.params).forEach((key, idx) => {
             parseObject[`actionParameter${idx}_key`] = key;
-            parseObject[`actionParameter${idx}_value`] =
-                trace.metadata.params[key].toString();
+            parseObject[`actionParameter${idx}_value`] = JSON.stringify(
+                trace.metadata.params[key],
+            );
         });
     }
 

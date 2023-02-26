@@ -11,6 +11,7 @@ const { logger } = require('./logger');
 /**
  * Function Create and Assign proper roles to Lambda Function
  * @param  {string} functionName - Name of Lambda Function
+ * @param  {string} testDevice - Name Device where need to run a test
  * @param  {string} description - Description of Lambda Function
  * @param  {string} token - Shipping token from logzio
  * @param  {string} bucketName - AWS Bucket name
@@ -23,6 +24,7 @@ const { logger } = require('./logger');
 
 exports.createLambda = async (
     functionName,
+    testDevice,
     description,
     token,
     bucketName,
@@ -77,6 +79,7 @@ exports.createLambda = async (
                     TOKEN: token,
                     LISTENER_URL: listenerUrl,
                     REGION: region,
+                    TEST_DEVICE: testDevice,
                     NAME_FUNCTION: functionName,
                     BUCKET_NAME: bucketName,
                 },

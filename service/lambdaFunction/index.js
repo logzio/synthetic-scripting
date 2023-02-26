@@ -2,9 +2,7 @@ const playwright = require('playwright-aws-lambda');
 const path = require('path');
 const readSendData = require('./rsData');
 const cfnResponse = require('cfn-response-async');
-const pathToFfmpeg = require('ffmpeg-static');
-const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(pathToFfmpeg);
+
 const firstRun = async (event, context) => {
     await regularRun();
 
@@ -23,23 +21,22 @@ const regularRun = async () => {
     let page = null;
     let browser;
     try {
-        browser = await playwright.launchChromium();
-        const size = { width: 1280, height: 600 };
-
+        browser = await playwright.launchChromium(false);
         context = await browser.newContext({
             recordHar: {
                 path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
                 mode: 'full',
                 content: 'omit',
             },
-            recordVideo: {
-                dir: path.join(__dirname, '..', '..', 'tmp'),
-                size,
-            },
         });
         await context.tracing.start({ screenshots: false, snapshots: false });
 
         page = await context.newPage();
+        let count = 0;
+        page.on('load', async (data) => {
+            count++;
+            await pageHandler(data, count);
+        });
     } catch (error) {
         console.log(error);
         err = error.message;

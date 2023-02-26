@@ -1,14 +1,35 @@
 const fs = require('fs');
 const path = require('path');
-const { startFileLocally, endFileLocally } = require('../helper/index-config');
+const { DESKTOP_DEVICE } = require('./constants');
+
+const {
+    startFileLocally,
+    endFileLocally,
+    startFileLocallyDeviceSelection,
+} = require('../helper/index-config');
 const { logger } = require('./logger');
+
+/**
+ * @param  {string} testDevice - Device where we need to run a test
+ */
+const populateDevice = (testDevice) => {
+    const valueForReplace = 'NAME_OF_DEVICE';
+
+    const startFileDevice = startFileLocallyDeviceSelection.replace(
+        valueForReplace,
+        testDevice,
+    );
+
+    return startFileDevice;
+};
+
 /**
  * @param  {string} code - Code snippet from ace editor inside Playwright test code
  * @param  {string} filePath
  */
-const readWriteAsync = async (code, filePath) => {
+const readWriteAsync = async (code, filePath, startFileForTest) => {
     try {
-        const fileStarts = startFileLocally.split('\n');
+        const fileStarts = startFileForTest.split('\n');
         const IDENTIFIER_CODE = `///////////////////////////////////`;
         const fileEnds = endFileLocally.split('\n');
         const extractCode = code.split(IDENTIFIER_CODE);
@@ -29,9 +50,9 @@ const readWriteAsync = async (code, filePath) => {
     }
 };
 /**
- * @param  {} code
+ * @param  {} code - Code snippet with user journey, built with end to end test Frameworks
  */
-exports.updateFileLocal = async (code) => {
+exports.updateFileLocal = async (code, testDevice) => {
     const statusError = {
         error: false,
         message: '',
@@ -45,7 +66,15 @@ exports.updateFileLocal = async (code) => {
     );
 
     try {
-        const fileStatus = await readWriteAsync(code, filePath);
+        let startFileForTest = startFileLocally;
+        if (testDevice != DESKTOP_DEVICE) {
+            startFileForTest = populateDevice(testDevice);
+        }
+        const fileStatus = await readWriteAsync(
+            code,
+            filePath,
+            startFileForTest,
+        );
         return fileStatus;
     } catch (err) {
         logger(err);
