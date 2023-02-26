@@ -75,7 +75,7 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 1.1.9:
 
--   Add support to run a tests on different mobile devices
+-   Split har reports between pages what will be open during the test
 
 1.1.8:
 

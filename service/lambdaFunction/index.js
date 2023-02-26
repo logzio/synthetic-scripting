@@ -23,18 +23,16 @@ const regularRun = async () => {
     let browser;
     try {
         browser = await playwright.launchChromium(false);
-        context = await browser.newContext({
-            recordHar: {
-                path: path.join(__dirname, '..', '..', 'tmp', 'page.har'),
-                mode: 'full',
-                content: 'omit',
-            },
-        });
+        context = await browser.newContext({});
         await context.tracing.start({ screenshots: false, snapshots: false });
 
         page = await context.newPage();
+        let count = 0;
+        page.on('load', async (data) => {
+            count++;
+            await pageHandler(data, count);
+        });
     } catch (error) {
-        console.log(error);
         err = error.message;
     } finally {
         if (browser) {
