@@ -25,7 +25,7 @@ const regularRun = async () => {
         browser = await playwright.launchChromium(false);
         context = await browser.newContext({
             recordHar: {
-                path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
+                path: path.join(__dirname, '..', '..', 'tmp', 'page.har'),
                 mode: 'full',
                 content: 'omit',
             },

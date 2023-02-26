@@ -103,8 +103,8 @@ const EnvVariableContainer: FunctionComponent<IProps> = ({
         <EnvVariableWrapper>
             <Text tag='h2'>Secrets Management</Text>
             <Text tag={'p'}>
-                Add key-value pairs for your secrets, that you can use in the
-                script as environment variables.
+                Include key-value pairs for your confidential information, which
+                you can then employ as environment variables in your script.
             </Text>
             <EnvVariableDisplay>
                 {renderEnvVariableHandler()}

@@ -177,7 +177,8 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
                     <SideWrapper>
                         <Text tag='h2'>Select Device</Text>
                         <Text tag={'p'}>
-                            Choose devicewhere you want to run test
+                            Select the device on which you would like to execute
+                            the test.
                         </Text>
                         <SelectWrapperDevice>
                             <Select
