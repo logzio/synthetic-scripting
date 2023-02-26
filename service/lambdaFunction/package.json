@@ -28,5 +28,8 @@
         "playwright-aws-lambda": "^0.9.0",
         "playwright-core": "^1.30.0",
         "playwright-har": "^0.1.1"
+    },
+    "devDependencies": {
+        "playwright": "^1.30.0"
     }
 }

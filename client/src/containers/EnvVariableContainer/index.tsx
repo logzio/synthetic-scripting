@@ -11,7 +11,7 @@ import { containsKeys } from '../../utils/validate';
 import { findObjectInArray } from '../../utils/helper';
 
 const EnvVariableWrapper = styled.div`
-    width: 27%;
+    width: 100%;
     margin-right: 0;
 `;
 
@@ -101,10 +101,10 @@ const EnvVariableContainer: FunctionComponent<IProps> = ({
     };
     return (
         <EnvVariableWrapper>
-            <Text tag='h2'>Enviroment Variable</Text>
+            <Text tag='h2'>Secrets Management</Text>
             <Text tag={'p'}>
-                Add key-value pairs for the environment variables that you use
-                in the script.
+                Include key-value pairs for your confidential information, which
+                you can then employ as environment variables in your script.
             </Text>
             <EnvVariableDisplay>
                 {renderEnvVariableHandler()}

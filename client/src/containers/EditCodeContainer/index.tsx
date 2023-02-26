@@ -2,11 +2,14 @@ import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 
 import CodeEditor from '../../components/CodeEditor';
-import EnvVariableWrapper from '../EnvVariableContainer';
+import EnvVariableContainer from '../EnvVariableContainer';
 import Text from '../../components/Text';
 import Select from '../../components/Select';
 
-import { availableCodeLanguages } from '../../utils/selectOptions';
+import {
+    availableCodeLanguages,
+    platformDevice,
+} from '../../utils/selectOptions';
 import Button from '../../components/Button';
 
 import api from '../../utils/api';
@@ -19,7 +22,10 @@ const ContainerDiv = styled.div`
     max-width: 1280px;
     padding-bottom: 24px;
 `;
-
+const SideWrapper = styled.div`
+    width: 27%;
+    margin-right: 0;
+`;
 const TopWrapper = styled.div`
     margin-bottom: 24px;
     display: flex;
@@ -46,7 +52,12 @@ const SelectWrapper = styled.div`
     max-width: 215px;
     width: 100%;
 `;
-
+const SelectWrapperDevice = styled.div`
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 30px;
+`;
 const MainWrapper = styled.div`
     display: flex;
     justify-content: space-between;
@@ -85,15 +96,19 @@ type EnvVariable = {
 interface IProps {
     uniqueKey: (isUnique: boolean) => void;
     codeSnippet: string;
+    testDevice: string;
     setCodeSnippet: (val: string) => void;
     setEnvVariable: (envVariable: EnvVariable[]) => void;
+    setTestDevice: (val: string) => void;
 }
 
 const EditCodeContainer: FunctionComponent<IProps> = ({
     uniqueKey,
     codeSnippet,
+    testDevice,
     setCodeSnippet,
     setEnvVariable,
+    setTestDevice,
 }) => {
     const [codeLanguage, setCodeLanguage] = useState<string>('Playwright');
     const [loading, setLoading] = useState<boolean>(false);
@@ -102,7 +117,9 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
     const onChangeSelect = (option: string) => {
         setCodeLanguage(option);
     };
-
+    const onChangeSelectDevice = (option: string) => {
+        setTestDevice(option);
+    };
     const startTestLocally = async () => {
         setTestStatus('');
         if (!isCodeValid) {
@@ -111,7 +128,7 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
         }
 
         setLoading(true);
-        const response = await api.testLocal(codeSnippet);
+        const response = await api.testLocal(codeSnippet, testDevice);
 
         if (response!.error && response!.errorData) {
             setTestStatus(response!.errorData);
@@ -157,10 +174,24 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
                         setCodeSnippet={setCodeSnippet}
                         codeSnippet={codeSnippet}
                     />
-                    <EnvVariableWrapper
-                        uniqueKey={uniqueKey}
-                        onSetListEnvVariable={setEnvVariable}
-                    />
+                    <SideWrapper>
+                        <Text tag='h2'>Select Device</Text>
+                        <Text tag={'p'}>
+                            Select the device on which you would like to execute
+                            the test.
+                        </Text>
+                        <SelectWrapperDevice>
+                            <Select
+                                options={platformDevice}
+                                onChangeSelect={onChangeSelectDevice}
+                                currentValue={testDevice}
+                            />
+                        </SelectWrapperDevice>
+                        <EnvVariableContainer
+                            uniqueKey={uniqueKey}
+                            onSetListEnvVariable={setEnvVariable}
+                        />
+                    </SideWrapper>
                 </MainWrapper>
                 <BottomWrapper>
                     <Text tag={'p'}>

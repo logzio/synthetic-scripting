@@ -65,10 +65,11 @@ class Api {
 	};
 
 
-	testLocal = async (codeSnippet: string) => {
+	testLocal = async (codeSnippet: string, testDevice: string) => {
 		const responseLocal = await this.customFetch(
 			{
 				code: codeSnippet,
+				testDevice
 
 			},
 			settings.endPointUrls.modifyFileLocalUrl,
@@ -83,10 +84,10 @@ class Api {
 		}
 	};
 
-	initPage = async (rangeTime: number, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: StatusProps) => void, description?: string) => {
+	initPage = async (rangeTime: number, testDevice: string, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: StatusProps) => void, description?: string) => {
 
 		const responseModify = await this.customFetch(
-			{ code: codeSnippet },
+			{ code: codeSnippet, testDevice },
 			settings.endPointUrls.modifyFileUrl,
 		);
 
@@ -164,6 +165,7 @@ class Api {
 		const response = await this.customFetch(
 			{
 				name,
+				testDevice,
 				description,
 				accessKey,
 				secretKey,
@@ -172,6 +174,7 @@ class Api {
 				region,
 				listEnvVariables,
 				listenerUrl,
+
 			},
 			settings.endPointUrls.createLambdaUrl,
 		);
@@ -223,11 +226,11 @@ class Api {
 			return cloudBridgeEventResp;
 		}
 	};
-	downloadCFTemplate = async (codeSnippet: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, region: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
+	downloadCFTemplate = async (codeSnippet: string, testDevice: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, region: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
 		onDownload(true)
 
 		const responseModify = await this.customFetch(
-			{ code: codeSnippet },
+			{ code: codeSnippet, testDevice },
 			settings.endPointUrls.modifyFileUrl,
 		);
 		if (!responseModify.error) {

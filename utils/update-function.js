@@ -1,14 +1,34 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('./logger');
-const { startFile, endFile } = require('../helper/index-config');
+const { DESKTOP_DEVICE } = require('./constants');
+const {
+    startFile,
+    endFile,
+    startFileDeviceSelection,
+} = require('../helper/index-config');
+
+/**
+ * @param  {string} testDevice - Device where we need to run a test
+ */
+const populateDevice = (testDevice) => {
+    const valueForReplace = 'NAME_OF_DEVICE';
+
+    const startFileDevice = startFileDeviceSelection.replace(
+        valueForReplace,
+        testDevice,
+    );
+
+    return startFileDevice;
+};
+
 /**
  * @param  {string} code - Code snippet from ace editor inside Playwright test code
  * @param  {string} filePath
  */
-const readWriteAsync = async (code, filePath) => {
+const readWriteAsync = async (code, filePath, startFileForLambda) => {
     try {
-        const fileStarts = startFile.split('\n');
+        const fileStarts = startFileForLambda.split('\n');
         const IDENTIFIER_CODE = `///////////////////////////////////`;
         const fileEnds = endFile.split('\n');
         const extractCode = code.split(IDENTIFIER_CODE);
@@ -29,9 +49,10 @@ const readWriteAsync = async (code, filePath) => {
     }
 };
 /**
- * @param  {} code
+ * @param  {string} code -
+ * @param  {string} testDevice - Device where we need to run a test
  */
-exports.updateFile = async (code) => {
+exports.updateFile = async (code, testDevice) => {
     const filePath = path.join(
         __dirname,
         '..',
@@ -41,7 +62,15 @@ exports.updateFile = async (code) => {
     );
 
     try {
-        const fileStatus = await readWriteAsync(code, filePath);
+        let startFileForLambda = startFile;
+        if (testDevice != DESKTOP_DEVICE) {
+            startFileForLambda = populateDevice(testDevice);
+        }
+        const fileStatus = await readWriteAsync(
+            code,
+            filePath,
+            startFileForLambda,
+        );
         if (fileStatus.error) {
             throw Error(fileStatus.err);
         }

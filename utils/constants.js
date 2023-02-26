@@ -6,4 +6,5 @@ module.exports = {
     BASIC_EXECUTION_ROLE_NAME: 'basic-execution-role',
     PUT_RULE_ROLE_NAME: 'put-rule-role',
     SEPARATOR: 'ToDisplay',
+    DESKTOP_DEVICE: 'Desktop Chrome',
 };
