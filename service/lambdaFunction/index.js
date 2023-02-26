@@ -24,7 +24,6 @@ const regularRun = async () => {
     try {
         browser = await playwright.launchChromium(false);
         context = await browser.newContext({});
-
         await context.tracing.start({ screenshots: false, snapshots: false });
 
         page = await context.newPage();
@@ -34,7 +33,6 @@ const regularRun = async () => {
             await pageHandler(data, count);
         });
     } catch (error) {
-        console.log(error);
         err = error.message;
     } finally {
         if (browser) {
