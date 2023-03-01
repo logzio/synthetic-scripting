@@ -1,8 +1,10 @@
+const { saveVideo } = require('playwright-video');
+
 const playwright = require('playwright-aws-lambda');
 const path = require('path');
 const readSendData = require('./rsData');
 const cfnResponse = require('cfn-response-async');
-
+const pageHandler = require('./handlerHar');
 const firstRun = async (event, context) => {
     await regularRun();
 
@@ -19,24 +21,26 @@ const regularRun = async () => {
     let context = null;
     let err = null;
     let page = null;
+    let capture;
     let browser;
+    const visitedUrls = [];
+
     try {
-        browser = await playwright.launchChromium(false);
-        context = await browser.newContext({
-            recordHar: {
-                path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
-                mode: 'full',
-                content: 'omit',
-            },
-        });
+        browser = await playwright.launchChromium();
+        const size = { width: 1280, height: 600 };
+
+        context = await browser.newContext({});
         await context.tracing.start({ screenshots: false, snapshots: false });
 
         page = await context.newPage();
-        let count = 0;
         page.on('load', async (data) => {
-            count++;
-            await pageHandler(data, count);
+            visitedUrls.push(data.url());
+            // await pageHandler(data, count);
         });
+        capture = await saveVideo(
+            page,
+            path.join(__dirname, '..', '..', 'tmp', 'video.mp4'),
+        );
     } catch (error) {
         console.log(error);
         err = error.message;
@@ -45,8 +49,10 @@ const regularRun = async () => {
             await context.tracing.stop({
                 path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
             });
+            await capture.stop();
             await context.close();
             await browser.close();
+            await pageHandler(visitedUrls);
         }
     }
     await readSendData(err);

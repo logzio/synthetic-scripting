@@ -12,6 +12,12 @@
                 "ec2:CreateSnapshot"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "S3BucketGetPut",
+            "Effect": "Allow",
+            "Action": ["s3:GetObject", "s3:PutObject"],
+            "Resource": "*"
         }
     ]
 }

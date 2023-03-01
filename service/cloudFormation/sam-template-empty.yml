@@ -33,6 +33,10 @@ Resources:
           LISTENER_URL: string
           TOKEN: string
           NAME_FUNCTION: string
+          REGION: string
+          BUCKET_NAME: string
+          TEST_DEVICE: string
+          IS_RECORD: string
   syntheticQueryS3Bucket:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -55,6 +59,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - 's3:GetObject'
+                  - 's3:PutObject'
                   - 'lambda:GetFunction'
                 Resource: '*'
   logzioSyntheticMonitorPrimerInvoke:

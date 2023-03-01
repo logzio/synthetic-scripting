@@ -1,38 +1,51 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const promises = require('fs/promises');
 const path = require('path');
-const s3 = new AWS.S3();
 
-const renameVideoFile = (sessionId) => {
-    let files = fs.readdirSync(path.join(__dirname, '..', '..', 'tmp'));
-    const videoExtenstion = '.webm';
+const renameVideoFile = async (sessionId) => {
+    try {
+        let files = fs.readdirSync(path.join(__dirname, '..', '..', 'tmp'));
+        const videoExtenstion = '.mp4';
+        const sizeBefore = await promises.stat(
+            path.join(__dirname, '..', '..', 'tmp', 'video.mp4'),
+        );
+        console.log(sizeBefore);
+        files.forEach((file) => {
+            console.log(file);
+            const extensionOfFile = file.substr(file.length - 4);
+            if (videoExtenstion === extensionOfFile) {
+                fs.renameSync(
+                    path.join(__dirname, '..', '..', 'tmp', file),
+                    path.join(__dirname, '..', '..', 'tmp', `${sessionId}.mp4`),
+                );
+            }
+        });
 
-    files.forEach((file) => {
-        const extensionOfFile = file.substr(file.length - 5);
-        if (videoExtenstion === extensionOfFile) {
-            fs.renameSync(
-                path.join(__dirname, '..', '..', 'tmp', file),
-                path.join(__dirname, '..', '..', 'tmp', `${sessionId}.webm`),
-            );
-        }
-    });
+        const sizeAfter = await promises.stat(
+            path.join(__dirname, '..', '..', 'tmp', `${sessionId}.mp4`),
+        );
+        console.log(sizeAfter);
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 const uploadVideoToBucket = async (sessionId) => {
     try {
-        renameVideoFile(sessionId);
-        // process.env.NAME_FUNCTION
+        await renameVideoFile(sessionId);
 
-        const fileName = `${sessionId}.webm`;
+        const fileName = `${sessionId}.mp4`;
         const fileRoute = path.join(__dirname, '..', '..', 'tmp', fileName);
-        const fileData = fs.readFileSync(fileRoute);
-        if (readData) {
+        const file = fs.createReadStream(fileRoute);
+
+        if (file) {
             const s3bucket = new AWS.S3();
             const params = {
                 Bucket: process.env.BUCKET_NAME,
-                Key: `${process.env.FUNCTION_NAME}/${fileName}`,
-                Body: fileData,
-                ContentType: 'video/webm',
+                Key: `${process.env.NAME_FUNCTION}/${fileName}`,
+                Body: file,
+                ContentType: 'video/mp4',
             };
 
             return new Promise((resolve, reject) => {

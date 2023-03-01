@@ -90,6 +90,7 @@ exports.createLambda = async (req, res) => {
         region,
         listEnvVariables,
         listenerUrl,
+        onChangeRecordStatus,
     } = req.body;
     try {
         const lambdaResp = await createLambda(
@@ -103,6 +104,7 @@ exports.createLambda = async (req, res) => {
             region,
             listEnvVariables,
             listenerUrl,
+            onChangeRecordStatus,
         );
         if (lambdaResp.error) {
             throw Error(lambdaResp.err);
@@ -180,6 +182,8 @@ exports.createZipCF = async (req, res) => {
         listener,
         region,
         rangeTime,
+        onChangeRecordStatus,
+        testDevice,
     } = req.body;
 
     try {
@@ -192,6 +196,8 @@ exports.createZipCF = async (req, res) => {
             listener,
             region,
             rangeTime,
+            onChangeRecordStatus,
+            testDevice,
         );
         await fileToZipCF(name);
 

@@ -1,4 +1,6 @@
 const AWS = require('aws-sdk');
+// const { IAMClient, CreatePolicyCommand } = require('@aws-sdk/client-iam');
+
 const fs = require('fs');
 const path = require('path');
 const { logger } = require('./logger');
@@ -9,6 +11,20 @@ const isRoleExists = async (iam, roleName) => {
     };
     const result = new Promise((resolve, reject) => {
         iam.getRole(paramsGetRole, function (err, data) {
+            if (err) reject({ error: true, err }); // an error occurred
+            else resolve(data); // successful response
+        });
+    });
+
+    return result;
+};
+
+const isPolicyExists = async (iam, policyName) => {
+    const paramsPolicy = {
+        PolicyArn: policyName,
+    };
+    const result = new Promise((resolve, reject) => {
+        iam.getPolicy(paramsPolicy, function (err, data) {
             if (err) reject({ error: true, err }); // an error occurred
             else resolve(data); // successful response
         });
@@ -65,12 +81,14 @@ exports.AIMRole = async (
     roleName,
     pathToRole,
     policyArn,
+    accountId,
 ) => {
     AWS.config.update({
         accessKeyId: accessKey,
         secretAccessKey: secretKey,
     });
     const iam = new AWS.IAM();
+
     try {
         const getIfRoleExists = await isRoleExists(iam, roleName);
         if (getIfRoleExists.Role) {
@@ -90,7 +108,22 @@ exports.AIMRole = async (
         }
 
         const setPolicyStatus = await setPolicy(iam, roleName, policyArn);
+        const ifGetPutPolicyExists = await isPolicyExists(
+            iam,
+            `arn:aws:iam::${accountId}:policy/S3BucketGetPut`,
+        );
+        if (!ifGetPutPolicyExists.Policy) {
+            const lambdaPolicyGetPut = await createCustomPolicy(iam);
 
+            const setPolicyLambdaStatus = await setPolicy(
+                iam,
+                roleName,
+                lambdaPolicyGetPut.Policy.Arn,
+            );
+            if (setPolicyLambdaStatus.err) {
+                throw setPolicyLambdaStatus.err;
+            }
+        }
         if (setPolicyStatus.err) {
             throw setPolicyStatus.err;
         }
@@ -100,4 +133,28 @@ exports.AIMRole = async (
         logger(err);
         return err;
     }
+};
+
+const createCustomPolicy = async (iam) => {
+    const customPolicy = {
+        Version: '2012-10-17',
+        Statement: [
+            {
+                Effect: 'Allow',
+                Action: ['s3:GetObject', 's3:PutObject'],
+                Resource: '*',
+            },
+        ],
+    };
+    const params = {
+        PolicyDocument: JSON.stringify(customPolicy),
+        PolicyName: 'S3BucketGetPut',
+    };
+    // Create an IAM service client object.
+    return new Promise((resolve, reject) => {
+        iam.createPolicy(params, function (err, data) {
+            if (err) reject(err); // an error occurred
+            else resolve(data); // successful response
+        });
+    });
 };

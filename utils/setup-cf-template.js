@@ -15,6 +15,9 @@ const dirOutput = path.join(__dirname, '..', 'output');
  * @param  {string} listener - Logzio listener url to send metrics/logs
  * @param  {string} region - AWS Region name
  * @param  {string} rangeTime - set interval for run Lambda function( in minutes)
+ * @param  {boolean} onChangeRecordStatus - Flag for record a browser based video of test
+ * @param  {string} testDevice - Device where need to run a test
+
  */
 exports.setupCFTemplate = async (
     listEnvVariables,
@@ -25,6 +28,8 @@ exports.setupCFTemplate = async (
     listener,
     region,
     rangeTime,
+    onChangeRecordStatus,
+    testDevice,
 ) => {
     try {
         const doc = yaml.load(
@@ -52,6 +57,8 @@ exports.setupCFTemplate = async (
             listener,
             region,
             rangeTime,
+            onChangeRecordStatus,
+            testDevice,
         );
 
         if (listEnvVariables.length > 0) {
@@ -135,6 +142,8 @@ exports.setupCFTemplate = async (
  * @param  {string} listener - Logzio listener url to send metrics/logs
  * @param  {string} region - AWS Region name
  * @param  {string} rangeTime - set interval for run Lambda function( in minutes)
+ * @param  {boolean} onChangeRecordStatus - Flag for record a browser based video of test
+ * @param  {string} testDevice - Device where need to run a test
  */
 const updateTemplate = (
     template,
@@ -145,6 +154,8 @@ const updateTemplate = (
     listener,
     region,
     rangeTime,
+    onChangeRecordStatus,
+    testDevice,
 ) => {
     const newYaml = { ...template };
 
@@ -182,6 +193,17 @@ const updateTemplate = (
     // name
     newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.NAME_FUNCTION =
         name;
+
+    // is record
+    newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.IS_RECORD =
+        onChangeRecordStatus ? 'to_record' : 'not_to_record';
+    //bucket name
+    newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.BUCKET_NAME =
+        bucket;
+
+    // test device
+    newYaml.Resources.ScheduledLambda.Properties.Environment.Variables.TEST_DEVICE =
+        testDevice;
 
     return newYaml;
 };

@@ -4,10 +4,7 @@ module.exports = {
 	const path = require('path');
 	const readSendData = require('./rsData');
 	const cfnResponse = require('cfn-response-async');
-	const pathToFfmpeg = require('ffmpeg-static');
-    const ffmpeg = require('fluent-ffmpeg');
-    ffmpeg.setFfmpegPath(pathToFfmpeg);
-	
+	const { saveVideo } = require('playwright-video');
 	const pageHandler = require('./handlerHar');
 
 	const firstRun = async (event, context) => {
@@ -28,10 +25,12 @@ module.exports = {
 		let context = null;
 		let err = null;
 		let page = null;
-		let browser = null;
+		let capture;
+		let browser;
+		const visitedUrls= [];
 
 		try {
-			browser = await playwright.launchChromium(false);
+			browser = await playwright.launchChromium();
 			context = await browser.newContext({
 				...mobileDevice
 
@@ -39,20 +38,23 @@ module.exports = {
 			await context.tracing.start({ screenshots: false, snapshots: false });
 	
 			page = await context.newPage();	
-			let count = 0;
 			page.on('load', async (data) => {
-				count++;
-				await pageHandler(data, count);
+				visitedUrls.push(data.url());
+
 			});
+			if(process.env.IS_RECORD === 'to_record'){
+				capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'));
+			}
 	`,
-    startFile: `const playwright = require('playwright-aws-lambda');
+    startFile: `
+	const { saveVideo } = require('playwright-video');
+
+	const playwright = require('playwright-aws-lambda');
 	const path = require('path');
 	const readSendData = require('./rsData');
 	const cfnResponse = require('cfn-response-async');
 	const pageHandler = require('./handlerHar');
-	const pathToFfmpeg = require('ffmpeg-static');
-const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(pathToFfmpeg);
+
 	const firstRun = async (event, context) => {
 		await regularRun();
 	
@@ -69,30 +71,24 @@ ffmpeg.setFfmpegPath(pathToFfmpeg);
 		let context = null;
 		let err = null;
 		let page = null;
+		let capture;
 		let browser;
+		const visitedUrls= [];
+
 		try {
 			browser = await playwright.launchChromium();
-			const size = { width: 1280, height: 600 };
 
 			context = await browser.newContext({
-				recordHar: {
-					path: path.join(__dirname, '..', '..', 'tmp', 'example.har'),
-					mode: 'full',
-					content: 'omit',
-				},
-				 recordVideo:{
-				 	dir:  path.join(__dirname,'..', '..', 'tmp' ),
-				 	size
-				 }
 			});
 			await context.tracing.start({ screenshots: false, snapshots: false });
 	
 			page = await context.newPage();
-			let count = 0;
 			page.on('load', async (data) => {
-				count++;
-				await pageHandler(data, count);
+				visitedUrls.push(data.url());
 			});
+			if(process.env.IS_RECORD === 'to_record'){
+			   capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'));
+			}
 	`,
     endFile: `
 
@@ -105,8 +101,13 @@ ffmpeg.setFfmpegPath(pathToFfmpeg);
 		await context.tracing.stop({
 			path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
 		});
+		if(process.env.IS_RECORD === 'to_record'){
+			await capture.stop();
+		}
 		await context.close();
 		await browser.close();
+		await pageHandler(visitedUrls);
+
 	}
 }
 await readSendData(err);

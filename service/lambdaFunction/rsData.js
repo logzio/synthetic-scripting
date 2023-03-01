@@ -21,6 +21,11 @@ const readSendData = async (error = '') => {
     const harsInDir = fs.readdirSync('/tmp');
 
     try {
+        // Upload video to the bucket
+        if (process.env.IS_RECORD === 'to_record') {
+            await uploadVideoToBucket(sessionId);
+        }
+
         harsInDir.forEach((file) => {
             if (file.split('.').length > 1 && file.split('.')[1] === 'har') {
                 const fileData = fs.readFileSync(`/tmp/${file}`);
@@ -69,8 +74,8 @@ const readSendData = async (error = '') => {
             statusResult: error ? 0 : 1,
             sessionId,
             nameTest: process.env.NAME_FUNCTION,
+            videoUrl: `https://${process.env.BUCKET_NAME}.s3.amazonaws/${process.env.NAME_FUNCTION}/${sessionId}.mp4`,
         });
-        await uploadVideoToBucket(sessionId);
         await sleep(4000);
         logger.sendAndClose();
     } catch (err) {

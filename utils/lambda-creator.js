@@ -20,6 +20,7 @@ const { logger } = require('./logger');
  * @param  {string} region -  AWS region where need to create synthetic logic
  * @param  {object} listEnvVariables - list of Environment variable for Lambda Function
  * @param  {string} listenerUrl  - Logzio listener url to send metrics/logs
+ * @param  {boolean} onChangeRecordStatus - Flag for record a browser based video of test
  */
 
 exports.createLambda = async (
@@ -33,6 +34,7 @@ exports.createLambda = async (
     region,
     listEnvVariables,
     listenerUrl,
+    onChangeRecordStatus,
 ) => {
     const accountId = await getAccountId(accessKey, secretKey);
 
@@ -56,6 +58,7 @@ exports.createLambda = async (
             BASIC_EXECUTION_ROLE_NAME,
             pathToRole,
             policyArn,
+            accountId,
         );
 
         if (iamRole.err) {
@@ -72,7 +75,7 @@ exports.createLambda = async (
             Runtime: 'nodejs16.x',
             Description: description,
             MemorySize: 512,
-            Timeout: 80,
+            Timeout: 300,
             Environment: {
                 Variables: {
                     ...variables,
@@ -82,6 +85,9 @@ exports.createLambda = async (
                     TEST_DEVICE: testDevice,
                     NAME_FUNCTION: functionName,
                     BUCKET_NAME: bucketName,
+                    IS_RECORD: onChangeRecordStatus
+                        ? 'to_record'
+                        : 'not_to_record',
                 },
             },
         };

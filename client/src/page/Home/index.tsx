@@ -80,7 +80,7 @@ const Home: FunctionComponent = () => {
     });
     const [codeSnippet, setCodeSnippet] = useState<string>(DEFAULT_CODE);
     const [testDevice, setTestDevice] = useState<string>('Desktop Chrome');
-
+    const [onChangeRecordStatus, onChangeRecord] = useState<boolean>(false);
     const [activeStep, setActiveStep] = useState<string>('edit_code');
     const [stageDeploy, setStageDeploy] = useState<StatusProps>({
         message: 'Function creating...',
@@ -132,6 +132,9 @@ const Home: FunctionComponent = () => {
     const onDownload = (step: boolean) => {
         setIsDownload(step);
     };
+    const onChangeRecordHandler = () => {
+        onChangeRecord(!onChangeRecordStatus);
+    };
 
     const [activeCloudProvider, setActiveCloudProvider] =
         useState<string>('AWS');
@@ -158,6 +161,7 @@ const Home: FunctionComponent = () => {
 
             response = await api.downloadCFTemplate(
                 codeSnippet,
+                onChangeRecordStatus,
                 testDevice,
                 envList,
                 configs.name.value,
@@ -198,6 +202,7 @@ const Home: FunctionComponent = () => {
                 rangeTimeVariable[
                     activeRangeTime.split(' ').reverse().join('_')
                 ],
+                onChangeRecordStatus,
                 testDevice,
                 codeSnippet,
                 configs.name.value,
@@ -291,6 +296,8 @@ const Home: FunctionComponent = () => {
                         uniqueKey={uniqueEnvVariableHandler}
                         testDevice={testDevice}
                         codeSnippet={codeSnippet}
+                        onChangeRecordStatus={onChangeRecordStatus}
+                        onChangeRecord={onChangeRecordHandler}
                         setCodeSnippet={onSetCodeSnippetHandler}
                         setEnvVariable={onSetEnvVariableHandler}
                         setTestDevice={setTestDevice}
