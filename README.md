@@ -1,6 +1,6 @@
 # Synthetic scripting
 
-This mini application for Synthetic scripting mimics and supervises your personalized user experience through browser scripting that directs the browser to your website, performs specific actions, and verifies specific elements. By utilizing frameworks like [Playwright](https://playwright.dev/)), the Synthetic scripting app facilitates the creation of tests to specify your custom user experience.
+This mini application for Synthetic scripting mimics and supervises your personalized user experience through browser scripting that directs the browser to your website, performs specific actions, and verifies specific elements. By utilizing synthteic frameworks like [Playwright](https://playwright.dev/), the Synthetic scripting app facilitates the creation of tests to specify your custom user experience.
 
 ## Run Application
 
