@@ -183,7 +183,7 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
                         <RecordVideoWrapper>
                             <Checkbox
                                 title='Record video'
-                                description='Record browser based video from the test'
+                                description='Record browser based video of the test'
                                 onClick={onChangeRecord}
                                 statusCheckbox={onChangeRecordStatus}
                             />

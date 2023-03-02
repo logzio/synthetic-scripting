@@ -1,6 +1,4 @@
 const AWS = require('aws-sdk');
-// const { IAMClient, CreatePolicyCommand } = require('@aws-sdk/client-iam');
-
 const fs = require('fs');
 const path = require('path');
 const { logger } = require('./logger');
