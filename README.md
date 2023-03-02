@@ -32,14 +32,20 @@ Here you can define the code for your test using [playwright.dev](https://playwr
 
 Click the **Test Script** button to check if the code runs correctly.
 
-3. Define environment variables in the Environment Variables manager.
+3. Check if you want to record browser based video of your test.
+   ![UI record-video](assets/record-video.png)
+
+4. You can select device on what you want to start a test.
+   ![UI record-video](assets/select-device.png)
+
+5. Define environment variables in the Environment Variables manager.
    ![UI env-variable](assets/env-variable.png)
 
 In the Environment Variables manager you can define environment variables that can be attached to your Lambda function. You can use them in the Code editor as `process.env.KEY` and define the `KEY` parameter, which will be present in the Lambda function.
 
 **NOTE:** Prior to testing the code locally, fill in the KEY-VALUE fields for all environment variables used.
 
-4. Download the code as a template or deploy it directly to your cloud provider, using the `Explore/deploy` tab.
+6. Download the code as a template or deploy it directly to your cloud provider, using the `Explore/deploy` tab.
 
 ## Download as a template
 
@@ -72,6 +78,11 @@ Give your metrics a few minutes to get from your system to ours,
 and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
+
+1.2.0:
+
+-   Add option to record a browser based video of the test
+-   Store browser based videos of the test in S3 user bucket
 
 1.1.9:
 
