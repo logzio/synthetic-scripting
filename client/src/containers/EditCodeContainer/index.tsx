@@ -5,7 +5,7 @@ import CodeEditor from '../../components/CodeEditor';
 import EnvVariableContainer from '../EnvVariableContainer';
 import Text from '../../components/Text';
 import Select from '../../components/Select';
-
+import Checkbox from '../../components/Checkbox';
 import {
     availableCodeLanguages,
     platformDevice,
@@ -63,6 +63,7 @@ const MainWrapper = styled.div`
     justify-content: space-between;
     height: 75%;
 `;
+const RecordVideoWrapper = styled.div``;
 
 const BottomWrapper = styled.div`
     display: flex;
@@ -97,18 +98,22 @@ interface IProps {
     uniqueKey: (isUnique: boolean) => void;
     codeSnippet: string;
     testDevice: string;
+    onChangeRecordStatus: boolean;
     setCodeSnippet: (val: string) => void;
     setEnvVariable: (envVariable: EnvVariable[]) => void;
     setTestDevice: (val: string) => void;
+    onChangeRecord: () => void;
 }
 
 const EditCodeContainer: FunctionComponent<IProps> = ({
     uniqueKey,
     codeSnippet,
     testDevice,
+    onChangeRecordStatus,
     setCodeSnippet,
     setEnvVariable,
     setTestDevice,
+    onChangeRecord,
 }) => {
     const [codeLanguage, setCodeLanguage] = useState<string>('Playwright');
     const [loading, setLoading] = useState<boolean>(false);
@@ -175,6 +180,14 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
                         codeSnippet={codeSnippet}
                     />
                     <SideWrapper>
+                        <RecordVideoWrapper>
+                            <Checkbox
+                                title='Record video'
+                                description='Record browser based video of the test'
+                                onClick={onChangeRecord}
+                                statusCheckbox={onChangeRecordStatus}
+                            />
+                        </RecordVideoWrapper>
                         <Text tag='h2'>Select Device</Text>
                         <Text tag={'p'}>
                             Select the device on which you would like to execute
@@ -187,6 +200,7 @@ const EditCodeContainer: FunctionComponent<IProps> = ({
                                 currentValue={testDevice}
                             />
                         </SelectWrapperDevice>
+
                         <EnvVariableContainer
                             uniqueKey={uniqueKey}
                             onSetListEnvVariable={setEnvVariable}

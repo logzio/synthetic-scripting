@@ -13,7 +13,8 @@ COPY ./ ./
 
 WORKDIR /usr/app/service/lambdaFunction
 
-RUN npm install
+RUN npm install --force
+RUN npm install @ffmpeg-installer/linux-x64 --force
 
 WORKDIR /usr/app/client
 

@@ -84,7 +84,7 @@ class Api {
 		}
 	};
 
-	initPage = async (rangeTime: number, testDevice: string, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: StatusProps) => void, description?: string) => {
+	initPage = async (rangeTime: number, onChangeRecordStatus: boolean, testDevice: string, codeSnippet: string, name: string, accessKey: string, secretKey: string, bucketName: string, token: string, listenerUrl: string, region: string, listEnvVariables: object, onStage: (stage: StatusProps) => void, description?: string) => {
 
 		const responseModify = await this.customFetch(
 			{ code: codeSnippet, testDevice },
@@ -174,7 +174,7 @@ class Api {
 				region,
 				listEnvVariables,
 				listenerUrl,
-
+				onChangeRecordStatus
 			},
 			settings.endPointUrls.createLambdaUrl,
 		);
@@ -226,7 +226,7 @@ class Api {
 			return cloudBridgeEventResp;
 		}
 	};
-	downloadCFTemplate = async (codeSnippet: string, testDevice: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, region: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
+	downloadCFTemplate = async (codeSnippet: string, onChangeRecordStatus: boolean, testDevice: string, envList: object, name: string, rangeTime: number, bucket: string, token: string, region: string, listener: string, onDownload: (step: boolean) => void, description?: string) => {
 		onDownload(true)
 
 		const responseModify = await this.customFetch(
@@ -248,7 +248,9 @@ class Api {
 				bucket,
 				listener,
 				region,
-				rangeTime
+				rangeTime,
+				onChangeRecordStatus,
+				testDevice
 			},
 			settings.endPointUrls.createCfZip,
 		);

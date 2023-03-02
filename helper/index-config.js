@@ -4,6 +4,7 @@ module.exports = {
 	const path = require('path');
 	const readSendData = require('./rsData');
 	const cfnResponse = require('cfn-response-async');
+	const { saveVideo } = require('playwright-video');
 	const pageHandler = require('./handlerHar');
 
 	const firstRun = async (event, context) => {
@@ -24,10 +25,12 @@ module.exports = {
 		let context = null;
 		let err = null;
 		let page = null;
-		let browser = null;
+		let capture;
+		let browser;
+		const visitedUrls= [];
 
 		try {
-			browser = await playwright.launchChromium(false);
+			browser = await playwright.launchChromium();
 			context = await browser.newContext({
 				...mobileDevice
 
@@ -35,13 +38,18 @@ module.exports = {
 			await context.tracing.start({ screenshots: false, snapshots: false });
 	
 			page = await context.newPage();	
-			let count = 0;
 			page.on('load', async (data) => {
-				count++;
-				await pageHandler(data, count);
+				visitedUrls.push(data.url());
+
 			});
+			if(process.env.IS_RECORD === 'to_record'){
+				capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'));
+			}
 	`,
-    startFile: `const playwright = require('playwright-aws-lambda');
+    startFile: `
+	const { saveVideo } = require('playwright-video');
+
+	const playwright = require('playwright-aws-lambda');
 	const path = require('path');
 	const readSendData = require('./rsData');
 	const cfnResponse = require('cfn-response-async');
@@ -63,32 +71,43 @@ module.exports = {
 		let context = null;
 		let err = null;
 		let page = null;
+		let capture;
 		let browser;
+		const visitedUrls= [];
+
 		try {
-			browser = await playwright.launchChromium(false);
+			browser = await playwright.launchChromium();
+
 			context = await browser.newContext({
 			});
 			await context.tracing.start({ screenshots: false, snapshots: false });
 	
 			page = await context.newPage();
-			let count = 0;
 			page.on('load', async (data) => {
-				count++;
-				await pageHandler(data, count);
+				visitedUrls.push(data.url());
 			});
+			if(process.env.IS_RECORD === 'to_record'){
+			   capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'));
+			}
 	`,
     endFile: `
 
 
 } catch (error) {
+	console.log(error);
 	err = error.message;
 } finally {
 	if (browser) {
 		await context.tracing.stop({
 			path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
 		});
+		if(process.env.IS_RECORD === 'to_record'){
+			await capture.stop();
+		}
 		await context.close();
 		await browser.close();
+		await pageHandler(visitedUrls);
+
 	}
 }
 await readSendData(err);
@@ -123,6 +142,7 @@ const handlerLocally = async () => {
 `,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
 	const { chromium } = require('playwright-core');
+	const path = require('path');
 
 	const errorStatusHandler = require('./statusError');
 	
@@ -131,7 +151,8 @@ const handlerLocally = async () => {
 		let err = null;
 		let page = null;
 		let browser = null;
-		try {	
+		try {
+			
 			browser = await chromium.launch({});
 			context = await browser.newContext();
 			page = await context.newPage();
