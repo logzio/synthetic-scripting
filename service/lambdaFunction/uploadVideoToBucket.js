@@ -1,18 +1,13 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
-const promises = require('fs/promises');
 const path = require('path');
 
 const renameVideoFile = async (sessionId) => {
     try {
         let files = fs.readdirSync(path.join(__dirname, '..', '..', 'tmp'));
         const videoExtenstion = '.mp4';
-        const sizeBefore = await promises.stat(
-            path.join(__dirname, '..', '..', 'tmp', 'video.mp4'),
-        );
-        console.log(sizeBefore);
+
         files.forEach((file) => {
-            console.log(file);
             const extensionOfFile = file.substr(file.length - 4);
             if (videoExtenstion === extensionOfFile) {
                 fs.renameSync(
@@ -21,11 +16,6 @@ const renameVideoFile = async (sessionId) => {
                 );
             }
         });
-
-        const sizeAfter = await promises.stat(
-            path.join(__dirname, '..', '..', 'tmp', `${sessionId}.mp4`),
-        );
-        console.log(sizeAfter);
     } catch (err) {
         console.log(err);
     }
