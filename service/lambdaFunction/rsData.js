@@ -74,7 +74,7 @@ const readSendData = async (error = '') => {
             statusResult: error ? 0 : 1,
             sessionId,
             nameTest: process.env.NAME_FUNCTION,
-            videoUrl: `https://${process.env.BUCKET_NAME}.s3.amazonaws/${process.env.NAME_FUNCTION}/${sessionId}.mp4`,
+            videoUrl: `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/${process.env.NAME_FUNCTION}/${sessionId}.mp4`,
         });
         await sleep(4000);
         logger.sendAndClose();
