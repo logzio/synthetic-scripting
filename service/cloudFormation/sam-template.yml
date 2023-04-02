@@ -44,7 +44,7 @@ Resources:
       Description: Lambda Function to run playwright test
       FunctionName: !Ref LambdaTestName
       Role: !GetAtt syntheticQueryS3Bucket.Arn
-      MemorySize: 512
+      MemorySize: 1024
       Timeout: 60
       Events:
         CronEvent:

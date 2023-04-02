@@ -43,7 +43,7 @@ module.exports = {
 
 			});
 			if(process.env.IS_RECORD === 'to_record'){
-				capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'));
+				capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'), {fps:120, followPopups:false});
 			}
 	`,
     startFile: `
@@ -87,7 +87,7 @@ module.exports = {
 				visitedUrls.push(data.url());
 			});
 			if(process.env.IS_RECORD === 'to_record'){
-			   capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'));
+			   capture = await saveVideo(page, path.join(__dirname,'..', '..', 'tmp', 'video.mp4'), {fps:120, followPopups:false});
 			}
 	`,
     endFile: `

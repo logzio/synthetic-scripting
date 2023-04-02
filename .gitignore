@@ -26,3 +26,5 @@ example-test.js
 client/build
 index-config-bkp.js
 upload-test.js
+
+Dockerfile.backup

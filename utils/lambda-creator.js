@@ -74,7 +74,7 @@ exports.createLambda = async (
             Role: iamRole.arn, // IAM_ROLE_ARN; e.g., arn:aws:iam::650138640062:role/v3-lambda-tutorial-lambda-role
             Runtime: 'nodejs16.x',
             Description: description,
-            MemorySize: 512,
+            MemorySize: 1024,
             Timeout: 300,
             Environment: {
                 Variables: {

@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, {
+    FunctionComponent,
+    useCallback,
+    useState,
+    useContext,
+} from 'react';
 
 import Layout from '../../components/Layout';
 
@@ -6,6 +11,7 @@ import EditCodeContainer from '../../containers/EditCodeContainer';
 import ButtonContainer from '../../containers/ButtonContainer';
 import ExportDeploy from '../../containers/ExportDeployContainer';
 import Error from '../../components/Error';
+import { UserContext } from '../../context/user/userContext';
 
 import api from '../../utils/api';
 import { rangeTimeVariable } from '../../utils/selectOptions';
@@ -21,43 +27,6 @@ type StatusProps = {
 type Meta = {
     field: string;
     value: string;
-};
-type MetaConfig = {
-    codeSnippet: {
-        value: string;
-        isValid: boolean;
-    };
-    name: {
-        value: string;
-        isValid: boolean;
-    };
-    accessKey: {
-        value: string;
-        isValid: boolean;
-    };
-    secretKey: {
-        value: string;
-        isValid: boolean;
-    };
-    bucketName: {
-        value: string;
-        isValid: boolean;
-    };
-    token: {
-        value: string;
-        isValid: boolean;
-    };
-    listener: {
-        value: string;
-        isValid: boolean;
-    };
-    listEnvVariables: EnvVariable[];
-    description?:
-        | {
-              value: string;
-              isValid: boolean;
-          }
-        | undefined;
 };
 
 type EnvVariable = {
@@ -90,42 +59,9 @@ const Home: FunctionComponent = () => {
     const [stageDisplay, setStageDisplay] = useState<boolean>(false);
     const [envList, setEnvList] = useState<EnvVariable[]>([]);
     const [isDownload, setIsDownload] = useState<boolean>(false);
-    const [configs, setConfigs] = useState<MetaConfig>({
-        codeSnippet: {
-            value: '',
-            isValid: true,
-        },
-        name: {
-            value: '',
-            isValid: true,
-        },
-        accessKey: {
-            value: '',
-            isValid: true,
-        },
-        secretKey: {
-            value: '',
-            isValid: true,
-        },
-        bucketName: {
-            value: '',
-            isValid: true,
-        },
-        token: {
-            value: '',
-            isValid: true,
-        },
-        listener: {
-            value: '',
-            isValid: true,
-        },
 
-        listEnvVariables: [],
-        description: {
-            value: '',
-            isValid: true,
-        },
-    });
+    const { setConfigs, configs } = useContext(UserContext);
+
     const onStage = (stage: StatusProps) => {
         setStageDeploy(stage);
     };
@@ -248,9 +184,16 @@ const Home: FunctionComponent = () => {
         setActiveCloudProvider(option);
     };
 
-    const updateMetaHandler = (data: Meta) => {
-        setConfigs({ ...configs, ...{ [data.field]: { value: data.value } } });
-    };
+    const updateMetaHandler = useCallback(
+        (data: Meta) => {
+            console.log(data);
+            setConfigs({
+                ...configs,
+                ...{ [data.field]: { value: data.value } },
+            });
+        },
+        [setConfigs, configs],
+    );
 
     const updateRangeTimeHandler = (option: string) => {
         setActiveRangeTime(option);
@@ -316,6 +259,7 @@ const Home: FunctionComponent = () => {
                         onChangeRangeTime={updateRangeTimeHandler}
                         onChangeCloudProvider={onChangeCloudProviderHandler}
                         updateMeta={updateMetaHandler}
+                        configs={configs}
                     />
                 )}
                 <ButtonContainer

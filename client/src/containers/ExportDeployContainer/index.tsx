@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 
 import Container from '../../components/Container';
 import Text from '../../components/Text';
@@ -15,6 +15,7 @@ import Label from '../../components/Label';
 import Input from '../../components/Input';
 import Tooltip from '../../components/Tooltip';
 import Status from '../../components/Status';
+import { MetaConfig } from '../../context/types';
 
 const ContainerSteps = styled.div`
     position: relative;
@@ -90,6 +91,7 @@ interface IProps {
     onChangeRangeTime: (option: string) => void;
     onChangeCloudProvider: (option: string) => void;
     updateMeta: (data: Meta) => void;
+    configs: MetaConfig;
 }
 type Meta = {
     field: string;
@@ -109,13 +111,12 @@ const ExportDeploy: FunctionComponent<IProps> = ({
     onChangeRegion,
     onChangeCloudProvider,
     updateMeta,
+    configs,
 }) => {
-    const [toggleStatus, setToggleStatus] = useState('');
-
     const onToggleHandler = (option: string) => {
         onChangeMethodTest(option);
     };
-
+    console.log(configs);
     return (
         <Container>
             <ContainerSteps>
@@ -161,6 +162,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                             name='name'
                             type='text'
                             placeholder='Function name'
+                            value={configs.name.value}
                             onChange={(
                                 e: React.FormEvent<HTMLInputElement>,
                             ) => {
@@ -182,6 +184,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                             name='token'
                             type='text'
                             placeholder='Logz.io logs token'
+                            value={configs.token.value}
                             onChange={(
                                 e: React.FormEvent<HTMLInputElement>,
                             ) => {
@@ -200,6 +203,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                         <Input
                             name='listener'
                             type='text'
+                            value={configs.listener.value}
                             placeholder='Logz.io Listener'
                             onChange={(
                                 e: React.FormEvent<HTMLInputElement>,
@@ -224,6 +228,11 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                         <Input
                             name='desciption'
                             type='text'
+                            value={
+                                configs.description
+                                    ? configs.description.value
+                                    : ''
+                            }
                             placeholder='Lambda function description'
                             onChange={(
                                 e: React.FormEvent<HTMLInputElement>,
@@ -259,6 +268,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                             name='bucketName'
                             type='text'
                             placeholder='Bucket Name'
+                            value={configs.bucketName.value}
                             onChange={(
                                 e: React.FormEvent<HTMLInputElement>,
                             ) => {
@@ -299,6 +309,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                             <Input
                                 name='accessKey'
                                 type='text'
+                                value={configs.accessKey.value}
                                 placeholder='Access Key'
                                 onChange={(
                                     e: React.FormEvent<HTMLInputElement>,
@@ -320,6 +331,7 @@ const ExportDeploy: FunctionComponent<IProps> = ({
                             <Input
                                 name='secretKey'
                                 type='text'
+                                value={configs.secretKey.value}
                                 placeholder='Secret Key'
                                 onChange={(
                                     e: React.FormEvent<HTMLInputElement>,

@@ -5,6 +5,7 @@ const path = require('path');
 const readSendData = require('./rsData');
 const cfnResponse = require('cfn-response-async');
 const pageHandler = require('./handlerHar');
+
 const firstRun = async (event, context) => {
     await regularRun();
 
@@ -27,7 +28,6 @@ const regularRun = async () => {
 
     try {
         browser = await playwright.launchChromium();
-        const size = { width: 1280, height: 600 };
 
         context = await browser.newContext({});
         await context.tracing.start({ screenshots: false, snapshots: false });
@@ -35,12 +35,14 @@ const regularRun = async () => {
         page = await context.newPage();
         page.on('load', async (data) => {
             visitedUrls.push(data.url());
-            // await pageHandler(data, count);
         });
-        capture = await saveVideo(
-            page,
-            path.join(__dirname, '..', '..', 'tmp', 'video.mp4'),
-        );
+        if (process.env.IS_RECORD === 'to_record') {
+            capture = await saveVideo(
+                page,
+                path.join(__dirname, '..', '..', 'tmp', 'video.mp4'),
+                { fps: 120, followPopups: false },
+            );
+        }
     } catch (error) {
         console.log(error);
         err = error.message;
@@ -49,7 +51,9 @@ const regularRun = async () => {
             await context.tracing.stop({
                 path: path.join(__dirname, '..', '..', 'tmp', 'trace.zip'),
             });
-            await capture.stop();
+            if (process.env.IS_RECORD === 'to_record') {
+                await capture.stop();
+            }
             await context.close();
             await browser.close();
             await pageHandler(visitedUrls);
