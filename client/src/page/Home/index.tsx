@@ -186,7 +186,6 @@ const Home: FunctionComponent = () => {
 
     const updateMetaHandler = useCallback(
         (data: Meta) => {
-            console.log(data);
             setConfigs({
                 ...configs,
                 ...{ [data.field]: { value: data.value } },

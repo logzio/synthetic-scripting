@@ -116,7 +116,6 @@ const ExportDeploy: FunctionComponent<IProps> = ({
     const onToggleHandler = (option: string) => {
         onChangeMethodTest(option);
     };
-    console.log(configs);
     return (
         <Container>
             <ContainerSteps>
