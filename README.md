@@ -79,6 +79,14 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
+1.2.2:
+
+-   Reduce docker image size
+
+1.2.1:
+
+-   Fix typo AWS S3 object(video) link
+
 1.2.0:
 
 -   Add option to record a browser based video of the test

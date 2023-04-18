@@ -13,7 +13,6 @@ COPY ./ ./
 
 WORKDIR /usr/app/client
 
-# RUN npm install
 
 RUN npm run build
 
