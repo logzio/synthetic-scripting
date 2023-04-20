@@ -79,32 +79,32 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 ## Changelong
 
-**1.2.2**:
+-   **1.2.2**:
 
 -   Reduce docker image size
 
-**1.2.1**:
+-   **1.2.1**:
 
 -   Fix typo AWS S3 object(video) link
 
-**1.2.0**:
+-   **1.2.0**:
 
 -   Add option to record a browser based video of the test
 -   Store browser based videos of the test in S3 user bucket
 
-**1.1.9**:
+-   **1.1.9**:
 
 -   Split har reports between pages what will be open during the test
 
-**1.1.8**:
+-   **1.1.8**:
 
 -   Add Option to choose device where need to run user flow
 
-**1.1.7**:
+-   **1.1.7**:
 
 -   Add first invocation after cloud function was uploaded
 
-**1.1.6**:
+-   **1.1.6**:
 
 -   fix typo in `log type`
 
@@ -112,28 +112,28 @@ and then open [Logz.io](https://app.logz.io/#/dashboard/metrics).
 
 -   add region and geolocation to logs
 
-**1.1.5**:
+-   **1.1.5**:
 
 -   Update sheduler name from static to dynamic
 
-**1.1.4**:
+-   **1.1.4**:
 
 -   Update the playwright from 1.24.0 to 1.30.0
 
 -   Add dropdown UI for regions select
 
-**1.1.3**:
+-   **1.1.3**:
 
 -   Update UI
 
-**1.1.2**:
+-   **1.1.2**:
 
 -   Update docker image, to upload playwright to the Docker.
 -   CSS fix, update test status box.
 -   Add cleanup for useEffect
 
-**1.1.1**:
-Refactor Components:
+-   **1.1.1**:
+    Refactor Components:
 
 -   Move from type to interfaces.
 
@@ -141,12 +141,12 @@ Add to summaryLog:
 
 -   totalDuration
 
-**1.1.0**:
+-   **1.1.0**:
 
 -   Update UI
 -   Initial Release
 
-**1.0.0**:
+-   **1.0.0**:
 
 -   Initial Release
 
