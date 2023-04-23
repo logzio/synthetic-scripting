@@ -1,6 +1,6 @@
 module.exports = {
     startFileDeviceSelection: `const playwright = require('playwright-aws-lambda');
-	const {  devices } = require('playwright');
+	const {  devices } = require('playwright-core');
 	const path = require('path');
 	const readSendData = require('./rsData');
 	const cfnResponse = require('cfn-response-async');
@@ -122,7 +122,7 @@ if (event.RequestType === 'Create' || event.RequestType === 'Delete') {
 }
 };`,
     startFileLocallyDeviceSelection: `const playwright = require('playwright-aws-lambda');
-const { webkit, devices } = require('playwright');
+const { webkit, devices } = require('playwright-core');
 
 const errorStatusHandler = require('./statusError');
 
@@ -142,6 +142,7 @@ const handlerLocally = async () => {
 `,
     startFileLocally: `const playwright = require('playwright-aws-lambda');
 	const { chromium } = require('playwright-core');
+
 	const path = require('path');
 
 	const errorStatusHandler = require('./statusError');
