@@ -32,8 +32,5 @@
         "playwright-core": "^1.30.0",
         "playwright-har": "^0.1.1",
         "playwright-video": "^2.4.0"
-    },
-    "devDependencies": {
-        "playwright": "^1.31.1"
     }
 }

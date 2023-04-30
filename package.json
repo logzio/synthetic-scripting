@@ -46,7 +46,6 @@
     "devDependencies": {
         "eslint": "^8.22.0",
         "eslint-config-prettier": "^8.5.0",
-        "nodemon": "^2.0.19",
-        "playwright": "^1.30.0"
+        "nodemon": "^2.0.19"
     }
 }
